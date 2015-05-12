@@ -31,6 +31,7 @@ defmodule Neoboard.Mixfile do
     [{:phoenix, "~> 0.13"},
      {:phoenix_html, "~> 1.0"},
      {:phoenix_live_reload, "~> 0.4", only: :dev},
-     {:cowboy, "~> 1.0"}]
+     {:cowboy, "~> 1.0"},
+     {:timex, "~> 0.13.4"}]
   end
 end

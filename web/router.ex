@@ -18,6 +18,10 @@ defmodule Neoboard.Router do
     get "/", PageController, :index
   end
 
+  socket "/ws", Neoboard do
+    channel "board:*", BoardChannel
+  end
+
   # Other scopes may use custom stacks.
   # scope "/api", Neoboard do
   #   pipe_through :api

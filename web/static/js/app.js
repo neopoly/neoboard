@@ -1,11 +1,19 @@
-import {Socket} from "phoenix"
+import {Socket} from "phoenix";
 
-// let socket = new Socket("/ws")
-// socket.connect()
-// socket.join("topic:subtopic", {}).receive("ok", chan => {
-// })
+const App = {
+  run() {
+    let socket = new Socket("/ws");
+    socket.connect();
+    let channel = socket.chan("board:neo", {});
+    channel.join().receive("ok", () => {
+      console.log("Welcome to the board channel");
 
-let App = {
-}
+      channel.on("time:state", state => {
+        console.log("time:state", state);
+        document.write(state.now + "<br>");
+      });
+    })
+  }
+};
 
-export default App
+export default App;
