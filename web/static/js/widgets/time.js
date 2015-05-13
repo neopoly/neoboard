@@ -26,7 +26,7 @@ const Time = React.createClass({
 export default React.createClass({
   mixins: [WidgetMixin("time:state")],
   getInitialState() {
-    return { now: new Date() }
+    return { time: {h: 0, m: 0, s: 0} }
   },
   render() {
     return (
