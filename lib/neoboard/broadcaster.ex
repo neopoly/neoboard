@@ -1,5 +1,6 @@
 defmodule Neoboard.Broadcaster do
   require Logger
+  @topic "board:neo"
 
   defmacro __using__(_) do
     quote do
@@ -15,8 +16,8 @@ defmodule Neoboard.Broadcaster do
   end
 
   def broadcast!(message, payload) do
-    Logger.debug("#{message} -> #{Poison.encode!(payload)}")
-    Neoboard.Sockets.broadcast!(message, payload)
+    Logger.debug("[#{@topic}] #{message} -> #{Poison.encode!(payload)}")
+    Neoboard.Endpoint.broadcast!(@topic, message, payload)
   end
 
   def module_to_message(module) do

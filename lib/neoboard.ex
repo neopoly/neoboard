@@ -10,9 +10,8 @@ defmodule Neoboard do
       # Start the endpoint when the application starts
       supervisor(Neoboard.Endpoint, []),
       # Here you could define other workers and supervisors as children
-      # worker(Neoboard.Worker, [arg1, arg2, arg3]),
+      # worker(Neoboard.Widget.Time, [arg1, arg2, arg3]),
       worker(Neoboard.Widgets.Time, []),
-      worker(Neoboard.Sockets, [])
     ]
 
     # See http://elixir-lang.org/docs/stable/elixir/Supervisor.html

@@ -14,12 +14,12 @@ defmodule Neoboard.BoardChannel do
   end
 
   def handle_info(:after_join, socket) do
-    Neoboard.Sockets.add(socket)
+    log("client joined")
     {:noreply, socket}
   end
 
   def handle_info(:after_leave, socket) do
-    Neoboard.Sockets.remove(socket)
+    log("client left")
     {:noreply, socket}
   end
 

@@ -19,7 +19,7 @@ defmodule Neoboard.Router do
   end
 
   socket "/ws", Neoboard do
-    channel "board:*", BoardChannel
+    channel "*", BoardChannel
   end
 
   # Other scopes may use custom stacks.
