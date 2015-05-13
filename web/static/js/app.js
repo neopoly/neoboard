@@ -1,19 +1,37 @@
-import {Socket} from "phoenix";
+import Board from "./board"
+import connector from "./connector"
 
-const App = {
-  run() {
-    let socket = new Socket("/ws");
-    socket.connect();
-    let channel = socket.chan("board:neo", {});
-    channel.join().receive("ok", () => {
-      console.log("Welcome to the board channel");
 
-      channel.on("time:state", state => {
-        console.log("time:state", state);
-        document.write(state.now + "<br>");
-      });
-    })
+const Connected = React.createClass({
+  render() {
+    return <Board name="board:neo" widgets={this.props.widgets}/>
   }
-};
+})
 
-export default App;
+const Connecting = React.createClass({
+  render() {
+    return <div>Connecting...</div>
+  }
+})
+
+export default React.createClass({
+  getInitialState() {
+    return this.getState()
+  },
+  getState() {
+    return {
+      connected: connector.isConnected
+    }
+  },
+  componentWillMount() {
+    connector.addListener(this._connectorChanged)
+    connector.establish()
+  },
+  render() {
+    if(this.state.connected) return <Connected widgets={this.props.widgets}/>;
+    else return <Connecting/>;
+  },
+  _connectorChanged() {
+    this.setState(this.getState())
+  }
+})
