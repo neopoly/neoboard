@@ -1,0 +1,19 @@
+{
+  "name": "neoboard",
+  "version": "0.0.0",
+  "authors": [
+    "Jonas Thiel <jt@neopoly.de>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "react": "~0.13.3",
+    "lodash": "~3.8.0"
+  }
+}
