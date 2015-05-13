@@ -1,1 +1,36 @@
 @import "normalize"
+
+*
+  box-sizing: border-box
+
+// Colors:
+$halfWhite: rgba(255,255,255,0.5)
+$white: rgba(255,255,255,1)
+
+// Dimensions:
+$defaultWidgetSize: 400px
+
+=widget($width: $defaultWidgetSize, $height: $defaultWidgetSize)
+  flex: 0 0 $width
+  height: $height
+  display: flex
+  flex-direction: column
+  justify-content: center
+  text-align: center
+
+.WidgetContainer
+  display: flex
+  flex-wrap: wrap
+  justify-content: center
+
+.TimeWidget
+  +widget
+  background: #361cab
+  .Date
+    font-size: 30px
+    font-weight: 400
+    color: $halfWhite
+  .Time
+    font-size: 76px
+    font-weight: 700
+    color: $white
