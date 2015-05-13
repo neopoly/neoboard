@@ -17,7 +17,7 @@ defmodule Neoboard.Mixfile do
   # Type `mix help compile.app` for more information
   def application do
     [mod: {Neoboard, []},
-     applications: [:phoenix, :phoenix_html, :cowboy, :logger]]
+     applications: [:phoenix, :phoenix_html, :cowboy, :logger, :httpoison]]
   end
 
   # Specifies which paths to compile per environment
@@ -32,6 +32,7 @@ defmodule Neoboard.Mixfile do
      {:phoenix_html, "~> 1.0"},
      {:phoenix_live_reload, "~> 0.4", only: :dev},
      {:cowboy, "~> 1.0"},
-     {:timex, "~> 0.13.4"}]
+     {:timex, "~> 0.13.4"},
+     {:httpoison, "~> 0.6"}]
   end
 end
