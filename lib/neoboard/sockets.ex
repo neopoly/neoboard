@@ -16,7 +16,7 @@ defmodule Neoboard.Sockets do
     Agent.update(@name, fn list -> List.delete(list, socket) end)
   end
 
-  def broadcast(message, payload) do
+  def broadcast!(message, payload) do
     Enum.each(all, fn socket -> Phoenix.Channel.push(socket, message, payload) end)
   end
 
