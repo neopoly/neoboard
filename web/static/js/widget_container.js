@@ -10,7 +10,7 @@ export default React.createClass({
       return React.createElement(widget, {channel: channel, key: i})
     }
     return (
-      <div className="widgets">
+      <div className="WidgetContainer">
         {this.props.widgets.map(renderWidget)}
       </div>
     );
