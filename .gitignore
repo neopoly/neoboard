@@ -23,3 +23,4 @@ erl_crash.dump
 # variables.
 /config/prod.secret.exs
 bower_components
+config/widgets.exs

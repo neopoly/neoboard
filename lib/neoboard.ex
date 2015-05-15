@@ -12,7 +12,8 @@ defmodule Neoboard do
       # Here you could define other workers and supervisors as children
       # worker(Neoboard.Widget.Time, [arg1, arg2, arg3]),
       worker(Neoboard.Widgets.Time, []),
-      worker(Neoboard.Widgets.Jenkins, [])
+      worker(Neoboard.Widgets.Jenkins, []),
+      worker(Neoboard.Widgets.Notepad, [])
     ]
 
     # See http://elixir-lang.org/docs/stable/elixir/Supervisor.html

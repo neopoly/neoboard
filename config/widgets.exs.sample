@@ -1,0 +1,7 @@
+use Mix.Config
+
+config :neoboard, Neoboard.Widgets.Notepad,
+  url: "https://internal.company.com/announcements",
+  every: 10000,
+  title: "Neopad",
+  info: "Edit via orga/wiki/DashboardNotepad"

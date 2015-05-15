@@ -1,0 +1,41 @@
+.NotepadWidget
+  +widget($height: 800px)
+  background: #ec7e2d
+  > h2
+    +font-medium
+    color: $halfWhite
+    position: absolute
+    left: 0
+    right: 0
+    top: 0
+  .content
+    margin: 0 16px
+    color: $twoThirdWhite
+    max-height: 80%
+    text-align: left
+    h2, h3, h4
+      margin: 18px 0 6px 0
+      color: $white
+      a.wiki-anchor
+        display: none
+    h2
+      font-size: 1.2rem
+      text-transform: uppercase
+    h3
+      font-size: 1.1rem
+    ul
+      list-style: none
+      margin: 0 0 0 12px
+      padding: 0
+      .value
+        float: right
+        margin-left: 12px
+    strong, b
+      color: $white
+      font-weight: normal
+  .info
+    position: absolute
+    left: 0
+    right: 0
+    bottom: 20px
+    color: $halfWhite
