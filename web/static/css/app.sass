@@ -5,6 +5,7 @@
 
 // Colors:
 $halfWhite: rgba(255,255,255,0.5)
+$thirdWhite: rgba(255,255,255,0.3)
 $white: rgba(255,255,255,1)
 
 // Dimensions:
@@ -18,6 +19,29 @@ $defaultWidgetSize: 400px
   justify-content: center
   text-align: center
 
+=inline-list()
+  list-style: none
+  margin: 0
+  padding: 0
+  > li
+    display: inline
+  > li:not(:last-child) a:after
+    content: " | "
+    color: $thirdWhite
+    margin-right: 5px
+
+=font-xlarge()
+  font-size: 100px
+  font-weight: 700
+
+=font-large()
+  font-size: 76px
+  font-weight: 700
+
+=font-medium()
+  font-size: 30px
+  font-weight: 400
+
 .WidgetContainer
   display: flex
   flex-wrap: wrap
@@ -27,10 +51,38 @@ $defaultWidgetSize: 400px
   +widget
   background: #361cab
   .Date
-    font-size: 30px
-    font-weight: 400
+    +font-medium
     color: $halfWhite
   .Time
-    font-size: 76px
-    font-weight: 700
+    +font-large
     color: $white
+
+.JenkinsWidget
+  +widget
+  text-align: center
+  color: $white
+
+  &.happy
+    background: #4ad55e
+  &.sad
+    background: #cd181b
+
+  h2
+    +font-xlarge
+    color: $halfWhite
+    margin: 0
+    line-height: 1.3em
+
+  .status
+    font-size: 150px
+    margin: 0
+    line-height: 0.9em
+
+  ul
+    +inline-list
+    max-height: 100px
+    margin-top: 25px
+    padding: 0 10px
+    li, a
+      color: $halfWhite
+      text-decoration: none
