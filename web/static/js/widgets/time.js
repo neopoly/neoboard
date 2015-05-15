@@ -29,7 +29,7 @@ const MyTime = React.createClass({
         <span>{this.props.sep}</span>
         <span>{d(this.props.s)}</span>
       </div>
-    );
+    )
   }
 })
 
@@ -50,7 +50,7 @@ const MyDate = React.createClass({
         <span>{this.props.sep}</span>
         <span>{d(this.props.y)}</span>
       </div>
-    );
+    )
   }
 })
 
@@ -68,7 +68,7 @@ export default React.createClass({
         <MyDate {...this.state.date}/>
         <MyTime {...this.state.time}/>
       </div>
-    );
+    )
   },
   transform(storeState){
     let now = new Date(storeState.now)

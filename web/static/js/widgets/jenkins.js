@@ -1,4 +1,5 @@
 import WidgetMixin from "../widget_mixin"
+import LastUpdatedAt from "../last_updated_at"
 
 const MAX_NUMBER_OF_JOBS = 10
 
@@ -22,8 +23,9 @@ export default React.createClass({
         <ul>
           {this._renderJobs()}
         </ul>
+        <LastUpdatedAt updated_at={this.state.updated_at}/>
       </div>
-    );
+    )
   },
   transform(storeState){
     return {
@@ -47,6 +49,6 @@ export default React.createClass({
       <li key={job.name}>
         <a href={job.url}>{job.name}</a>
       </li>
-    );
+    )
   }
 })

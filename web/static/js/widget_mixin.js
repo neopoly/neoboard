@@ -12,7 +12,10 @@ export default function(channelName) {
     },
     _onStoreChange() {
       let state = this.store.state
-      if(_.isFunction(this.transform)) state = this.transform(state)
+      if(_.isFunction(this.transform)) {
+        state = this.transform(state)
+        if(!state.updated_at) state.updated_at = this.store.state.updated_at
+      }
       this.setState(state)
     }
   }

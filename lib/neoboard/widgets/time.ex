@@ -1,5 +1,4 @@
 defmodule Neoboard.Widgets.Time do
-  use Timex
   use GenServer
   use Neoboard.Broadcaster
 
@@ -15,12 +14,8 @@ defmodule Neoboard.Widgets.Time do
   end
 
   def handle_info(:tick, _) do
-    now = format_datetime(Date.now)
+    now = Neoboard.TimeService.now_as_iso
     broadcast! %{now: now}
     {:noreply, now}
-  end
-
-  defp format_datetime(datetime) do
-    DateFormat.format!(datetime, "{ISO}")
   end
 end

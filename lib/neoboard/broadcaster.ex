@@ -16,8 +16,9 @@ defmodule Neoboard.Broadcaster do
   end
 
   def broadcast!(message, payload) do
-    Logger.debug("[#{@topic}] #{message} -> #{Poison.encode!(payload)}")
-    Neoboard.Endpoint.broadcast!(@topic, message, payload)
+    with_timestamp = add_timestamp!(payload)
+    Logger.debug("[#{@topic}] #{message} -> #{Poison.encode!(with_timestamp)}")
+    Neoboard.Endpoint.broadcast!(@topic, message, with_timestamp)
   end
 
   def module_to_message(module) do
@@ -26,5 +27,10 @@ defmodule Neoboard.Broadcaster do
     |> List.last
     |> String.downcase
     namespace <> ":state"
+  end
+
+  defp add_timestamp!(payload) do
+    now = Neoboard.TimeService.now_as_iso
+    Dict.put(payload, :updated_at, now)
   end
 end
