@@ -13,3 +13,8 @@ config :neoboard, Neoboard.Widgets.Jenkins,
 
 config :neoboard, Neoboard.Widgets.Time,
   every: 1000
+
+config :neoboard, Neoboard.Widgets.NichtLustig,
+  url: "http://static.nichtlustig.de/comics/full/",
+  base: "http://static.nichtlustig.de/comics/full/~s.jpg",
+  every: 300_000

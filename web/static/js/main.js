@@ -2,11 +2,13 @@ import App from "./app"
 import TimeWidget from "./widgets/time"
 import JenkinsWidget from "./widgets/jenkins"
 import NotepadWidget from "./widgets/notepad"
+import NichtLustigWidget from "./widgets/nicht_lustig"
 
 const widgets = [
 TimeWidget,
 JenkinsWidget,
-NotepadWidget
+NotepadWidget,
+NichtLustigWidget
 ]
 
 export default {
