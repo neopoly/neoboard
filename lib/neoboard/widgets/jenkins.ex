@@ -1,15 +1,12 @@
 defmodule Neoboard.Widgets.Jenkins do
   use GenServer
   use Neoboard.Broadcaster
-
-  @endpoint "http://ci.neopoly.de/api/json"
-  @every 10000
-  @failed_color "red"
+  use Neoboard.Config
 
   def start_link do
     {:ok, pid} = GenServer.start_link(__MODULE__, [])
     send(pid, :tick)
-    :timer.send_interval(@every, pid, :tick)
+    :timer.send_interval(config[:every], pid, :tick)
     {:ok, pid}
   end
 
@@ -21,7 +18,7 @@ defmodule Neoboard.Widgets.Jenkins do
 
   defp fetch do
     HTTPoison.start
-    {:ok, %HTTPoison.Response{status_code: 200, body: body}} = HTTPoison.get(@endpoint)
+    {:ok, %HTTPoison.Response{status_code: 200, body: body}} = HTTPoison.get(config[:url])
     response = process_body(body) |> build_response
     {:ok, response}
   end
@@ -38,6 +35,6 @@ defmodule Neoboard.Widgets.Jenkins do
 
   defp extract_failed_jobs!(%{"jobs" => jobs}) do
     jobs
-    |> Enum.filter(fn(j) -> j["color"] == @failed_color end)
+    |> Enum.filter(fn(j) -> j["color"] == config[:failed_color] end)
   end
 end

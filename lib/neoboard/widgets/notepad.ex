@@ -1,6 +1,7 @@
 defmodule Neoboard.Widgets.Notepad do
   use GenServer
   use Neoboard.Broadcaster
+  use Neoboard.Config
 
   @body_pattern ~r{<body>\s*(.*)</body>}s
 
@@ -28,9 +29,5 @@ defmodule Neoboard.Widgets.Notepad do
     c = Regex.run(@body_pattern, body, capture: :all_but_first)
         |> List.first
     %{content: c, title: config[:title], info: config[:info]}
-  end
-
-  defp config do
-    Application.get_env(:neoboard, Neoboard.Widgets.Notepad)
   end
 end

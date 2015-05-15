@@ -1,11 +1,12 @@
 defmodule Neoboard.Widgets.Time do
   use GenServer
   use Neoboard.Broadcaster
+  use Neoboard.Config
 
   def start_link do
     {:ok, pid} = GenServer.start_link(__MODULE__, [])
     send(pid, :tick)
-    :timer.send_interval(1000, pid, :tick)
+    :timer.send_interval(config[:every], pid, :tick)
     {:ok, pid}
   end
 
