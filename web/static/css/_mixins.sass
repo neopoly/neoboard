@@ -1,0 +1,40 @@
+// Dimensions:
+$defaultWidgetSize: 400px
+
+=widget($width: $defaultWidgetSize, $height: $defaultWidgetSize)
+  flex: 0 0 $width
+  height: $height
+  display: flex
+  flex-direction: column
+  justify-content: center
+  text-align: center
+  position: relative
+  div.updated_at
+    position: absolute
+    bottom: 10px
+    left: 0
+    right: 0
+    color: $thirdBlack
+
+=inline-list()
+  list-style: none
+  margin: 0
+  padding: 0
+  > li
+    display: inline
+  > li:not(:last-child) a:after
+    content: " | "
+    color: $thirdWhite
+    margin-right: 5px
+
+=font-xlarge()
+  font-size: 100px
+  font-weight: 700
+
+=font-large()
+  font-size: 76px
+  font-weight: 700
+
+=font-medium()
+  font-size: 30px
+  font-weight: 400
