@@ -1,7 +1,6 @@
 defmodule Neoboard.Widgets.Jenkins do
   use GenServer
   use Neoboard.Broadcaster
-  require Logger
 
   @endpoint "http://ci.neopoly.de/api/json"
   @every 10000
@@ -14,14 +13,10 @@ defmodule Neoboard.Widgets.Jenkins do
     {:ok, pid}
   end
 
-  def init([]) do
-    {:ok, []}
-  end
-
   def handle_info(:tick, _) do
     {:ok, reponse} = fetch
     broadcast! reponse
-    {:noreply, []}
+    {:noreply, nil}
   end
 
   defp fetch do
