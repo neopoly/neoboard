@@ -11,6 +11,7 @@ defmodule Neoboard do
       supervisor(Neoboard.Endpoint, []),
       # Here you could define other workers and supervisors as children
       # worker(Neoboard.Widget.Time, [arg1, arg2, arg3]),
+      worker(Neoboard.Broadcaster, []),
       worker(Neoboard.Widgets.Time, []),
       worker(Neoboard.Widgets.Jenkins, []),
       worker(Neoboard.Widgets.Notepad, []),

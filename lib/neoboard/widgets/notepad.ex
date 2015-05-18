@@ -1,6 +1,6 @@
 defmodule Neoboard.Widgets.Notepad do
   use GenServer
-  use Neoboard.Broadcaster
+  use Neoboard.Pusher
   use Neoboard.Config
 
   @body_pattern ~r{<body>\s*(.*)</body>}s
@@ -14,7 +14,7 @@ defmodule Neoboard.Widgets.Notepad do
 
   def handle_info(:tick, _) do
     {:ok, response} = fetch
-    broadcast! response
+    push! response
     {:noreply, nil}
   end
 

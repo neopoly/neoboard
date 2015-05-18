@@ -1,6 +1,6 @@
 defmodule Neoboard.Widgets.Jenkins do
   use GenServer
-  use Neoboard.Broadcaster
+  use Neoboard.Pusher
   use Neoboard.Config
 
   def start_link do
@@ -12,7 +12,7 @@ defmodule Neoboard.Widgets.Jenkins do
 
   def handle_info(:tick, _) do
     {:ok, reponse} = fetch
-    broadcast! reponse
+    push! reponse
     {:noreply, nil}
   end
 

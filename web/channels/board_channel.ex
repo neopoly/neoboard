@@ -7,14 +7,16 @@ defmodule Neoboard.BoardChannel do
     {:ok, socket}
   end
 
-  def terminate({trigger, reason}, socket) do
-    log("#{trigger} -> #{reason}")
+  def terminate(_reason, _socket) do
     send(self, :after_leave)
     :ok
   end
 
   def handle_info(:after_join, socket) do
     log("client joined")
+    Enum.map(Neoboard.Broadcaster.messages, fn {message, payload} ->
+      push(socket, message, payload)
+    end)
     {:noreply, socket}
   end
 

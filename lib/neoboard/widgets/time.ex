@@ -1,6 +1,6 @@
 defmodule Neoboard.Widgets.Time do
   use GenServer
-  use Neoboard.Broadcaster
+  use Neoboard.Pusher
   use Neoboard.Config
 
   def start_link do
@@ -12,7 +12,7 @@ defmodule Neoboard.Widgets.Time do
 
   def handle_info(:tick, _) do
     now = Neoboard.TimeService.now_as_iso
-    broadcast! %{now: now}
+    push! %{now: now}
     {:noreply, nil}
   end
 end

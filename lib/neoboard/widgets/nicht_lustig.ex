@@ -1,6 +1,6 @@
 defmodule Neoboard.Widgets.NichtLustig do
   use GenServer
-  use Neoboard.Broadcaster
+  use Neoboard.Pusher
   use Neoboard.Config
 
   @image_pattern ~r{href=".*?(\d+)\.jpg"}i
@@ -19,7 +19,7 @@ defmodule Neoboard.Widgets.NichtLustig do
 
   def handle_info(:tick, _) do
     {:ok, reponse} = fetch
-    broadcast! reponse
+    push! reponse
     {:noreply, nil}
   end
 
