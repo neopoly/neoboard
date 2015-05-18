@@ -13,7 +13,8 @@ defmodule Neoboard.WidgetSupervisor do
       worker(Neoboard.Widgets.Jenkins, []),
       worker(Neoboard.Widgets.Notepad, []),
       worker(Neoboard.Widgets.NichtLustig, []),
-      worker(Neoboard.Widgets.RedmineProjectTable, [])
+      worker(Neoboard.Widgets.RedmineProjectTable, []),
+      worker(Neoboard.Widgets.Gitter, [])
     ]
 
     supervise(children, strategy: :one_for_one)

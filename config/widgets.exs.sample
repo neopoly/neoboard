@@ -23,3 +23,10 @@ config :neoboard, Neoboard.Widgets.RedmineProjectTable,
   url: "https://redmine.company.com/projects/the_project/issues/gantt.png?month=~s&months=4&query_id=18&year=~s&zoom=2&r=~s",
   every: 300_000,
   title: "Timetable"
+
+config :neoboard, Neoboard.Widgets.Gitter,
+  room: "cryptic_room_id",
+  token: "your_access_token",
+  messages: 10,
+  every: 10_000,
+  title: "gitter.im/yourRoom"
