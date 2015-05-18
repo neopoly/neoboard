@@ -3,12 +3,14 @@ import TimeWidget from "./widgets/time"
 import JenkinsWidget from "./widgets/jenkins"
 import NotepadWidget from "./widgets/notepad"
 import NichtLustigWidget from "./widgets/nicht_lustig"
+import RedmineProjectTable from "./widgets/redmine_project_table"
 
 const widgets = [
 TimeWidget,
 JenkinsWidget,
 NotepadWidget,
-NichtLustigWidget
+NichtLustigWidget,
+RedmineProjectTable
 ]
 
 export default {

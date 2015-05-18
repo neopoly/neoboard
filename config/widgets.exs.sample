@@ -18,3 +18,8 @@ config :neoboard, Neoboard.Widgets.NichtLustig,
   url: "http://static.nichtlustig.de/comics/full/",
   base: "http://static.nichtlustig.de/comics/full/~s.jpg",
   every: 300_000
+
+config :neoboard, Neoboard.Widgets.RedmineProjectTable,
+  url: "https://redmine.company.com/projects/the_project/issues/gantt.png?month=~s&months=4&query_id=18&year=~s&zoom=2&r=~s",
+  every: 300_000,
+  title: "Timetable"
