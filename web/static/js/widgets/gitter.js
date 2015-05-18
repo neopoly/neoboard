@@ -16,7 +16,7 @@ export default React.createClass({
         <div className="scrollable">
           <div className="scrollable-content">
             <ol>
-              {this.state.messages.map(this._renderMessage)}
+              {this.state.messages.reverse().map(this._renderMessage)}
             </ol>
           </div>
         </div>

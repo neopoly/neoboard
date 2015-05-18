@@ -5,30 +5,66 @@ defmodule Neoboard.Widgets.Gitter do
 
   def start_link do
     {:ok, pid} = GenServer.start_link(__MODULE__, :ok)
-    send(pid, :tick)
-    :timer.send_interval(config[:every], pid, :tick)
+    GenServer.cast(pid, :listen)
     {:ok, pid}
   end
 
-  def handle_info(:tick, _) do
-    push! %{messages: fetch, title: config[:title]}
-    {:noreply, nil}
+  def init(:ok) do
+    {:ok, []}
+  end
+
+  def handle_info(%HTTPoison.AsyncChunk{chunk: chunk}, state) do
+    cond do
+      String.match?(chunk, ~r/\{.*\}/) ->
+        message = chunk |> Poison.decode!
+        updated = [message | state]
+        push_messages! updated
+        {:noreply, updated}
+      true ->
+        # ignore all whitespace and other nonsense
+        {:noreply, state}
+    end
+  end
+
+  def handle_info(%HTTPoison.AsyncEnd{}, state) do
+    # in this case something went wrong, so lets crash
+    {:stop, "Stream ended", state}
+  end
+
+  def handle_info(request, state) do
+    super(request, state)
+  end
+
+  def handle_cast(:listen, _state) do
+    messages = fetch
+    push_messages! messages
+    do_listen
+    {:noreply, messages}
   end
 
   defp fetch do
     HTTPoison.start
-    {:ok, %HTTPoison.Response{status_code: 200, body: body}} = HTTPoison.get(url, header)
-    body |> Poison.decode!
+    {:ok, %HTTPoison.Response{status_code: 200, body: body}} = HTTPoison.get(url, headers)
+    body |> Poison.decode! |> Enum.reverse
   end
 
-  defp header do
+  defp push_messages!(messages) do
+    push! %{messages: messages, title: config[:title]}
+  end
+
+  defp headers do
     %{
       "Authorization" => "Bearer #{config[:token]}",
       "Accept" => "application/json"
     }
   end
 
-  def url(host \\ "api.gitter.im") do
+  defp url(host \\ "api.gitter.im") do
     "https://#{host}/v1/rooms/#{config[:room]}/chatMessages?limit=#{config[:messages]}"
+  end
+
+  defp do_listen do
+    HTTPoison.start
+    HTTPoison.get! url("stream.gitter.im"), headers, [stream_to: self]
   end
 end

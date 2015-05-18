@@ -47,10 +47,15 @@
         font-size: 0.7rem
 
       p
+        display: -webkit-box
         color: $twoThirdWhite
         font-size: 0.9rem
         max-height: 75px
         margin: 0
+        -webkit-line-clamp: 4
+        -webkit-box-orient: vertical
+        overflow: hidden
+        text-overflow: ellipsis
 
     .clear
       clear: both
