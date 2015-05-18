@@ -7,15 +7,9 @@ defmodule Neoboard do
     import Supervisor.Spec, warn: false
 
     children = [
-      # Start the endpoint when the application starts
       supervisor(Neoboard.Endpoint, []),
-      # Here you could define other workers and supervisors as children
-      # worker(Neoboard.Widget.Time, [arg1, arg2, arg3]),
-      worker(Neoboard.Broadcaster, []),
-      worker(Neoboard.Widgets.Time, []),
-      worker(Neoboard.Widgets.Jenkins, []),
-      worker(Neoboard.Widgets.Notepad, []),
-      worker(Neoboard.Widgets.NichtLustig, [])
+      supervisor(Neoboard.WidgetSupervisor, []),
+      worker(Neoboard.Broadcaster, [])
     ]
 
     # See http://elixir-lang.org/docs/stable/elixir/Supervisor.html
