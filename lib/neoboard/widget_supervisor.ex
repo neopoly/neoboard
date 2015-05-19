@@ -6,17 +6,7 @@ defmodule Neoboard.WidgetSupervisor do
   end
 
   def init([]) do
-    children = [
-      # Here you could define other workers
-      # worker(Neoboard.Widget.Time, [arg1, arg2, arg3]),
-      worker(Neoboard.Widgets.Time, []),
-      worker(Neoboard.Widgets.Jenkins, []),
-      worker(Neoboard.Widgets.Notepad, []),
-      worker(Neoboard.Widgets.NichtLustig, []),
-      worker(Neoboard.Widgets.RedmineProjectTable, []),
-      worker(Neoboard.Widgets.Gitter, [])
-    ]
-
+    children = Enum.map(Neoboard.Widgets.enabled, &(worker(&1, [])))
     supervise(children, strategy: :one_for_one)
   end
 end
