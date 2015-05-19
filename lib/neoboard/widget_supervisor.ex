@@ -6,7 +6,12 @@ defmodule Neoboard.WidgetSupervisor do
   end
 
   def init([]) do
-    children = Enum.map(Neoboard.Widgets.enabled, &(worker(&1, [])))
+    cond do
+      Neoboard.Widgets.auto_start? ->
+        children = Enum.map(Neoboard.Widgets.enabled, &(worker(&1, [])))
+      true ->
+        children = []
+    end
     supervise(children, strategy: :one_for_one)
   end
 end

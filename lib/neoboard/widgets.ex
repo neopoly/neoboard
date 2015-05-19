@@ -5,7 +5,15 @@ defmodule Neoboard.Widgets do
     |> Enum.filter(&widget_module?/1)
   end
 
+  def auto_start? do
+    Dict.get(config, :auto_start, true)
+  end
+
   defp widget_module?(mod) do
     to_string(mod) |> String.match?(~r/Neoboard\.Widgets\.\w+/)
+  end
+
+  defp config do
+    Application.get_env(:neoboard, __MODULE__, Keyword.new)
   end
 end

@@ -8,8 +8,8 @@ defmodule Neoboard do
 
     children = [
       supervisor(Neoboard.Endpoint, []),
-      supervisor(Neoboard.WidgetSupervisor, []),
-      worker(Neoboard.Broadcaster, [])
+      worker(Neoboard.Broadcaster, []),
+      supervisor(Neoboard.WidgetSupervisor, [])
     ]
 
     # See http://elixir-lang.org/docs/stable/elixir/Supervisor.html

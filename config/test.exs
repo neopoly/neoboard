@@ -8,3 +8,7 @@ config :neoboard, Neoboard.Endpoint,
 
 # Print only warnings and errors during test
 config :logger, level: :warn
+
+# Configures Neoboard's widget
+config :neoboard, Neoboard.Widgets,
+  auto_start: false
