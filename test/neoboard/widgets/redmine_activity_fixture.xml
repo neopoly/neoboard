@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Redmine: Aktivität</title>
+  <link rel="self" href="https://redmine.company.com/activity.atom?key=SECRET_KEY"/>
+  <link rel="alternate" href="https://redmine.company.com/activity"/>
+  <id>https://redmine.company.com/</id>
+  <icon>https://redmine.company.com/favicon.ico</icon>
+  <updated>2015-05-19T10:19:27Z</updated>
+  <author>
+    <name>Redmine</name>
+  </author>
+  <generator uri="http://www.redmine.org/">
+Redmine  </generator>
+  <entry>
+    <title>project1 - Bug #27936 (Closed): Bug title</title>
+    <link rel="alternate" href="https://redmine.company.com/issues/27936#change-54970"/>
+    <id>https://redmine.company.com/issues/27936#change-54970</id>
+    <updated>2015-05-19T10:19:27Z</updated>
+    <author>
+      <name>Max Mustermann</name>
+      <email>mm@company.com</email>
+    </author>
+    <content type="html">
+    </content>
+  </entry>
+  <entry>
+    <title>project2 - Task #27946 (New): Task title</title>
+    <link rel="alternate" href="https://redmine.company.com/issues/27946"/>
+    <id>https://redmine.company.com/issues/27946</id>
+    <updated>2015-05-19T10:07:33Z</updated>
+    <author>
+      <name>Anette Adam</name>
+      <email>aa@company.com</email>
+    </author>
+    <content type="html">
+&lt;p&gt;This is some longer ticket description*&lt;/p&gt;
+
+
+  &lt;p&gt;This only makes sense longer tickets.&lt;/p&gt;
+      </content>
+  </entry>
+  <entry>
+    <title>project1 - Task #27903 (In Progress): Another task title</title>
+    <link rel="alternate" href="https://redmine.company.com/issues/27903#change-54967"/>
+    <id>https://redmine.company.com/issues/27903#change-54967</id>
+    <updated>2015-05-19T08:56:01Z</updated>
+    <author>
+      <name>Anette Adam</name>
+      <email>aa@company.com</email>
+    </author>
+    <content type="html">
+    </content>
+  </entry>
+  <entry>
+    <title>project3 - Revision 706ee6fd (project3): Merge branch 'feature-xyz'</title>
+    <link rel="alternate" href="https://redmine.company.com/projects/project3/repository/revisions/706ee6fd874515cb6de082d1a9a22dda1709a249"/>
+    <id>https://redmine.company.com/projects/project3/repository/revisions/706ee6fd874515cb6de082d1a9a22dda1709a249</id>
+    <updated>2015-05-18T15:02:59Z</updated>
+    <author>
+      <name>Peter Paul</name>
+      <email>pp@company.com</email>
+    </author>
+    <content type="html">
+    </content>
+  </entry>
+</feed>

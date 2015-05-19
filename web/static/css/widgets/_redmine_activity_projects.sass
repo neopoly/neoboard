@@ -1,0 +1,52 @@
+$avatarSize: 48px
+
+.RedmineActivityProjectsWidget
+  +widget($height: 800px)
+  background: #254763
+  justify-content: flex-start
+
+  > h2
+    +font-medium
+    color: $halfWhite
+
+  ol.projects, ol.users
+    list-style: none
+    margin: 0
+    padding: 0
+    text-align: left
+
+  ol.projects
+    margin: 0 12px
+    overflow: hidden
+    max-height: 81%
+    > li
+      margin-bottom: 5px
+      span.name, span.activity
+        color: $twoThirdWhite
+      span.updated_at
+        color: $halfWhite
+        font-size: 0.2rem
+      span.activity
+        float: right
+      ol.users
+        overflow: hidden
+        transition: line-height 250ms ease-out
+        transition: height 250ms ease-out
+        line-height: 0
+        height: 0
+        > li
+          display: inline
+          img
+            width: $avatarSize
+            height: $avatarSize
+            opacity: 0
+            transition: opacity 500ms ease-out
+
+      &:hover, &.full
+        span.name
+          color: $white
+        ol.users
+          line-height: $avatarSize
+          height: $avatarSize
+          > li img
+            opacity: 1
