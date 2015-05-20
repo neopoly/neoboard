@@ -1,0 +1,75 @@
+$background-blur: 16px
+
+.OwncloudImagesWidget
+  +widget($height: 400px)
+  background: black
+  overflow: hidden
+
+  .empty
+    color: $halfWhite
+
+  .image, .image > div
+    height: 100%
+    width: 100%
+
+  .image > div
+    position: absolute
+    top: 0
+    left: 0
+
+  .background
+    width: 110%
+    height: 110%
+    position: absolute
+    top: -5%
+    left: -5%
+    overflow: hidden
+    img
+      opacity: 0.5
+      width: 100%
+      height: 100%
+      +filter(blur($background-blur))
+      z-index: 1
+
+  .foreground
+    z-index: 2
+    position: relative
+    width: 100%
+    height: 100%
+    img
+      position: relative
+      width: auto
+      height: auto
+      max-height: 100%
+      max-width: 100%
+      top: 50%
+      transform: translateY(-50%)
+
+  .legend
+    position: absolute
+    bottom: 10px
+    left: 0
+    width: 100%
+    color: $white
+    font-size: 0.7rem
+    text-align: carousel-enter
+    z-index: 3
+    text-shadow: 0 2px 3px $halfBlack
+    .name
+      margin-right: 10px
+
+  //animations
+
+  .carousel-enter
+    opacity: 0.01
+    transition: opacity 0.5s ease-in
+
+  .carousel-enter.carousel-enter-active
+    opacity: 1
+
+  .carousel-leave
+    opacity: 1
+    transition: opacity 0.5s ease-in
+
+  .carousel-leave.carousel-leave-active
+    opacity: 0.01

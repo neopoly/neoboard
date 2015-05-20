@@ -30,3 +30,7 @@ config :neoboard, Neoboard.Widgets.Gitter,
   messages: 10,
   every: 10_000,
   title: "gitter.im/yourRoom"
+
+config :neoboard, Neoboard.Widgets.OwncloudImages,
+  url: "https://owncloud.company.com/public.php?service=files&t=SECRET_TOKEN",
+  every: 10_000

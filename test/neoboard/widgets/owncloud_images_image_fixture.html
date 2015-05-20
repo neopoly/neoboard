@@ -1,0 +1,53 @@
+
+<!DOCTYPE html>
+<!--[if lt IE 7]><html class="ng-csp ie ie6 lte9 lte8 lte7"><![endif]-->
+<!--[if IE 7]><html class="ng-csp ie ie7 lte9 lte8 lte7"><![endif]-->
+<!--[if IE 8]><html class="ng-csp ie ie8 lte9 lte8"><![endif]-->
+<!--[if IE 9]><html class="ng-csp ie ie9 lte9"><![endif]-->
+<!--[if gt IE 9]><html class="ng-csp ie"><![endif]-->
+<!--[if !IE]><!--><html class="ng-csp"><!--<![endif]-->
+  <head>
+    <title>ownCloud</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="shortcut icon" href="/owncloud/core/img/favicon.png" />
+    <link rel="apple-touch-icon-precomposed" href="/owncloud/core/img/favicon-touch.png" />
+          <link rel="stylesheet" href="/owncloud/remote.php/core.css?v=f0873a91b499e265ff6d78ff6e8985a0" type="text/css" media="screen" />
+          <link rel="stylesheet" href="/owncloud/index.php/apps/files_sharing/css/public.css?v=f0873a91b499e265ff6d78ff6e8985a0" type="text/css" media="screen" />
+              <script type="text/javascript" src="/owncloud/index.php/core/js/config.js?v=f0873a91b499e265ff6d78ff6e8985a0"></script>
+          <script type="text/javascript" src="/owncloud/remote.php/core.js?v=f0873a91b499e265ff6d78ff6e8985a0"></script>
+          <script type="text/javascript" src="/owncloud/apps/files_sharing/js/public.js?v=f0873a91b499e265ff6d78ff6e8985a0"></script>
+          <script type="text/javascript" src="/owncloud/apps/files/js/fileactions.js?v=f0873a91b499e265ff6d78ff6e8985a0"></script>
+          </head>
+
+  <body>
+    <input type="hidden" name="dir" value="/folder1/subdir" id="dir">
+<input type="hidden" name="downloadURL" value="https://owncloud.company.com/public.php?service=files&amp;t=SECRET_TOKEN&amp;download&amp;path=%2Ffolder1%2FIMG_0315.JPG" id="downloadURL">
+<input type="hidden" name="filename" value="IMG_0315.JPG" id="filename">
+<input type="hidden" name="mimetype" value="image/jpeg" id="mimetype">
+<header><div id="header">
+  <a href="/owncloud/index.php" title="" id="owncloud"><img class="svg"
+    src="/owncloud/core/img/logo-wide.svg" alt="ownCloud" /></a>
+  <div class="header-right">
+      <span id="details">COMPANY hat die Datei IMAGES mit Dir geteilt</span>
+            <a href="https://owncloud.company.com/public.php?service=files&amp;t=SECRET_TOKEN&amp;download&amp;path=%2Ffolder1%2FIMG_0315.JPG" class="button" id="download"><img
+        class="svg" alt="Download" src="/owncloud/core/img/actions/download.svg"
+        />Download</a>
+      </div>
+</div></header>
+<div id="preview">
+            <div id="imgframe">
+        <img src="https://owncloud.company.com/public.php?service=files&amp;t=SECRET_TOKEN&amp;download&amp;path=%2Ffolder1%2FIMG_0315.JPG" />
+      </div>
+        <ul id="noPreview">
+      <li class="error">
+        Es ist keine Vorschau verf&uuml;gbar f&uuml;r IMAGES<br />
+        <a href="https://owncloud.company.com/public.php?service=files&amp;t=SECRET_TOKEN&amp;download&amp;path=%2Ffolder1%2FIMG_0315.JPG" id="download"><img class="svg" alt="Download"
+          src="/owncloud/core/img/actions/download.svg"
+          />Download</a>
+      </li>
+    </ul>
+  </div>
+<footer><p class="info"><a href="http://owncloud.org/">ownCloud</a> &ndash;
+Web-Services unter Deiner Kontrolle</p></footer>
+  </body>
+</html>

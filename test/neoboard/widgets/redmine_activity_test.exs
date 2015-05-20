@@ -1,7 +1,7 @@
 defmodule Neoboard.Widgets.RedmineActivityTest do
   use ExUnit.Case, async: true
   use Timex
-  alias Neoboard.Widgets.RedmineActivity.Parser, as: Parser
+  alias Neoboard.Widgets.RedmineActivity.Parser
 
   setup do
     {:ok, xml: load_fixture!}

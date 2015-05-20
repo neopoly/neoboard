@@ -1,0 +1,228 @@
+
+<!DOCTYPE html>
+<!--[if lt IE 7]><html class="ng-csp ie ie6 lte9 lte8 lte7"><![endif]-->
+<!--[if IE 7]><html class="ng-csp ie ie7 lte9 lte8 lte7"><![endif]-->
+<!--[if IE 8]><html class="ng-csp ie ie8 lte9 lte8"><![endif]-->
+<!--[if IE 9]><html class="ng-csp ie ie9 lte9"><![endif]-->
+<!--[if gt IE 9]><html class="ng-csp ie"><![endif]-->
+<!--[if !IE]><!--><html class="ng-csp"><!--<![endif]-->
+  <head>
+    <title>ownCloud</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="shortcut icon" href="/owncloud/core/img/favicon.png" />
+    <link rel="apple-touch-icon-precomposed" href="/owncloud/core/img/favicon-touch.png" />
+          <link rel="stylesheet" href="/owncloud/remote.php/core.css?v=f0873a91b499e265ff6d78ff6e8985a0" type="text/css" media="screen" />
+          <link rel="stylesheet" href="/owncloud/index.php/apps/files_sharing/css/public.css?v=f0873a91b499e265ff6d78ff6e8985a0" type="text/css" media="screen" />
+          <link rel="stylesheet" href="/owncloud/index.php/apps/files/css/files.css?v=f0873a91b499e265ff6d78ff6e8985a0" type="text/css" media="screen" />
+              <script type="text/javascript" src="/owncloud/index.php/core/js/config.js?v=f0873a91b499e265ff6d78ff6e8985a0"></script>
+          <script type="text/javascript" src="/owncloud/remote.php/core.js?v=f0873a91b499e265ff6d78ff6e8985a0"></script>
+          <script type="text/javascript" src="/owncloud/apps/files_sharing/js/public.js?v=f0873a91b499e265ff6d78ff6e8985a0"></script>
+          <script type="text/javascript" src="/owncloud/apps/files/js/fileactions.js?v=f0873a91b499e265ff6d78ff6e8985a0"></script>
+          <script type="text/javascript" src="/owncloud/apps/files/js/files.js?v=f0873a91b499e265ff6d78ff6e8985a0"></script>
+          <script type="text/javascript" src="/owncloud/apps/files/js/filelist.js?v=f0873a91b499e265ff6d78ff6e8985a0"></script>
+          <script type="text/javascript" src="/owncloud/apps/files/js/keyboardshortcuts.js?v=f0873a91b499e265ff6d78ff6e8985a0"></script>
+          </head>
+
+  <body>
+    <input type="hidden" name="dir" value="" id="dir">
+<input type="hidden" name="downloadURL" value="https://owncloud.company.com/public.php?service=files&amp;t=SECRET_TOKEN&amp;download&amp;path=" id="downloadURL">
+<input type="hidden" name="filename" value="the folder" id="filename">
+<input type="hidden" name="mimetype" value="httpd/unix-directory" id="mimetype">
+<header><div id="header">
+  <a href="/owncloud/index.php" title="" id="owncloud"><img class="svg"
+    src="/owncloud/core/img/logo-wide.svg" alt="ownCloud" /></a>
+  <div class="header-right">
+      <span id="details">COMPANY hat den Ordner IMAGES mit Dir geteilt</span>
+            <a href="https://owncloud.company.com/public.php?service=files&amp;t=SECRET_TOKEN&amp;download&amp;path=" class="button" id="download"><img
+        class="svg" alt="Download" src="/owncloud/core/img/actions/download.svg"
+        />Download</a>
+      </div>
+</div></header>
+<div id="preview">
+      <!--[if IE 8]><style>input[type="checkbox"]{padding:0;}table td{position:static !important;}</style><![endif]-->
+<div id="controls">
+        <div class="actions"><input type="button" disabled value="Du besitzt hier keine Schreib-Berechtigung."></div>
+    <input type="hidden" name="dir" value="" id="dir">
+    <input type="hidden" name="permissions" value="0" id="permissions">
+</div>
+
+
+<table id="filestable">
+  <thead>
+    <tr>
+      <th id='headerName'>
+        <input type="checkbox" id="select_all" />
+        <span class='name'>Name</span>
+        <span class='selectedActions'>
+                      <a href="" class="download">
+              <img class="svg" alt="Download"
+                 src="/owncloud/core/img/actions/download.svg" />
+              Herunterladen           </a>
+                  </span>
+      </th>
+      <th id="headerSize">Gr&ouml;&szlig;e</th>
+      <th id="headerDate">
+        <span id="modified">Bearbeitet</span>
+              </th>
+    </tr>
+  </thead>
+  <tbody id="fileList">
+    <input type="hidden" id="disableSharing" data-status="1">
+
+  <tr data-id="2603"
+    data-file="folder1"
+    data-type="dir"
+    data-mime="httpd/unix-directory"
+    data-size='312334896'
+    data-permissions='1'>
+    <td class="filename svg"
+          style="background-image:url(/owncloud/core/img/filetypes/folder.png)"
+          >
+    <input type="checkbox" />         <a class="name" href="https://owncloud.company.com/public.php?service=files&amp;t=SECRET_TOKEN&amp;path=//folder1" title="">
+          <span class="nametext">
+                  folder1              </span>
+              <span class="uploadtext" currentUploads="0">
+        </span>
+            </a>
+    </td>
+    <td class="filesize"
+      title="297.9 MB"
+      style="color:rgb(0,0,0)">
+        297.9   </td>
+    <td class="date">
+      <span class="modified"
+          title="01.01.1970 00:00:00"
+          style="color:rgb(200,200,200)">
+        Vor 2 Monaten     </span>
+    </td>
+  </tr>
+  <tr data-id="2605"
+    data-file="folder2"
+    data-type="dir"
+    data-mime="httpd/unix-directory"
+    data-size='0'
+    data-permissions='1'>
+    <td class="filename svg"
+          style="background-image:url(/owncloud/core/img/filetypes/folder.png)"
+          >
+    <input type="checkbox" />         <a class="name" href="https://owncloud.company.com/public.php?service=files&amp;t=SECRET_TOKEN&amp;path=//folder2" title="">
+          <span class="nametext">
+                  folder2             </span>
+              <span class="uploadtext" currentUploads="0">
+        </span>
+            </a>
+    </td>
+    <td class="filesize"
+      title="0 B"
+      style="color:rgb(200,200,200)">
+        0   </td>
+    <td class="date">
+      <span class="modified"
+          title="20.05.4896 14:26:49"
+          style="color:rgb(200,200,200)">
+        Vor 2 Monaten     </span>
+    </td>
+  </tr>
+  <tr data-id="2804"
+    data-file="IMG_0001.JPG"
+    data-type="file"
+    data-mime="image/jpeg"
+    data-size='2976317'
+    data-permissions='1'>
+    <td class="filename svg"
+          style="background-image:url(/owncloud/core/img/filetypes/image.png)"
+          >
+    <input type="checkbox" />         <a class="name" href="https://owncloud.company.com/public.php?service=files&amp;t=SECRET_TOKEN&amp;download&amp;path=/IMG_0001.JPG" title="">
+          <span class="nametext">
+                  IMG_0001<span class='extension'>.JPG</span>
+              </span>
+            </a>
+    </td>
+    <td class="filesize"
+      title="2.8 MB"
+      style="color:rgb(194,194,194)">
+        2.8   </td>
+    <td class="date">
+      <span class="modified"
+          title="20.05.8368 14:26:49"
+          style="color:rgb(200,200,200)">
+        Vor 2 Monaten     </span>
+    </td>
+  </tr>
+  <tr data-id="2803"
+    data-file="IMG_0002.JPG"
+    data-type="file"
+    data-mime="image/jpeg"
+    data-size='2962772'
+    data-permissions='1'>
+    <td class="filename svg"
+          style="background-image:url(/owncloud/core/img/filetypes/image.png)"
+          >
+    <input type="checkbox" />         <a class="name" href="https://owncloud.company.com/public.php?service=files&amp;t=SECRET_TOKEN&amp;download&amp;path=/folder1/IMG_0002.JPG" title="">
+          <span class="nametext">
+                  IMG_0002<span class='extension'>.JPG</span>
+              </span>
+            </a>
+    </td>
+    <td class="filesize"
+      title="2.8 MB"
+      style="color:rgb(194,194,194)">
+        2.8   </td>
+    <td class="date">
+      <span class="modified"
+          title="20.05.8367 14:26:49"
+          style="color:rgb(200,200,200)">
+        Vor 2 Monaten     </span>
+    </td>
+  </tr>
+  <tr data-id="2609"
+    data-file="folder3"
+    data-type="dir"
+    data-mime="httpd/unix-directory"
+    data-size='58173069'
+    data-permissions='1'>
+    <td class="filename svg"
+          style="background-image:url(/owncloud/core/img/filetypes/folder.png)"
+          >
+    <input type="checkbox" />         <a class="name" href="https://owncloud.company.com/public.php?service=files&amp;t=SECRET_TOKEN&amp;path=//folder3" title="">
+          <span class="nametext">
+                  folder3              </span>
+              <span class="uploadtext" currentUploads="0">
+        </span>
+            </a>
+    </td>
+    <td class="filesize"
+      title="55.5 MB"
+      style="color:rgb(89,89,89)">
+        55.5    </td>
+    <td class="date">
+      <span class="modified"
+          title="20.05.6653 14:26:49"
+          style="color:rgb(200,200,200)">
+        Vor 2 Monaten     </span>
+    </td>
+  </tr>
+  </tbody>
+</table>
+<div id="editor"></div>
+<div id="uploadsize-message" title="Upload zu gro&szlig;">
+  <p>
+  Die Datei &uuml;berschreitet die Maximalgr&ouml;&szlig;e f&uuml;r Uploads auf diesem Server.  </p>
+</div>
+<div id="scanning-message">
+  <h3>
+    Dateien werden gescannt, bitte warten. <span id='scan-count'></span>
+  </h3>
+  <p>
+    Scanne <span id='scan-current'></span>
+  </p>
+</div>
+
+<!-- config hints for javascript -->
+<input type="hidden" name="allowZipDownload" id="allowZipDownload" value="1" />
+<input type="hidden" name="usedSpacePercent" id="usedSpacePercent" value="0" />
+  </div>
+<footer><p class="info"><a href="http://owncloud.org/">ownCloud</a> &ndash;
+Web-Services unter Deiner Kontrolle</p></footer>
+  </body>
+</html>

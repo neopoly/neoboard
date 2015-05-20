@@ -16,5 +16,10 @@
     "react": "~0.13.3",
     "lodash": "~3.8.0",
     "classnames": "~2.1.1"
+  },
+  "overrides": {
+    "react": {
+      "main": "react-with-addons.js"
+    }
   }
 }
