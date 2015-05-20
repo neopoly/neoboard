@@ -132,6 +132,7 @@ defmodule Neoboard.Widgets.OwncloudImages.FolderDoc do
   defp file_name(doc) do
     Regex.run(~r{data-file="([^"]+)"}i, doc, capture: :all_but_first)
     |> List.first
+    |> URI.decode_www_form
   end
 end
 
