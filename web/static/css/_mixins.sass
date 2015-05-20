@@ -24,7 +24,8 @@ $defaultWidgetSize: 400px
   padding: 0
   > li
     display: inline
-  > li:not(:last-child) a:after
+  > li:not(:last-child) > a:after,
+  > li:not(:last-child) > span:after
     content: " | "
     color: $thirdWhite
     margin-right: 5px

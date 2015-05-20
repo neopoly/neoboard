@@ -6,11 +6,13 @@ import NichtLustigWidget from "./widgets/nicht_lustig"
 import RedmineProjectTable from "./widgets/redmine_project_table"
 import Gitter from "./widgets/gitter"
 import RedmineActivityProjects from "./widgets/redmine_activity_projects"
+import RedmineActivityUsers from "./widgets/redmine_activity_users"
 import OwncloudImages from "./widgets/owncloud_images"
 
 const widgets = [
 Gitter,
 RedmineActivityProjects,
+RedmineActivityUsers,
 OwncloudImages,
 TimeWidget,
 JenkinsWidget,

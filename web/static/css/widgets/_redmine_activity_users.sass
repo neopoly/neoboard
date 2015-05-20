@@ -1,0 +1,55 @@
+.RedmineActivityUsersWidget
+  +widget
+  background: $black
+  overflow: hidden
+
+  div.updated_at
+    z-index: 5
+    color: $halfWhite
+
+  .user
+    color: $white
+
+    > div
+      position: absolute
+      top: 0
+      left: 0
+      height: 100%
+      width: 100%
+
+    img
+      position: absolute
+      left: 0
+      top: 0
+      height: 100%
+      width: 100%
+      z-index: 1
+      opacity: 0.5
+
+    .info
+      position: absolute
+      z-index: 2
+      top: 50%
+      left: 0
+      width: 100%
+      transform: translateY(-50%)
+
+    ol
+      +inline-list
+      color: $twoThirdWhite
+
+  //animations
+
+  .carousel-enter
+    opacity: 0.01
+    transition: opacity 0.5s ease-in
+
+  .carousel-enter.carousel-enter-active
+    opacity: 1
+
+  .carousel-leave
+    opacity: 1
+    transition: opacity 0.5s ease-in
+
+  .carousel-leave.carousel-leave-active
+    opacity: 0.01
