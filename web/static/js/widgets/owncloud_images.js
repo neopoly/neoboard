@@ -29,11 +29,18 @@ export default React.createClass({
           <div className="background"><img src={this.state.url}/></div>
           <div className="foreground"><img src={this.state.url} alt={this.state.name}/></div>
           <div className="legend">
-            <span className="name">{this.state.name}</span>
+            <span className="path">{this._path(this.state.path)}</span>
             <span className="counter">{this.state.current} / {this.state.count}</span>
           </div>
         </div>
       </ReactCSSTransitionGroup>
     )
+  },
+  _path(path){
+    // transform "/dir_one/dir2" -> "Dir One / Dir2"
+    return path.split("/")
+      .filter(s => s.length > 0)
+      .map(_.startCase)
+      .join(" / ")
   }
 })

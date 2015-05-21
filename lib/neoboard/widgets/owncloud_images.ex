@@ -34,41 +34,19 @@ defmodule Neoboard.Widgets.OwncloudImages do
     %{images: images, count: length(images), current: 0}
   end
 
-  defp push_image!(%{images: [{name, url} | images], current: current, count: count}) do
+  defp push_image!(%{images: [%{name: name, url: url, path: path} | images], current: current, count: count}) do
     next = current + 1
-    push! %{name: name, url: url, current: next, count: count}
+    push! %{name: name, url: url, path: path, current: next, count: count}
     :timer.send_after(config[:every], self, :tick)
     %{images: images, current: next, count: count}
   end
 end
 
-defmodule Neoboard.Widgets.OwncloudImages.Folder do
-  defstruct name: nil, url: nil
-  @type t :: %__MODULE__{name: String.t, url: String.t}
-
-  def build({name, url}) do
-    %__MODULE__{name: name, url: url}
-  end
-end
-
-defmodule Neoboard.Widgets.OwncloudImages.Image do
-  defstruct name: nil, url: nil
-  @type t :: %__MODULE__{name: String.t, url: String.t}
-
-  def build({name, url}) do
-    %__MODULE__{name: name, url: url}
-  end
-end
-
 defmodule Neoboard.Widgets.OwncloudImages.Parser do
-  alias Neoboard.Widgets.OwncloudImages.Folder
-  alias Neoboard.Widgets.OwncloudImages.Image
   alias Neoboard.Widgets.OwncloudImages.FolderDoc
-  alias Neoboard.Widgets.OwncloudImages.ImageDoc
 
   def parse!(source) do
-    folder = %Folder{url: source}
-    collect_images(folder)
+    collect_images(%{url: source})
   end
 
   defp load!(url) do
@@ -77,45 +55,52 @@ defmodule Neoboard.Widgets.OwncloudImages.Parser do
   end
 
   defp collect_images([]), do: []
-  defp collect_images([%Folder{} = folder | tail]) do
+  defp collect_images([folder | tail]) do
     collect_images(folder) ++ collect_images(tail)
   end
-  defp collect_images(%Folder{url: url}) do
-    doc = load!(url)
-    folders =
-      FolderDoc.find_folders(doc, url)
-      |> Enum.map(&Folder.build/1)
-    images =
-      FolderDoc.find_images(doc, url)
-      |> Enum.map(&Image.build/1)
-    collect_images(folders) ++ collect_images(images)
-  end
-  defp collect_images([%Image{} = image | tail]) do
-    [collect_image(image) | collect_images(tail)]
-  end
-  defp collect_image(%Image{url: url}) do
-    image = load!(url) |> ImageDoc.extract_image
-    image
+  defp collect_images(%{url: url}) do
+    doc     = load!(url)
+    folders = FolderDoc.find_folders(doc, url)
+    images  = FolderDoc.find_images(doc)
+    collect_images(folders) ++ images
   end
 end
 
 defmodule Neoboard.Widgets.OwncloudImages.FolderDoc do
+  alias Neoboard.Widgets.OwncloudImages.DocHelper
+
   def find_folders(doc, base_url) do
     doc
-    |> all(~r{<tr[^>]+data-type="dir".*</tr>}isr)
-    |> Enum.map(&(extract_name_and_url(&1, base_url)))
+    |> DocHelper.all(~r{<tr[^>]+data-type="dir".*</tr>}isr)
+    |> Enum.map(fn row ->
+      name = file_name(row)
+      url  = build_folder_url(base_url, name)
+      %{name: name, url: url}
+    end)
   end
 
-  def find_images(doc, base_url) do
+  def find_images(doc) do
+    path = extract_path(doc)
     doc
-    |> all(~r{<tr[^>]+data-mime="image/\w+".*</tr>}isr)
-    |> Enum.map(&(extract_name_and_url(&1, base_url)))
+    |> DocHelper.all(~r{<tr[^>]+data-mime="image/\w+".*</tr>}isr)
+    |> Enum.map(fn row ->
+      name = file_name(row)
+      url  = image_url(row)
+      %{name: name, url: url, path: path}
+    end)
   end
 
-  defp extract_name_and_url(row, base_url) do
-    name = file_name(row)
-    url  = build_folder_url(base_url, name)
-    {name, url}
+  defp image_url(row) do
+    row
+    |> DocHelper.extract_element_attribute("a", "class=\"name\"", "href")
+    |> decode_uri
+    |> String.replace("&amp;", "&")
+  end
+
+  def extract_path(doc) do
+    doc
+    |> DocHelper.extract_input_value("dir")
+    |> decode_uri
   end
 
   defp build_folder_url(base_url, folder) do
@@ -125,52 +110,33 @@ defmodule Neoboard.Widgets.OwncloudImages.FolderDoc do
     to_string(%{uri | query: URI.encode_query(updated)})
   end
 
-  defp all(doc, regex) do
+  defp file_name(doc) do
+    doc
+    |> DocHelper.first(~r{data-file="([^"]+)"}i)
+    |> decode_uri
+  end
+
+  defp decode_uri(uri), do: URI.decode_www_form(uri)
+end
+
+defmodule Neoboard.Widgets.OwncloudImages.DocHelper do
+  def all(doc, regex) do
     Regex.scan(regex, doc) |> List.flatten
   end
 
-  defp file_name(doc) do
-    Regex.run(~r{data-file="([^"]+)"}i, doc, capture: :all_but_first)
-    |> List.first
-    |> URI.decode_www_form
-  end
-end
-
-defmodule Neoboard.Widgets.OwncloudImages.ImageDoc do
-  def extract_image(doc) do
-    name =
-      doc
-      |> extract_input_value("dir")
-      |> transform_dir_to_name
-    url =
-      doc
-      |> extract_input_value("downloadURL")
-      |> fix_url
-    {name, url}
-  end
-
-  defp transform_dir_to_name(string) do
-    string
-    |> String.split("/")
-    |> Enum.reject(&(String.length(&1) == 0))
-    |> Enum.map(&String.capitalize/1)
-    |> Enum.join(" / ")
-  end
-
-  defp fix_url(string) do
-    string
-    |> URI.decode
-    |> String.replace("&amp;", "&")
-  end
-
-  defp extract_input_value(doc, name) do
-    doc
-    |> first(~r{(<input[^>]+name="#{name}"[^>]+>)}i)
-    |> first(~r{value="([^"]+)"}i)
-  end
-
-  defp first(doc, regex) do
+  def first(doc, regex) do
     Regex.run(regex, doc, capture: :all_but_first)
     |> List.first
+  end
+
+  def extract_element_attribute(doc, tag, selector, attribute) do
+    doc
+    |> first(~r{(<#{tag}[^>]+#{selector}[^>]+>)}i)
+    |> first(~r{#{attribute}="([^"]*)"}i)
+  end
+
+  def extract_input_value(doc, name) do
+    doc
+    |> extract_element_attribute("input", "name=\"#{name}\"", "value")
   end
 end
