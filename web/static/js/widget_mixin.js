@@ -16,7 +16,13 @@ export default function(channelName) {
         state = this.transform(state)
         if(!state.updated_at) state.updated_at = this.store.state.updated_at
       }
-      this.setState(state)
+      // allow components to overwrite the default action if a store
+      // has changed to do more actions
+      if(_.isFunction(this.onStoreChange)) {
+        this.onStoreChange(state)
+      }else{
+        this.setState(state)
+      }
     }
   }
 }

@@ -7,6 +7,9 @@ const NEXT_TIMEOUT = 10000 //ms
 
 export default React.createClass({
   mixins: [WidgetMixin("redmineactivity:state")],
+  getDefaultProps() {
+    return {transition: "transitionSlideFromRight"}
+  },
   getInitialState() {
     return {
       users: [],
@@ -38,7 +41,10 @@ export default React.createClass({
   },
   _renderUser(user){
     return (
-      <ReactCSSTransitionGroup transitionName="carousel" component="div" className="user">
+      <ReactCSSTransitionGroup
+        transitionName={this.props.transition}
+        component="div"
+        className="user">
         <div key={user.email}>
           <img src={this._avatarUrl(user)} />
           <div className="info">
