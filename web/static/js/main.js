@@ -8,6 +8,7 @@ import Gitter from "./widgets/gitter"
 import RedmineActivityProjects from "./widgets/redmine_activity_projects"
 import RedmineActivityUsers from "./widgets/redmine_activity_users"
 import OwncloudImages from "./widgets/owncloud_images"
+import Images from "./widgets/images"
 
 const widgets = [
 Gitter,
@@ -18,7 +19,8 @@ TimeWidget,
 JenkinsWidget,
 NichtLustigWidget,
 RedmineProjectTable,
-NotepadWidget
+NotepadWidget,
+Images
 ]
 
 export default {

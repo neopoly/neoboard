@@ -34,3 +34,10 @@ config :neoboard, Neoboard.Widgets.Gitter,
 config :neoboard, Neoboard.Widgets.OwncloudImages,
   url: "https://owncloud.company.com/public.php?service=files&t=SECRET_TOKEN",
   every: 10_000
+
+config :neoboard, Neoboard.Widgets.Images,
+  urls: [
+    "http://www.company.com/logo-a.png",
+    "http://www.company.com/logo-b.png",
+  ],
+  every: 10_000
