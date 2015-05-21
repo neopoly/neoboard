@@ -17,7 +17,7 @@ defmodule Neoboard.Widgets.Gitter do
     cond do
       String.match?(chunk, ~r/\{.*\}/) ->
         message = chunk |> Poison.decode!
-        updated = [message | state]
+        updated = [message | state] |> Enum.take(config[:messages])
         push_messages! updated
         {:noreply, updated}
       true ->
