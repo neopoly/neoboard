@@ -1,5 +1,6 @@
 import WidgetMixin from "../widget_mixin"
 import LastUpdatedAt from "../last_updated_at"
+const FormattedRelative = ReactIntl.FormattedRelative
 
 const NEXT_TIMEOUT = 5000 //ms
 
@@ -47,7 +48,9 @@ export default React.createClass({
       <li key={project.name} className={cls}>
         <span className="name">{project.name}</span>
         <span className="activity">{project.activity}</span>
-        <span className="updated_at">{project.updated_at}</span>
+        <span className="updated_at">
+          <FormattedRelative value={project.updated_at}/>
+        </span>
         <ol className="users">
           {project.users.map(this._renderUser)}
         </ol>

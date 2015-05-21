@@ -1,5 +1,6 @@
 import WidgetMixin from "../widget_mixin"
 import LastUpdatedAt from "../last_updated_at"
+const FormattedRelative = ReactIntl.FormattedRelative
 
 export default React.createClass({
   mixins: [WidgetMixin("gitter:state")],
@@ -33,8 +34,8 @@ export default React.createClass({
         </div>
         <div className="content">
           <div className="meta">
-            <span>{message.fromUser.displayName}</span>
-            <span>{message.sent}</span>
+            <span className="displayName">{message.fromUser.displayName}</span>
+            <FormattedRelative value={message.sent}/>
           </div>
           <p>{message.text}</p>
         </div>

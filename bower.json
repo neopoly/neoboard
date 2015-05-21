@@ -15,11 +15,18 @@
   "dependencies": {
     "react": "~0.13.3",
     "lodash": "~3.8.0",
-    "classnames": "~2.1.1"
+    "classnames": "~2.1.1",
+    "react-intl": "~1.2.0"
   },
   "overrides": {
     "react": {
       "main": "react-with-addons.js"
+    },
+    "react-intl": {
+      "dependencies": {
+        "react": "~0.13.3",
+        "intl": "~0.1.2"
+      }
     }
   }
 }
