@@ -15,8 +15,8 @@ export default React.createClass({
   },
   _handleLoad() {
     if(!this.isMounted()) return
-    let canvas  = React.findDOMNode(this.refs.background)
-    let image   = React.findDOMNode(this.refs.image)
+    let canvas  = this.refs.background.getDOMNode()
+    let image   = this.refs.image.getDOMNode()
     let context = canvas.getContext("2d")
     context.drawImage(image, 1, 1, 2, 2, 0, 0, canvas.width, canvas.height)
   }

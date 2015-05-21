@@ -1,7 +1,34 @@
 import WidgetMixin from "../widget_mixin"
 import LastUpdatedAt from "../last_updated_at"
+
+//uses global emojify
+
 const FormattedRelative = ReactIntl.FormattedRelative
 const ReactCSSTransitionGroup = React.addons.CSSTransitionGroup
+
+const Message = React.createClass({
+  render() {
+    let message = this.props.value
+    return (
+      <div>
+        <div className="avatar">
+          <img src={message.fromUser.avatarUrlSmall}/>
+        </div>
+        <div className="content">
+          <div className="meta">
+            <span className="displayName">{message.fromUser.displayName}</span>
+            <FormattedRelative value={message.sent}/>
+          </div>
+          <p ref="body">{message.text}</p>
+        </div>
+        <div className="clear"/>
+      </div>
+    )
+  },
+  componentDidMount() {
+    emojify.run(this.refs.body.getDOMNode())
+  }
+})
 
 export default React.createClass({
   mixins: [WidgetMixin("gitter:state")],
@@ -35,17 +62,7 @@ export default React.createClass({
   _renderMessage(message) {
     return (
       <li key={message.id}>
-        <div className="avatar">
-          <img src={message.fromUser.avatarUrlSmall}/>
-        </div>
-        <div className="content">
-          <div className="meta">
-            <span className="displayName">{message.fromUser.displayName}</span>
-            <FormattedRelative value={message.sent}/>
-          </div>
-          <p>{message.text}</p>
-        </div>
-        <div className="clear"/>
+        <Message value={message}/>
       </li>
     )
   }
