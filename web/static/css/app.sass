@@ -1,6 +1,7 @@
 @import "normalize"
 @import "config"
 @import "mixins"
+@import "grid"
 
 *
   box-sizing: border-box
@@ -8,15 +9,13 @@
 body
   font-family: 'Open Sans', "Helvetica Neue", Helvetica, Arial, sans-serif
   font-size: 1.1rem
-  background: black
+  background: $background
   padding: 4px 0
 
 .WidgetContainer
-  display: flex
-  flex-wrap: wrap
-  justify-content: center
-
   @import "transitions"
+  width: 1900px
+  margin: 0 auto
 
 @import "widgets/time"
 @import "widgets/jenkins"

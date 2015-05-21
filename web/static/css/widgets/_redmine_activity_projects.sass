@@ -1,7 +1,7 @@
 $avatarSize: 48px
 
 .RedmineActivityProjectsWidget
-  +widget($height: 800px)
+  +widget
   background: #254763
   justify-content: flex-start
 
@@ -21,7 +21,7 @@ $avatarSize: 48px
     max-height: 81%
     > li
       margin-bottom: 5px
-      span.name, span.activity
+      span.name
         color: $twoThirdWhite
       span.updated_at
         color: $thirdWhite
@@ -29,6 +29,7 @@ $avatarSize: 48px
         font-size: 0.7rem
       span.activity
         float: right
+        color: $white
       ol.users
         overflow: hidden
         transition: line-height 250ms ease-out
