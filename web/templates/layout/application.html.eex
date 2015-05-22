@@ -11,7 +11,7 @@
   </head>
 
   <body>
-    <div class="container">
+    <div id="main">
       <%= @inner %>
     </div>
     <script src="<%= static_path(@conn, "/js/vendors.js") %>"></script>

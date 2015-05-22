@@ -28,7 +28,7 @@ const widgets = [
 
 const Main = {
   run() {
-    React.render(<App widgets={widgets}/>, document.body)
+    React.render(<App widgets={widgets}/>, document.getElementById("main"))
   }
 }
 
