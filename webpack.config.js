@@ -1,8 +1,24 @@
+var CommonsChunkPlugin = require("webpack/lib/optimize/CommonsChunkPlugin")
+
+var vendors = [
+  "react",
+  "lodash",
+  "classnames",
+  "react-intl",
+  "react-grid-layout",
+  "phoenix",
+  "emojify"
+];
+
 module.exports = {
-  entry: "./web/static/entry.js",
+  entry: {
+    application: "./web/static/entry.js",
+    vendors: vendors
+  },
+  devtool: "source-map",
   output: {
     path: "./priv/static/js",
-    filename: "bundle.js"
+    filename: "[name].js"
   },
   resolve: {
     root: [
@@ -13,7 +29,11 @@ module.exports = {
       react$: "react/addons"
     }
   },
+  plugins: [
+    new CommonsChunkPlugin("vendors", "vendors.js")
+  ],
   module: {
+    noParse: vendors,
     loaders: [
     {
      test: /\.scss$/,

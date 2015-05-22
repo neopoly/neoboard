@@ -32,3 +32,15 @@ Now you can startup a server instance:
     $ mix phoenix.server
 
 Now you can visit `localhost:4000` from your browser.
+
+## Production system
+
+For a productive system you should pre-compile the used assets. A custom mix 
+tasks is provided to instrument webpack's build process:
+
+    $ mix assets.precompile
+
+Also you should generate hashed versions of the static files by invoking 
+Phoenix "digest" task:
+
+    $ mix phoenix.digest

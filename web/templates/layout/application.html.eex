@@ -14,6 +14,7 @@
     <div class="container">
       <%= @inner %>
     </div>
-    <script src="<%= static_path(@conn, "/js/bundle.js") %>"></script>
+    <script src="<%= static_path(@conn, "/js/vendors.js") %>"></script>
+    <script src="<%= static_path(@conn, "/js/application.js") %>"></script>
   </body>
 </html>
