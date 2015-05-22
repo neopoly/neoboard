@@ -46,3 +46,7 @@ Also you should generate hashed versions of the static files by invoking
 Phoenix "digest" task:
 
     $ mix phoenix.digest
+
+## LICENSE
+
+Please have a look at `LICENSE.txt` for further information about the license this project is published under.
