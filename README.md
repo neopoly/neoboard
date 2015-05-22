@@ -1,6 +1,6 @@
 # Neoboard
 
-Steps to start the Dasboard application
+Steps to start the Dashboard application
 
 ## Requirements
 
@@ -10,7 +10,7 @@ Detailed instructions to install Elixir are available at: http://elixir-lang.org
 
 ### Install NodeJS
 
-This project also needs NodeJS for static assets compliation. Find installation instructions at: https://nodejs.org/download/
+This project also needs NodeJS for static assets compilation. Find installation instructions at: https://nodejs.org/download/
 
 ## Start an instance
 
