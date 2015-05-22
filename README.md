@@ -2,6 +2,8 @@
 
 Steps to start the Dashboard application
 
+**WARNING:** This application is in a very early *ALPHA* state. Everything may change while I'm exploring Elixir and React.
+
 ## Requirements
 
 ### Install Elixir
