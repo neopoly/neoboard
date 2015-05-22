@@ -19,7 +19,9 @@ config :neoboard, Neoboard.Endpoint,
 config :neoboard, Neoboard.Endpoint,
   live_reload: [
     patterns: [
-      ~r{priv/static/.*(js|css|png|jpeg|jpg|gif)$},
+      ~r{priv/static/.*(css|png|jpeg|jpg|gif)$},
+      ~r{priv/static/js/application.js$},
+      ~r{priv/static/js/vendors.js$},
       ~r{web/views/.*(ex)$},
       ~r{web/templates/.*(eex)$}
     ]
