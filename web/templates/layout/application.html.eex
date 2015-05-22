@@ -8,15 +8,12 @@
     <meta name="author" content="">
 
     <title>Neoboard</title>
-    <link rel="stylesheet" href="<%= static_path(@conn, "/css/app.css") %>">
   </head>
 
   <body>
     <div class="container">
       <%= @inner %>
     </div>
-    <script src="<%= static_path(@conn, "/js/vendor.js") %>"></script>
-    <script src="<%= static_path(@conn, "/js/app.js") %>"></script>
-    <script>require("web/static/js/main").run()</script>
+    <script src="<%= static_path(@conn, "/js/bundle.js") %>"></script>
   </body>
 </html>

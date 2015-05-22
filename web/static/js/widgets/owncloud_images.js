@@ -1,3 +1,4 @@
+import React from "react"
 import WidgetMixin from "../widget_mixin"
 import ImagePreloader from "../image_preloader"
 

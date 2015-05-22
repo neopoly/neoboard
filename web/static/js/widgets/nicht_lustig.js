@@ -1,3 +1,4 @@
+import React from "react"
 import WidgetMixin from "../widget_mixin"
 
 export default React.createClass({

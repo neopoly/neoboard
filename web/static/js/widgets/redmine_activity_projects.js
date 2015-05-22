@@ -1,6 +1,8 @@
+import React from "react"
 import WidgetMixin from "../widget_mixin"
 import LastUpdatedAt from "../last_updated_at"
-const FormattedRelative = ReactIntl.FormattedRelative
+import {FormattedRelative} from "react-intl"
+import classNames from "classnames"
 
 const NEXT_TIMEOUT = 5000 //ms
 

@@ -1,3 +1,5 @@
+import React from "react"
+
 const d = function(number) {
   return number < 10 ? "0"+number : number
 }

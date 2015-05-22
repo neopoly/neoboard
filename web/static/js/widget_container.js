@@ -1,4 +1,6 @@
+import React from "react"
 import WidgetStore from "./widget_store"
+import ReactGridLayout from "react-grid-layout"
 
 export default React.createClass({
   getDefaultProps() {

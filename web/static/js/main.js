@@ -1,3 +1,4 @@
+import React from "react"
 import App from "./app"
 import TimeWidget from "./widgets/time"
 import JenkinsWidget from "./widgets/jenkins"
@@ -25,8 +26,12 @@ const widgets = [
   [Images,                  {x:4, y:2, w:1, h:1}]
 ]
 
-export default {
+const Main = {
   run() {
     React.render(<App widgets={widgets}/>, document.body)
   }
 }
+
+Main.run()
+
+export default Main

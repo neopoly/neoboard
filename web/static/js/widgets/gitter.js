@@ -1,9 +1,9 @@
+import React from "react"
 import WidgetMixin from "../widget_mixin"
 import LastUpdatedAt from "../last_updated_at"
+import Emojify from "emojify"
+import {FormattedRelative} from "react-intl"
 
-//uses global emojify
-
-const FormattedRelative = ReactIntl.FormattedRelative
 const ReactCSSTransitionGroup = React.addons.CSSTransitionGroup
 
 const Message = React.createClass({
@@ -26,7 +26,7 @@ const Message = React.createClass({
     )
   },
   componentDidMount() {
-    emojify.run(this.refs.body.getDOMNode())
+    Emojify.run(this.refs.body.getDOMNode())
   }
 })
 

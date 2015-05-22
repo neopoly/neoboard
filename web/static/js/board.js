@@ -1,3 +1,4 @@
+import React from "react"
 import connector from "./connector"
 import WidgetContainer from "./widget_container"
 
@@ -18,7 +19,7 @@ export default React.createClass({
     if(this.state.ready) return <WidgetContainer widgets={this.props.widgets} channel={this.getChannel()}/>
     return <div>Waiting...</div>
   },
-  getChannel(){
+  getChannel() {
     return connector.getChannel(this.props.name)
   },
   _connectorChanged() {

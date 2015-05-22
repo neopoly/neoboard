@@ -1,4 +1,5 @@
 import Api from "./api"
+import _ from "lodash"
 
 class Connector {
   constructor(url) {

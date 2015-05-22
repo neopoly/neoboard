@@ -12,12 +12,6 @@ Detailed instructions to install Elixir are available at: http://elixir-lang.org
 
 This project also needs NodeJS for static assets compliation. Find installation instructions at: https://nodejs.org/download/
 
-### Install bower
-
-For managing JS dependencies you also need to install bower after you have installed NodeJS:
-
-    $ npm install -g bower
-
 ## Start an instance
 
 Configure the widgets by create a configuration file at `config/widgets.exs`. You can use `config/widgets.exs.sample` as your template:
@@ -32,10 +26,6 @@ Install all Elixir dependencies:
 Install all NPM dependencies:
 
     $ npm install
-
-Load all JS dependencies:
-
-    $ bower install
 
 Now you can startup a server instance:
 

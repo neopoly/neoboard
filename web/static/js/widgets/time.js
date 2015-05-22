@@ -1,3 +1,4 @@
+import React from "react"
 import WidgetMixin from "../widget_mixin"
 
 const d = function(number) {

@@ -1,3 +1,4 @@
+import React from "react"
 import WidgetStore from "./widget_store"
 import Channel from "./channel"
 

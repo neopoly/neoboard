@@ -1,5 +1,7 @@
+import React from "react"
 import WidgetMixin from "../widget_mixin"
 import LastUpdatedAt from "../last_updated_at"
+import classNames from "classnames"
 
 const MAX_NUMBER_OF_JOBS = 10
 
