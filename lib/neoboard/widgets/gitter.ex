@@ -65,6 +65,6 @@ defmodule Neoboard.Widgets.Gitter do
 
   defp do_listen do
     HTTPoison.start
-    HTTPoison.get! url("stream.gitter.im"), headers, [stream_to: self]
+    HTTPoison.get! url("stream.gitter.im"), headers, [stream_to: self, recv_timeout: :infinity]
   end
 end
