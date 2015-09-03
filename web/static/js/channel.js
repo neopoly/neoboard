@@ -2,7 +2,7 @@ class Channel {
   constructor(socket, name) {
     this.socket = socket
     this._name = name
-    this.chan = socket.chan(this.name, {})
+    this.chan = socket.channel(this.name, {})
   }
   join(callback) {
     this.chan.join().receive("ok", () => {
