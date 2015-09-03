@@ -28,8 +28,8 @@ defmodule Neoboard.Mixfile do
   #
   # Type `mix help deps` for examples and options
   defp deps do
-    [{:phoenix, "~> 0.17"},
-     {:phoenix_html, "~> 1.4"},
+    [{:phoenix, "~> 1.0"},
+     {:phoenix_html, "~> 2.1"},
      {:phoenix_live_reload, "~> 1.0", only: :dev},
      {:cowboy, "~> 1.0"},
      {:timex, "~> 0.13.4"},
