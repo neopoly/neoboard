@@ -179,4 +179,5 @@ defmodule Neoboard.Widgets.RedmineActivity.Xml do
   defp extract_text([xmlText(value: value)]), do: List.to_string(value)
   defp extract_text([xmlText(value: value) | _x]), do: List.to_string(value)
   defp extract_text(xmlText(value: value)), do: List.to_string(value)
+  defp extract_text([]), do: ""
 end
