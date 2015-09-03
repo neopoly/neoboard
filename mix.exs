@@ -33,6 +33,6 @@ defmodule Neoboard.Mixfile do
      {:phoenix_live_reload, "~> 1.0", only: :dev},
      {:cowboy, "~> 1.0"},
      {:timex, "~> 0.19"},
-     {:httpoison, "~> 0.6"}]
+     {:httpoison, "~> 0.7"}]
   end
 end
