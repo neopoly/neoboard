@@ -9,9 +9,12 @@ defmodule Neoboard.Endpoint do
     at: "/", from: :neoboard, gzip: false,
     only: ~w(css images js favicon.ico robots.txt)
 
+  socket "/ws", Neoboard.UserSocket
+
   # Code reloading can be explicitly enabled under the
   # :code_reloader configuration of your endpoint.
   if code_reloading? do
+    socket "/phoenix/live_reload/socket", Phoenix.LiveReloader.Socket
     plug Phoenix.LiveReloader
     plug Phoenix.CodeReloader
   end
@@ -31,5 +34,5 @@ defmodule Neoboard.Endpoint do
     key: "_neoboard_key",
     signing_salt: "2Z5ZsLKm"
 
-  plug :router, Neoboard.Router
+  plug Neoboard.Router
 end

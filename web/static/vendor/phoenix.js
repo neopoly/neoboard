@@ -11,7 +11,9 @@
 //
 // The `Socket` constructor takes the mount point of the socket
 // as well as options that can be found in the Socket docs,
-// such as configuring the `LongPoller` transport, and heartbeat.
+// such as configuring the `LongPoll` transport, and heartbeat.
+// Socket params can also be passed as an option for default, but
+// overridable channel params to apply to all channels.
 //
 //
 // ## Channels
@@ -48,7 +50,7 @@
 //
 // ## Pushing Messages
 //
-// From the prevoius example, we can see that pushing messages to the server
+// From the previous example, we can see that pushing messages to the server
 // can be done with `chan.push(eventName, payload)` and we can optionally
 // receive responses from the push. Additionally, we can use
 // `after(millsec, callback)` to abort waiting for our `receive` hooks and
@@ -98,6 +100,10 @@ const CHAN_EVENTS = {
   join: "phx_join",
   reply: "phx_reply",
   leave: "phx_leave"
+}
+const TRANSPORTS = {
+  longpoll: "longpoll",
+  websocket: "websocket"
 }
 
 class Push {
@@ -191,35 +197,40 @@ export class Channel {
     this.bindings    = []
     this.joinedOnce  = false
     this.joinPush    = new Push(this, CHAN_EVENTS.join, this.params)
-    this.pushBuffer = []
-
+    this.pushBuffer  = []
+    this.rejoinTimer  = new Timer(
+      () => this.rejoinUntilConnected(),
+      this.socket.reconnectAfterMs
+    )
     this.joinPush.receive("ok", () => {
       this.state = CHAN_STATES.joined
+      this.rejoinTimer.reset()
     })
     this.onClose( () => {
+      this.socket.log("channel", `close ${this.topic}`)
       this.state = CHAN_STATES.closed
       this.socket.remove(this)
     })
     this.onError( reason => {
+      this.socket.log("channel", `error ${this.topic}`, reason)
       this.state = CHAN_STATES.errored
-      setTimeout( () => this.rejoinUntilConnected(), this.socket.reconnectAfterMs)
+      this.rejoinTimer.setTimeout()
     })
-    this.on(CHAN_EVENTS.reply, payload => {
-      this.trigger(this.replyEventName(payload.ref), payload)
+    this.on(CHAN_EVENTS.reply, (payload, ref) => {
+      this.trigger(this.replyEventName(ref), payload)
     })
   }
 
-  rejoinUntilConnected(){ if(this.state !== CHAN_STATES.errored){ return }
+  rejoinUntilConnected(){
+    this.rejoinTimer.setTimeout()
     if(this.socket.isConnected()){
       this.rejoin()
-    } else {
-      setTimeout(() => this.rejoinUntilConnected(), this.socket.reconnectAfterMs)
     }
   }
 
   join(){
     if(this.joinedOnce){
-      throw(`tried to join mulitple times. 'join' can only be called a singe time per channel instance`)
+      throw(`tried to join multiple times. 'join' can only be called a single time per channel instance`)
     } else {
       this.joinedOnce = true
     }
@@ -267,10 +278,15 @@ export class Channel {
   //
   leave(){
     return this.push(CHAN_EVENTS.leave).receive("ok", () => {
+      this.log("channel", `leave ${this.topic}`)
       this.trigger(CHAN_EVENTS.close, "leave")
     })
   }
 
+  // Overridable message hook
+  //
+  // Receives all events for specialized message handling
+  onMessage(event, payload, ref){}
 
   // private
 
@@ -287,9 +303,10 @@ export class Channel {
     this.pushBuffer = []
   }
 
-  trigger(triggerEvent, msg){
+  trigger(triggerEvent, payload, ref){
+    this.onMessage(triggerEvent, payload, ref)
     this.bindings.filter( bind => bind.event === triggerEvent )
-                 .map( bind => bind.callback(msg) )
+                 .map( bind => bind.callback(payload, ref) )
   }
 
   replyEventName(ref){ return `chan_reply_${ref}` }
@@ -303,38 +320,50 @@ export class Socket {
   //                                               "wss://example.com"
   //                                               "/ws" (inherited host & protocol)
   // opts - Optional configuration
-  //   transport - The Websocket Transport, ie WebSocket, Phoenix.LongPoller.
-  //               Defaults to WebSocket with automatic LongPoller fallback.
+  //   transport - The Websocket Transport, ie WebSocket, Phoenix.LongPoll.
+  //               Defaults to WebSocket with automatic LongPoll fallback.
+  //   params - The defaults for all channel params, ie `{user_id: userToken}`
   //   heartbeatIntervalMs - The millisec interval to send a heartbeat message
-  //   reconnectAfterMs - The millisec interval to reconnect after connection loss
+  //   reconnectAfterMs - The optional function that returns the millsec
+  //                      reconnect interval. Defaults to stepped backoff of:
+  //
+  //     function(tries){
+  //       return [1000, 5000, 10000][tries - 1] || 10000
+  //     }
+  //
   //   logger - The optional function for specialized logging, ie:
-  //            `logger: function(msg){ console.log(msg) }`
-  //   longpoller_timeout - The maximum timeout of a long poll AJAX request.
+  //     `logger: (kind, msg, data) => { console.log(`${kind}: ${msg}`, data) }
+  //
+  //   longpollerTimeout - The maximum timeout of a long poll AJAX request.
   //                        Defaults to 20s (double the server long poll timer).
   //
   // For IE8 support use an ES5-shim (https://github.com/es-shims/es5-shim)
   //
   constructor(endPoint, opts = {}){
     this.stateChangeCallbacks = {open: [], close: [], error: [], message: []}
-    this.reconnectTimer       = null
     this.channels             = []
     this.sendBuffer           = []
     this.ref                  = 0
-    this.transport            = opts.transport || window.WebSocket || LongPoller
+    this.transport            = opts.transport || window.WebSocket || LongPoll
     this.heartbeatIntervalMs  = opts.heartbeatIntervalMs || 30000
-    this.reconnectAfterMs     = opts.reconnectAfterMs || 5000
+    this.reconnectAfterMs     = opts.reconnectAfterMs || function(tries){
+      return [1000, 5000, 10000][tries - 1] || 10000
+    }
+    this.reconnectTimer       = new Timer(() => this.connect(), this.reconnectAfterMs)
     this.logger               = opts.logger || function(){} // noop
-    this.longpoller_timeout   = opts.longpoller_timeout || 20000
-    this.endPoint             = this.expandEndpoint(endPoint)
+    this.longpollerTimeout    = opts.longpollerTimeout || 20000
+    this.params               = opts.params || {}
+    this.endPoint             = `${endPoint}/${TRANSPORTS.websocket}`
   }
 
   protocol(){ return location.protocol.match(/^https/) ? "wss" : "ws" }
 
-  expandEndpoint(endPoint){
-    if(endPoint.charAt(0) !== "/"){ return endPoint }
-    if(endPoint.charAt(1) === "/"){ return `${this.protocol()}:${endPoint}` }
+  endPointURL(){
+    let uri = Ajax.appendParams(this.endPoint, this.params)
+    if(uri.charAt(0) !== "/"){ return uri }
+    if(uri.charAt(1) === "/"){ return `${this.protocol()}:${uri}` }
 
-    return `${this.protocol()}://${location.host}${endPoint}`
+    return `${this.protocol()}://${location.host}${uri}`
   }
 
   disconnect(callback, code, reason){
@@ -348,8 +377,8 @@ export class Socket {
 
   connect(){
     this.disconnect(() => {
-      this.conn = new this.transport(this.endPoint)
-      this.conn.timeout   = this.longpoller_timeout
+      this.conn = new this.transport(this.endPointURL())
+      this.conn.timeout   = this.longpollerTimeout
       this.conn.onopen    = () => this.onConnOpen()
       this.conn.onerror   = error => this.onConnError(error)
       this.conn.onmessage = event => this.onConnMessage(event)
@@ -358,7 +387,7 @@ export class Socket {
   }
 
   // Logs the message. Override `this.logger` for specialized logging. noops by default
-  log(msg){ this.logger(msg) }
+  log(kind, msg, data){ this.logger(kind, msg, data) }
 
   // Registers callbacks for connection state change events
   //
@@ -372,8 +401,9 @@ export class Socket {
   onMessage  (callback){ this.stateChangeCallbacks.message.push(callback) }
 
   onConnOpen(){
+    this.log("transport", `connected to ${this.endPointURL()}`, this.transport.prototype)
     this.flushSendBuffer()
-    clearInterval(this.reconnectTimer)
+    this.reconnectTimer.reset()
     if(!this.conn.skipHeartbeat){
       clearInterval(this.heartbeatTimer)
       this.heartbeatTimer = setInterval(() => this.sendHeartbeat(), this.heartbeatIntervalMs)
@@ -382,18 +412,15 @@ export class Socket {
   }
 
   onConnClose(event){
-    this.log("WS close:")
-    this.log(event)
+    this.log("transport", "close", event)
     this.triggerChanError()
-    clearInterval(this.reconnectTimer)
     clearInterval(this.heartbeatTimer)
-    this.reconnectTimer = setInterval(() => this.connect(), this.reconnectAfterMs)
+    this.reconnectTimer.setTimeout()
     this.stateChangeCallbacks.close.forEach( callback => callback(event) )
   }
 
   onConnError(error){
-    this.log("WS error:")
-    this.log(error)
+    this.log("transport", error)
     this.triggerChanError()
     this.stateChangeCallbacks.error.forEach( callback => callback(error) )
   }
@@ -417,14 +444,20 @@ export class Socket {
     this.channels = this.channels.filter( c => !c.isMember(chan.topic) )
   }
 
-  chan(topic, params){
-    let chan = new Channel(topic, params, this)
+  chan(topic, chanParams = {}){
+    let mergedParams = {}
+    for(var key in this.params){ mergedParams[key] = this.params[key] }
+    for(var key in chanParams){ mergedParams[key] = chanParams[key] }
+
+    let chan = new Channel(topic, mergedParams, this)
     this.channels.push(chan)
     return chan
   }
 
   push(data){
+    let {topic, event, payload, ref} = data
     let callback = () => this.conn.send(JSON.stringify(data))
+    this.log("push", `${topic} ${event} (${ref})`, payload)
     if(this.isConnected()){
       callback()
     }
@@ -453,22 +486,19 @@ export class Socket {
   }
 
   onConnMessage(rawMessage){
-    this.log("message received:")
-    this.log(rawMessage)
-    let {topic, event, payload} = JSON.parse(rawMessage.data)
+    let msg = JSON.parse(rawMessage.data)
+    let {topic, event, payload, ref} = msg
+    this.log("receive", `${payload.status || ""} ${topic} ${event} ${ref && "(" + ref + ")" || ""}`, payload)
     this.channels.filter( chan => chan.isMember(topic) )
-                 .forEach( chan => chan.trigger(event, payload) )
-    this.stateChangeCallbacks.message.forEach( callback => {
-      callback(topic, event, payload)
-    })
+                 .forEach( chan => chan.trigger(event, payload, ref) )
+    this.stateChangeCallbacks.message.forEach( callback => callback(msg) )
   }
 }
 
 
-export class LongPoller {
+export class LongPoll {
 
   constructor(endPoint){
-    this.retryInMs       = 5000
     this.endPoint        = null
     this.token           = null
     this.sig             = null
@@ -477,19 +507,25 @@ export class LongPoller {
     this.onerror         = function(){} // noop
     this.onmessage       = function(){} // noop
     this.onclose         = function(){} // noop
-    this.upgradeEndpoint = this.normalizeEndpoint(endPoint)
-    this.pollEndpoint    = this.upgradeEndpoint + (/\/$/.test(endPoint) ? "poll" : "/poll")
+    this.pollEndpoint    = this.normalizeEndpoint(endPoint)
     this.readyState      = SOCKET_STATES.connecting
 
     this.poll()
   }
 
   normalizeEndpoint(endPoint){
-    return endPoint.replace("ws://", "http://").replace("wss://", "https://")
+    return(endPoint
+      .replace("ws://", "http://")
+      .replace("wss://", "https://")
+      .replace(new RegExp("(.*)\/" + TRANSPORTS.websocket), "$1/" + TRANSPORTS.longpoll))
   }
 
   endpointURL(){
-    return this.pollEndpoint + `?token=${encodeURIComponent(this.token)}&sig=${encodeURIComponent(this.sig)}`
+    return Ajax.appendParams(this.pollEndpoint, {
+      token: this.token,
+      sig: this.sig,
+      format: "json"
+    })
   }
 
   closeAndRetry(){
@@ -603,6 +639,65 @@ export class Ajax {
              JSON.parse(resp) :
              null
   }
+
+  static serialize(obj, parentKey){
+    let queryStr = [];
+    for(var key in obj){ if(!obj.hasOwnProperty(key)){ continue }
+      let paramKey = parentKey ? `${parentKey}[${key}]` : key
+      let paramVal = obj[key]
+      if(typeof paramVal === "object"){
+        queryStr.push(this.serialize(paramVal, paramKey))
+      } else {
+        queryStr.push(encodeURIComponent(paramKey) + "=" + encodeURIComponent(paramVal))
+      }
+    }
+    return queryStr.join("&")
+  }
+
+  static appendParams(url, params){
+    if(Object.keys(params).length === 0){ return url }
+
+    let prefix = url.match(/\?/) ? "&" : "?"
+    return `${url}${prefix}${this.serialize(params)}`
+  }
 }
 
 Ajax.states = {complete: 4}
+
+
+// Creates a timer that accepts a `timerCalc` function to perform
+// calculated timeout retries, such as exponential backoff.
+//
+// ## Examples
+//
+//    let reconnectTimer = new Timer(() => this.connect(), function(tries){
+//      return [1000, 5000, 10000][tries - 1] || 10000
+//    })
+//    reconnectTimer.setTimeout() // fires after 1000
+//    reconnectTimer.setTimeout() // fires after 5000
+//    reconnectTimer.reset()
+//    reconnectTimer.setTimeout() // fires after 1000
+//
+class Timer {
+  constructor(callback, timerCalc){
+    this.callback  = callback
+    this.timerCalc = timerCalc
+    this.timer     = null
+    this.tries     = 0
+  }
+
+  reset(){
+    this.tries = 0
+    clearTimeout(this.timer)
+  }
+
+  // Cancels any previous setTimeout and schedules callback
+  setTimeout(){
+    clearTimeout(this.timer)
+
+    this.timer = setTimeout(() => {
+      this.tries = this.tries + 1
+      this.callback()
+    }, this.timerCalc(this.tries + 1))
+  }
+}
