@@ -7,7 +7,7 @@ defmodule Neoboard.TimeServiceTest do
 
   test "it returns now formatted" do
     formatted = Neoboard.TimeService.now("{RFC1123}")
-    assert formatted =~ ~r/\w{3}, \d{1,2} \w{3} \d{4} \d{2}:\d{2}:\d{2}\.?\d* \w{2,3}/
+    assert formatted =~ ~r/\w{3}, \d{1,2} \w{3} \d{4} \d{2}:\d{2}:\d{2} \+\w{4}/
   end
 
   test "it returns now as iso" do
