@@ -1,7 +1,5 @@
-FROM alpine:3.2
+FROM alpine:edge
 MAINTAINER Jonas Thiel <jonas@thiel.io>
-
-RUN echo 'http://dl-4.alpinelinux.org/alpine/edge/main' >> /etc/apk/repositories
 
 RUN apk --update add ncurses-libs erlang wget curl erlang-crypto build-base libstdc++\
     erlang-syntax-tools erlang-inets erlang-ssl erlang-public-key erlang-xmerl\
@@ -23,13 +21,20 @@ RUN mix local.hex --force \
 ENV APP_HOME /app
 RUN mkdir $APP_HOME
 WORKDIR $APP_HOME
+ADD package.json $APP_HOME/package.json
+
+ENV SASS_BINARY_NAME alpine-x64-14
+ENV SASS_BINARY_SITE https://github.com/jnbt/node-sass/releases/download
+RUN npm install
+
+ENV MIX_ENV prod
+ENV NEOBOARD_PORT 4000
 
 ADD . $APP_HOME
+RUN mix deps.get
+RUN mix compile
+RUN mix phoenix.digest
 
-#RUN mix deps.get
-RUN npm install
-#RUN mix phoenix.server
+EXPOSE 4000
 
-#EXPOSE 4000
-
-CMD ["/bin/sh"]
+CMD ["mix", "phoenix.server"]

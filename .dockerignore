@@ -6,3 +6,4 @@ README.md
 _build
 deps
 node_modules
+Makefile
