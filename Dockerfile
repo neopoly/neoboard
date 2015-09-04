@@ -21,7 +21,7 @@ RUN mix local.hex --force \
 ENV APP_HOME /app
 RUN mkdir $APP_HOME
 WORKDIR $APP_HOME
-ADD package.json $APP_HOME/package.json
+COPY package.json $APP_HOME/package.json
 
 ENV SASS_BINARY_NAME alpine-x64-14
 ENV SASS_BINARY_SITE https://github.com/jnbt/node-sass/releases/download
@@ -30,10 +30,20 @@ RUN npm install
 ENV MIX_ENV prod
 ENV NEOBOARD_PORT 4000
 
-ADD . $APP_HOME
+COPY ["mix.exs", "mix.lock", "${APP_HOME}/"]
 RUN mix deps.get
+
+COPY config ${APP_HOME}/config
+COPY lib ${APP_HOME}/lib
+COPY test ${APP_HOME}/test
+COPY web ${APP_HOME}/web
+COPY priv ${APP_HOME}/priv
 RUN mix compile
-RUN mix phoenix.digest
+
+COPY webpack.config.js $APP_HOME/webpack.config.js
+RUN mkdir -p priv/static \
+    && node_modules/webpack/bin/webpack.js -p --progress \
+    && mix phoenix.digest
 
 EXPOSE 4000
 
