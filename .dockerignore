@@ -1,0 +1,8 @@
+.git
+.gitignore
+Dockerfile
+LICENSE.txt
+README.md
+_build
+deps
+node_modules
