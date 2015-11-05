@@ -8,7 +8,7 @@ RUN apk --update add ncurses-libs erlang wget curl erlang-crypto build-base libs
     erlang-asn1 erlang-sasl erlang-erl-interface erlang-dev nodejs git python\
     && rm -rf /var/cache/apk/*
 
-ENV ELIXIR_VERSION 1.0.5
+ENV ELIXIR_VERSION 1.1.1
 
 RUN curl -L -o Precompiled.zip https://github.com/elixir-lang/elixir/releases/download/v${ELIXIR_VERSION}/Precompiled.zip \
     && mkdir -p /opt/elixir-${ELIXIR_VERSION}/ \
