@@ -1,6 +1,8 @@
 FROM alpine:edge
 MAINTAINER Jonas Thiel <jonas@thiel.io>
 
+RUN echo 'http://dl-4.alpinelinux.org/alpine/edge/community' >> /etc/apk/repositories
+
 RUN apk --update add ncurses-libs erlang wget curl erlang-crypto build-base libstdc++\
     erlang-syntax-tools erlang-inets erlang-ssl erlang-public-key erlang-xmerl\
     erlang-asn1 erlang-sasl erlang-erl-interface erlang-dev nodejs git python\
