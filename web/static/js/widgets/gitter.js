@@ -3,8 +3,7 @@ import WidgetMixin from "../widget_mixin"
 import LastUpdatedAt from "../last_updated_at"
 import Emojify from "emojify"
 import {FormattedRelative} from "react-intl"
-
-const ReactCSSTransitionGroup = React.addons.CSSTransitionGroup
+import TimeoutTransitionGroup from "../timeout_transition_group"
 
 const Message = React.createClass({
   render() {
@@ -47,11 +46,13 @@ export default React.createClass({
         <h2>{this.state.title}</h2>
         <div className="scrollable">
           <div className="scrollable-content">
-            <ReactCSSTransitionGroup
+            <TimeoutTransitionGroup
               transitionName={this.props.transition}
+              enterTimeout={500}
+              leaveTimeout={500}
               component="ol">
               {this.state.messages.reverse().map(this._renderMessage)}
-            </ReactCSSTransitionGroup>
+            </TimeoutTransitionGroup>
           </div>
         </div>
         <img src={this.state.url} />

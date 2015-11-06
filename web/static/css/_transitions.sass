@@ -1,14 +1,16 @@
+$transitionDuration: 0.5s
+
 // Fade transition using opacity
 .transitionFade-enter
   opacity: 0.01
-  transition: opacity 0.5s ease-in
+  transition: opacity $transitionDuration ease-in
 
   &.transitionFade-enter-active
     opacity: 1
 
 .transitionFade-leave
   opacity: 1
-  transition: opacity 0.5s ease-in
+  transition: opacity $transitionDuration ease-in
 
   &.transitionFade-leave-active
     opacity: 0.01
@@ -16,14 +18,14 @@
 // Slide transition from right to left
 .transitionSlideFromRight-enter
   transform: translateX(100%)
-  transition: transform 0.5s ease-in
+  transition: transform $transitionDuration ease-in
 
   &.transitionSlideFromRight-enter-active
     transform: translateX(0%)
 
 .transitionSlideFromRight-leave
   transform: translateX(0%)
-  transition: transform 0.5s ease-in
+  transition: transform $transitionDuration ease-in
 
   &.transitionSlideFromRight-leave-active
     transform: translateX(-100%)
@@ -31,14 +33,14 @@
 // Slide transition from left to right
 .transitionSlideFromLeft-enter
   transform: translateX(-100%)
-  transition: transform 0.5s ease-in
+  transition: transform $transitionDuration ease-in
 
   &.transitionSlideFromLeft-enter-active
     transform: translateX(0%)
 
 .transitionSlideFromLeft-leave
   transform: translateX(0%)
-  transition: transform 0.5s ease-in
+  transition: transform $transitionDuration ease-in
 
   &.transitionSlideFromLeft-leave-active
     transform: translateX(100%)
@@ -46,14 +48,14 @@
 // Slide transition from top to bottom
 .transitionSlideFromTop-enter
   transform: translateY(-100%)
-  transition: transform 0.5s ease-in
+  transition: transform $transitionDuration ease-in
 
   &.transitionSlideFromTop-enter-active
     transform: translateY(0%)
 
 .transitionSlideFromTop-leave
   transform: translateY(0%)
-  transition: transform 0.5s ease-in
+  transition: transform $transitionDuration ease-in
 
   &.transitionSlideFromTop-leave-active
     transform: translateY(100%)
@@ -61,14 +63,14 @@
 // Slide transition from bottom to top
 .transitionSlideFromBottom-enter
   transform: translateY(100%)
-  transition: transform 0.5s ease-in
+  transition: transform $transitionDuration ease-in
 
   &.transitionSlideFromBottom-enter-active
     transform: translateY(0%)
 
 .transitionSlideFromBottom-leave
   transform: translateY(0%)
-  transition: transform 0.5s ease-in
+  transition: transform $transitionDuration ease-in
 
   &.transitionSlideFromBottom-leave-active
     transform: translateY(-100%)
@@ -77,7 +79,7 @@
 .transitionScaleGrow-enter
   transform: scale(0.01)
   opacity: 0.01
-  transition: transform 0.5s ease-in, opacity 0.5s ease-out
+  transition: transform $transitionDuration ease-in, opacity $transitionDuration ease-out
 
   &.transitionScaleGrow-enter-active
     opacity: 1
@@ -86,7 +88,7 @@
 .transitionScaleGrow-leave
   transform: scale(1)
   opacity: 1
-  transition: transform 0.5s ease-in, opacity 0.5s ease-out
+  transition: transform $transitionDuration ease-in, opacity $transitionDuration ease-out
 
   &.transitionScaleGrow-leave-active
     opacity: 0.01
@@ -96,7 +98,7 @@
 .transitionScaleShrink-enter
   transform: scale(2)
   opacity: 0.01
-  transition: transform 0.5s ease-in, opacity 0.5s ease-out
+  transition: transform $transitionDuration ease-in, opacity $transitionDuration ease-out
 
   &.transitionScaleShrink-enter-active
     opacity: 1
@@ -105,7 +107,7 @@
 .transitionScaleShrink-leave
   transform: scale(1)
   opacity: 1
-  transition: transform 0.5s ease-in, opacity 0.5s ease-out
+  transition: transform $transitionDuration ease-in, opacity $transitionDuration ease-out
 
   &.transitionScaleShrink-leave-active
     opacity: 0.01

@@ -1,8 +1,7 @@
 import React from "react"
 import WidgetMixin from "../widget_mixin"
 import ImagePreloader from "../image_preloader"
-
-const ReactCSSTransitionGroup = React.addons.CSSTransitionGroup
+import TimeoutTransitionGroup from "../timeout_transition_group"
 
 export default React.createClass({
   mixins: [WidgetMixin("images:state")],
@@ -21,11 +20,13 @@ export default React.createClass({
   render() {
     return (
       <div className="ImagesWidget">
-        <ReactCSSTransitionGroup
+        <TimeoutTransitionGroup
           transitionName={this.props.transition}
+          enterTimeout={500}
+          leaveTimeout={500}
           component="div">
           {this.state.url === "" ? undefined : this._renderImage()}
-        </ReactCSSTransitionGroup>
+        </TimeoutTransitionGroup>
       </div>
     )
   },
