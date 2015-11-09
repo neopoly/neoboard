@@ -12,6 +12,6 @@ defmodule Neoboard.WidgetSupervisor do
       true ->
         children = []
     end
-    supervise(children, strategy: :one_for_one)
+    supervise(children, strategy: :one_for_one, max_restarts: 20)
   end
 end
