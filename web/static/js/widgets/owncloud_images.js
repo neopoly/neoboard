@@ -6,7 +6,7 @@ import TimeoutTransitionGroup from "../timeout_transition_group"
 export default React.createClass({
   mixins: [WidgetMixin("owncloudimages:state")],
   getDefaultProps() {
-    return {transition: "transitionScaleGrow"}
+    return {transition: "transitionFade"}
   },
   getInitialState() {
     return {
