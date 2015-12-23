@@ -6,6 +6,9 @@ import {FormattedRelative} from "react-intl"
 import TimeoutTransitionGroup from "../timeout_transition_group"
 
 const Message = React.createClass({
+  getDefaultProps() {
+    return { interval: 1000 * 60 } // 1 minute
+  },
   render() {
     let message = this.props.value
     return (
@@ -26,6 +29,21 @@ const Message = React.createClass({
   },
   componentDidMount() {
     Emojify.run(this.refs.body.getDOMNode())
+    this._update()
+  },
+  componentWillUnmount() {
+    this._clearTimeout()
+  },
+  _update() {
+    this._clearTimeout()
+    this.timeout = setTimeout(this._update, this.props.interval)
+    this.forceUpdate()
+  },
+  _clearTimeout() {
+    if(this.timeout) {
+      clearTimeout(this.timeout)
+      delete this.timeout
+    }
   }
 })
 
