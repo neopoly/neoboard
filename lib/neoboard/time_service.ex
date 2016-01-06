@@ -10,6 +10,6 @@ defmodule Neoboard.TimeService do
   end
 
   def now_as_iso do
-    now("{ISO}")
+    now("{ISO:Extended}")
   end
 end

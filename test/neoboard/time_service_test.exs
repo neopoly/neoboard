@@ -12,6 +12,6 @@ defmodule Neoboard.TimeServiceTest do
 
   test "it returns now as iso" do
     formatted = Neoboard.TimeService.now_as_iso
-    assert formatted =~ ~r/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.?\d*\+\d{4}/
+    assert formatted =~ ~r/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.?\d*\+\d{2}:\d{2}/
   end
 end
