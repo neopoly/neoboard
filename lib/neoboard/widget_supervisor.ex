@@ -10,11 +10,11 @@ defmodule Neoboard.WidgetSupervisor do
   end
 
   def init([]) do
-    cond do
+    children = cond do
       Neoboard.Widgets.auto_start? ->
-        children = Enum.map(Neoboard.Widgets.enabled, &worker_cushion/1)
+        Enum.map(Neoboard.Widgets.enabled, &worker_cushion/1)
       true ->
-        children = []
+        []
     end
     supervise(children, strategy: :one_for_one, max_restarts: 20)
   end

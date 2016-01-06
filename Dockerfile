@@ -3,12 +3,12 @@ MAINTAINER Jonas Thiel <jonas@thiel.io>
 
 RUN echo 'http://dl-4.alpinelinux.org/alpine/edge/community' >> /etc/apk/repositories
 
-RUN apk --update add ncurses-libs erlang wget curl erlang-crypto build-base libstdc++\
+RUN apk --update add ncurses-libs curl build-base libstdc++ erlang erlang-crypto\
     erlang-syntax-tools erlang-inets erlang-ssl erlang-public-key erlang-xmerl\
     erlang-asn1 erlang-sasl erlang-erl-interface erlang-dev nodejs git python\
     && rm -rf /var/cache/apk/*
 
-ENV ELIXIR_VERSION 1.1.1
+ENV ELIXIR_VERSION 1.2.0
 
 RUN curl -L -o Precompiled.zip https://github.com/elixir-lang/elixir/releases/download/v${ELIXIR_VERSION}/Precompiled.zip \
     && mkdir -p /opt/elixir-${ELIXIR_VERSION}/ \
@@ -25,8 +25,6 @@ RUN mkdir $APP_HOME
 WORKDIR $APP_HOME
 COPY package.json $APP_HOME/package.json
 
-ENV SASS_BINARY_NAME alpine-x64-14
-ENV SASS_BINARY_SITE https://github.com/jnbt/node-sass/releases/download
 RUN npm install
 
 ENV MIX_ENV prod
