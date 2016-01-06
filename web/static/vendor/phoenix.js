@@ -6,13 +6,13 @@
 // channels are mulitplexed over the connection.
 // Connect to the server using the `Socket` class:
 //
-//     let socket = new Socket("/ws")
-//     socket.connect({userToken: "123"})
+//     let socket = new Socket("/ws", {params: {userToken: "123"}})
+//     socket.connect()
 //
-// The `Socket` constructor takes the mount point of the socket
-// as well as options that can be found in the Socket docs,
-// such as configuring the `LongPoll` transport, and heartbeat.
-// Socket params can also be passed as an object literal to `connect`.
+// The `Socket` constructor takes the mount point of the socket,
+// the authentication params, as well as options that can be found in
+// the Socket docs, such as configuring the `LongPoll` transport, and
+// heartbeat.
 //
 // ## Channels
 //
@@ -21,20 +21,20 @@
 // To join a channel, you must provide the topic, and channel params for
 // authorization. Here's an example chat room example where `"new_msg"`
 // events are listened for, messages are pushed to the server, and
-// the channel is joined with ok/error matches, and `after` hook:
+// the channel is joined with ok/error/timeout matches:
 //
 //     let channel = socket.channel("rooms:123", {token: roomToken})
 //     channel.on("new_msg", msg => console.log("Got message", msg) )
 //     $input.onEnter( e => {
-//       channel.push("new_msg", {body: e.target.val})
+//       channel.push("new_msg", {body: e.target.val}, 10000)
 //        .receive("ok", (msg) => console.log("created message", msg) )
 //        .receive("error", (reasons) => console.log("create failed", reasons) )
-//        .after(10000, () => console.log("Networking issue. Still waiting...") )
+//        .receive("timeout", () => console.log("Networking issue...") )
 //     })
 //     channel.join()
 //       .receive("ok", ({messages}) => console.log("catching up", messages) )
 //       .receive("error", ({reason}) => console.log("failed join", reason) )
-//       .after(10000, () => console.log("Networking issue. Still waiting...") )
+//       .receive("timeout", () => console.log("Networking issue. Still waiting...") )
 //
 //
 // ## Joining
@@ -51,8 +51,8 @@
 // From the previous example, we can see that pushing messages to the server
 // can be done with `channel.push(eventName, payload)` and we can optionally
 // receive responses from the push. Additionally, we can use
-// `after(millsec, callback)` to abort waiting for our `receive` hooks and
-// take action after some period of waiting.
+// `receive("timeout", callback)` to abort waiting for our other `receive` hooks
+//  and take action after some period of waiting.
 //
 //
 // ## Socket Hooks
@@ -87,6 +87,7 @@
 
 const VSN = "1.0.0"
 const SOCKET_STATES = {connecting: 0, open: 1, closing: 2, closed: 3}
+const DEFAULT_TIMEOUT = 10000
 const CHANNEL_STATES = {
   closed: "closed",
   errored: "errored",
@@ -109,57 +110,49 @@ class Push {
 
   // Initializes the Push
   //
-  // channel - The Channelnel
+  // channel - The Channel
   // event - The event, for example `"phx_join"`
   // payload - The payload, for example `{user_id: 123}`
+  // timeout - The push timeout in milliseconds
   //
-  constructor(channel, event, payload){
+  constructor(channel, event, payload, timeout){
     this.channel      = channel
     this.event        = event
     this.payload      = payload || {}
     this.receivedResp = null
-    this.afterHook    = null
+    this.timeout      = timeout
+    this.timeoutTimer = null
     this.recHooks     = []
     this.sent         = false
   }
 
-  send(){
-    const ref         = this.channel.socket.makeRef()
-    this.refEvent     = this.channel.replyEventName(ref)
+  resend(timeout){
+    this.timeout = timeout
+    this.cancelRefEvent()
+    this.ref          = null
+    this.refEvent     = null
     this.receivedResp = null
     this.sent         = false
+    this.send()
+  }
 
-    this.channel.on(this.refEvent, payload => {
-      this.receivedResp = payload
-      this.matchReceive(payload)
-      this.cancelRefEvent()
-      this.cancelAfter()
-    })
-
-    this.startAfter()
+  send(){ if(this.hasReceived("timeout")){ return }
+    this.startTimeout()
     this.sent = true
     this.channel.socket.push({
       topic: this.channel.topic,
       event: this.event,
       payload: this.payload,
-      ref: ref
+      ref: this.ref
     })
   }
 
   receive(status, callback){
-    if(this.receivedResp && this.receivedResp.status === status){
+    if(this.hasReceived(status)){
       callback(this.receivedResp.response)
     }
 
     this.recHooks.push({status, callback})
-    return this
-  }
-
-  after(ms, callback){
-    if(this.afterHook){ throw(`only a single after hook can be applied to a push`) }
-    let timer = null
-    if(this.sent){ timer = setTimeout(callback, ms) }
-    this.afterHook = {ms: ms, callback: callback, timer: timer}
     return this
   }
 
@@ -171,19 +164,37 @@ class Push {
                  .forEach( h => h.callback(response) )
   }
 
-  cancelRefEvent(){ this.channel.off(this.refEvent) }
-
-  cancelAfter(){ if(!this.afterHook){ return }
-    clearTimeout(this.afterHook.timer)
-    this.afterHook.timer = null
+  cancelRefEvent(){ if(!this.refEvent){ return }
+    this.channel.off(this.refEvent)
   }
 
-  startAfter(){ if(!this.afterHook){ return }
-    let callback = () => {
+  cancelTimeout(){
+    clearTimeout(this.timeoutTimer)
+    this.timeoutTimer = null
+  }
+
+  startTimeout(){ if(this.timeoutTimer){ return }
+    this.ref      = this.channel.socket.makeRef()
+    this.refEvent = this.channel.replyEventName(this.ref)
+
+    this.channel.on(this.refEvent, payload => {
       this.cancelRefEvent()
-      this.afterHook.callback()
-    }
-    this.afterHook.timer = setTimeout(callback, this.afterHook.ms)
+      this.cancelTimeout()
+      this.receivedResp = payload
+      this.matchReceive(payload)
+    })
+
+    this.timeoutTimer = setTimeout(() => {
+      this.trigger("timeout", {})
+    }, this.timeout)
+  }
+
+  hasReceived(status){
+    return this.receivedResp && this.receivedResp.status === status
+  }
+
+  trigger(status, response){
+    this.channel.trigger(this.refEvent, {status, response})
   }
 }
 
@@ -194,8 +205,9 @@ export class Channel {
     this.params      = params || {}
     this.socket      = socket
     this.bindings    = []
+    this.timeout     = this.socket.timeout
     this.joinedOnce  = false
-    this.joinPush    = new Push(this, CHANNEL_EVENTS.join, this.params)
+    this.joinPush    = new Push(this, CHANNEL_EVENTS.join, this.params, this.timeout)
     this.pushBuffer  = []
     this.rejoinTimer  = new Timer(
       () => this.rejoinUntilConnected(),
@@ -204,6 +216,8 @@ export class Channel {
     this.joinPush.receive("ok", () => {
       this.state = CHANNEL_STATES.joined
       this.rejoinTimer.reset()
+      this.pushBuffer.forEach( pushEvent => pushEvent.send() )
+      this.pushBuffer = []
     })
     this.onClose( () => {
       this.socket.log("channel", `close ${this.topic}`)
@@ -212,6 +226,13 @@ export class Channel {
     })
     this.onError( reason => {
       this.socket.log("channel", `error ${this.topic}`, reason)
+      this.state = CHANNEL_STATES.errored
+      this.rejoinTimer.setTimeout()
+    })
+    this.joinPush.receive("timeout", () => {
+      if(this.state !== CHANNEL_STATES.joining){ return }
+
+      this.socket.log("channel", `timeout ${this.topic}`, this.joinPush.timeout)
       this.state = CHANNEL_STATES.errored
       this.rejoinTimer.setTimeout()
     })
@@ -227,13 +248,13 @@ export class Channel {
     }
   }
 
-  join(){
+  join(timeout = this.timeout){
     if(this.joinedOnce){
       throw(`tried to join multiple times. 'join' can only be called a single time per channel instance`)
     } else {
       this.joinedOnce = true
     }
-    this.sendJoin()
+    this.rejoin(timeout)
     return this.joinPush
   }
 
@@ -249,14 +270,15 @@ export class Channel {
 
   canPush(){ return this.socket.isConnected() && this.state === CHANNEL_STATES.joined }
 
-  push(event, payload){
+  push(event, payload, timeout = this.timeout){
     if(!this.joinedOnce){
       throw(`tried to push '${event}' to '${this.topic}' before joining. Use channel.join() before pushing events`)
     }
-    let pushEvent = new Push(this, event, payload)
+    let pushEvent = new Push(this, event, payload, timeout)
     if(this.canPush()){
       pushEvent.send()
     } else {
+      pushEvent.startTimeout()
       this.pushBuffer.push(pushEvent)
     }
 
@@ -275,11 +297,18 @@ export class Channel {
   //
   //     channel.leave().receive("ok", () => alert("left!") )
   //
-  leave(){
-    return this.push(CHANNEL_EVENTS.leave).receive("ok", () => {
+  leave(timeout = this.timeout){
+    let onClose = () => {
       this.socket.log("channel", `leave ${this.topic}`)
       this.trigger(CHANNEL_EVENTS.close, "leave")
-    })
+    }
+    let leavePush = new Push(this, CHANNEL_EVENTS.leave, {}, timeout)
+    leavePush.receive("ok", () => onClose() )
+             .receive("timeout", () => onClose() )
+    leavePush.send()
+    if(!this.canPush()){ leavePush.trigger("ok", {}) }
+
+    return leavePush
   }
 
   // Overridable message hook
@@ -291,16 +320,12 @@ export class Channel {
 
   isMember(topic){ return this.topic === topic }
 
-  sendJoin(){
+  sendJoin(timeout){
     this.state = CHANNEL_STATES.joining
-    this.joinPush.send()
+    this.joinPush.resend(timeout)
   }
 
-  rejoin(){
-    this.sendJoin()
-    this.pushBuffer.forEach( pushEvent => pushEvent.send() )
-    this.pushBuffer = []
-  }
+  rejoin(timeout = this.timeout){ this.sendJoin(timeout) }
 
   trigger(triggerEvent, payload, ref){
     this.onMessage(triggerEvent, payload, ref)
@@ -321,6 +346,8 @@ export class Socket {
   // opts - Optional configuration
   //   transport - The Websocket Transport, for example WebSocket or Phoenix.LongPoll.
   //               Defaults to WebSocket with automatic LongPoll fallback.
+  //   timeout - The default timeout in milliseconds to trigger push timeouts.
+  //             Defaults `DEFAULT_TIMEOUT`
   //   heartbeatIntervalMs - The millisec interval to send a heartbeat message
   //   reconnectAfterMs - The optional function that returns the millsec
   //                      reconnect interval. Defaults to stepped backoff of:
@@ -335,6 +362,8 @@ export class Socket {
   //   longpollerTimeout - The maximum timeout of a long poll AJAX request.
   //                        Defaults to 20s (double the server long poll timer).
   //
+  //   params - The optional params to pass when connecting
+  //
   // For IE8 support use an ES5-shim (https://github.com/es-shims/es5-shim)
   //
   constructor(endPoint, opts = {}){
@@ -342,16 +371,19 @@ export class Socket {
     this.channels             = []
     this.sendBuffer           = []
     this.ref                  = 0
+    this.timeout              = opts.timeout || DEFAULT_TIMEOUT
     this.transport            = opts.transport || window.WebSocket || LongPoll
     this.heartbeatIntervalMs  = opts.heartbeatIntervalMs || 30000
     this.reconnectAfterMs     = opts.reconnectAfterMs || function(tries){
-      return [1000, 5000, 10000][tries - 1] || 10000
+      return [1000, 2000, 5000, 10000][tries - 1] || 10000
     }
     this.logger               = opts.logger || function(){} // noop
     this.longpollerTimeout    = opts.longpollerTimeout || 20000
-    this.params               = {}
-    this.reconnectTimer       = new Timer(() => this.connect(this.params), this.reconnectAfterMs)
+    this.params               = opts.params || {}
     this.endPoint             = `${endPoint}/${TRANSPORTS.websocket}`
+    this.reconnectTimer       = new Timer(() => {
+      this.disconnect(() => this.connect())
+    }, this.reconnectAfterMs)
   }
 
   protocol(){ return location.protocol.match(/^https/) ? "wss" : "ws" }
@@ -375,15 +407,19 @@ export class Socket {
   }
 
   // params - The params to send when connecting, for example `{user_id: userToken}`
-  connect(params = {}){ this.params = params
-    this.disconnect(() => {
-      this.conn = new this.transport(this.endPointURL())
-      this.conn.timeout   = this.longpollerTimeout
-      this.conn.onopen    = () => this.onConnOpen()
-      this.conn.onerror   = error => this.onConnError(error)
-      this.conn.onmessage = event => this.onConnMessage(event)
-      this.conn.onclose   = event => this.onConnClose(event)
-    })
+  connect(params){
+    if(params){
+      console && console.log("passing params to connect is deprecated. Instead pass :params to the Socket constructor")
+      this.params = params
+    }
+    if(this.conn){ return }
+
+    this.conn = new this.transport(this.endPointURL())
+    this.conn.timeout   = this.longpollerTimeout
+    this.conn.onopen    = () => this.onConnOpen()
+    this.conn.onerror   = error => this.onConnError(error)
+    this.conn.onmessage = event => this.onConnMessage(event)
+    this.conn.onclose   = event => this.onConnClose(event)
   }
 
   // Logs the message. Override `this.logger` for specialized logging. noops by default
@@ -445,9 +481,9 @@ export class Socket {
   }
 
   channel(topic, chanParams = {}){
-    let channel = new Channel(topic, chanParams, this)
-    this.channels.push(channel)
-    return channel
+    let chan = new Channel(topic, chanParams, this)
+    this.channels.push(chan)
+    return chan
   }
 
   push(data){
@@ -470,7 +506,7 @@ export class Socket {
     return this.ref.toString()
   }
 
-  sendHeartbeat(){
+  sendHeartbeat(){ if(!this.isConnected()){ return }
     this.push({topic: "phoenix", event: "heartbeat", payload: {}, ref: this.makeRef()})
   }
 
