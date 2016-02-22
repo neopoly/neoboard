@@ -13,7 +13,7 @@ export default React.createClass({
   },
   render() {
     return (
-      <div className="NotepadWidget">
+      <div className="NotepadWidget" title={this.state.info}>
         <h2>{this.state.title}</h2>
         <div
           className="content"
@@ -21,7 +21,6 @@ export default React.createClass({
             __html: this._renderContent()
           }}
         />
-        <p className="info">{this.state.info}</p>
         <LastUpdatedAt updated_at={this.state.updated_at}/>
       </div>
     )
