@@ -2,11 +2,11 @@ defmodule Neoboard.TimeService do
   use Timex
 
   def now do
-    Date.now
+    DateTime.now
   end
 
   def now(format) do
-    DateFormat.format!(now, format)
+    Timex.format!(now, format)
   end
 
   def now_as_iso do
