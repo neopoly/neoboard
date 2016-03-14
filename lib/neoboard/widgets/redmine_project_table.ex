@@ -22,7 +22,7 @@ defmodule Neoboard.Widgets.RedmineProjectTable do
 
   defp url_options do
     now = Neoboard.TimeService.now
-    cache_key = Timex.Date.to_secs(now, :zero)
+    cache_key = Timex.DateTime.to_secs(now, :zero)
     [
       Integer.to_string(now.month),
       Integer.to_string(now.year),
