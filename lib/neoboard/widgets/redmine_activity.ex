@@ -31,14 +31,13 @@ defmodule Neoboard.Widgets.RedmineActivity do
 
   defp build_response(%{projects: projects, users: users}) do
     %{
-      projects: Enum.map(projects, &(%{&1 | updated_at: DateFormat.format!(&1.updated_at, "{ISO}")})),
+      projects: Enum.map(projects, &(%{&1 | updated_at: Timex.format!(&1.updated_at, "{ISO:Extended}")})),
       users: users
     }
   end
 end
 
 defmodule Neoboard.Widgets.RedmineActivity.Project do
-  use Timex
   alias Neoboard.Widgets.RedmineActivity.Project
   defstruct name: nil, users: [], activity: 0, updated_at: nil
 
@@ -52,7 +51,7 @@ defmodule Neoboard.Widgets.RedmineActivity.Project do
   end
 
   def updated_at(project, datetime_as_string) do
-    {:ok, date} = DateFormat.parse(datetime_as_string, "{ISOz}")
+    {:ok, date} = Timex.parse(datetime_as_string, "{ISO:Extended:Z}")
     at = cond do
      is_nil(project.updated_at) -> date
      project.updated_at < date  -> date

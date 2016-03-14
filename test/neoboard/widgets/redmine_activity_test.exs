@@ -1,6 +1,5 @@
 defmodule Neoboard.Widgets.RedmineActivityTest do
   use ExUnit.Case, async: true
-  use Timex
   alias Neoboard.Widgets.RedmineActivity.Parser
 
   setup do
@@ -12,7 +11,7 @@ defmodule Neoboard.Widgets.RedmineActivityTest do
     [first | two_projects] = projects
     assert first.name       == "project1"
     assert first.activity   == 2
-    assert first.updated_at == Date.from({{2015,5,19},{10,19,27}})
+    assert first.updated_at == Timex.datetime({{2015,5,19},{10,19,27}})
     [user | rest] = first.users
     assert user.email == "aa@company.com"
     [user | rest] = rest
@@ -22,7 +21,7 @@ defmodule Neoboard.Widgets.RedmineActivityTest do
     [second | one_project] = two_projects
     assert second.name       == "project3"
     assert second.activity   == 1
-    assert second.updated_at == Date.from({{2015,5,18},{15,02,59}})
+    assert second.updated_at == Timex.datetime({{2015,5,18},{15,02,59}})
     [user | rest] = second.users
     assert user.email == "pp@company.com"
     assert Enum.empty?(rest)
@@ -31,7 +30,7 @@ defmodule Neoboard.Widgets.RedmineActivityTest do
     assert Enum.empty?(rest)
     assert third.name       == "project2"
     assert third.activity   == 1
-    assert third.updated_at == Date.from({{2015,5,19},{10,07,33}})
+    assert third.updated_at == Timex.datetime({{2015,5,19},{10,07,33}})
     [user | rest] = third.users
     assert user.email == "aa@company.com"
     assert Enum.empty?(rest)
