@@ -19,7 +19,7 @@ defmodule Neoboard.Widgets.RedmineActivityTest do
     assert Enum.empty?(rest)
 
     [second | one_project] = two_projects
-    assert second.name       == "project3"
+    assert second.name       == "project3 & more"
     assert second.activity   == 1
     assert second.updated_at == Timex.datetime({{2015,5,18},{15,02,59}})
     [user | rest] = second.users
@@ -50,5 +50,15 @@ defmodule Neoboard.Widgets.RedmineActivityTest do
   defp load_fixture! do
     Path.join(__DIR__, "redmine_activity_fixture.xml")
     |> File.read!
+  end
+end
+
+defmodule Neoboard.Widgets.RedmineActivity.XmlTest do
+  use ExUnit.Case, async: true
+  alias Neoboard.Widgets.RedmineActivity.Xml
+
+  test "handles text nodes with ampersand" do
+    source = Xml.load_xml("<title>code &amp; fun</title>")
+    assert Xml.text(source) == "code & fun"
   end
 end

@@ -143,7 +143,7 @@ defmodule Neoboard.Widgets.RedmineActivity.Parser do
   end
 
   defp extract_project_name(entry) do
-    entry |> Xml.first('./title') |> Xml.text |> match(~r/^([\w\-_ ]+) - /)
+    entry |> Xml.first('./title') |> Xml.text |> match(~r/^([&\w\-_ ]+) - /)
   end
 
   defp extract_updated(entry) do
@@ -176,7 +176,9 @@ defmodule Neoboard.Widgets.RedmineActivity.Xml do
 
   def text(node), do: node |> xpath('./text()') |> extract_text
   defp extract_text([xmlText(value: value)]), do: List.to_string(value)
-  defp extract_text([xmlText(value: value) | _x]), do: List.to_string(value)
+  defp extract_text([xmlText(value: value) | rest]) do
+    List.to_string(value) <> extract_text(rest)
+  end
   defp extract_text(xmlText(value: value)), do: List.to_string(value)
   defp extract_text([]), do: ""
 end
