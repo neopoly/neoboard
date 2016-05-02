@@ -5,7 +5,8 @@ RUN echo 'http://dl-4.alpinelinux.org/alpine/edge/community' >> /etc/apk/reposit
 
 RUN apk --update add ncurses-libs curl build-base libstdc++ erlang erlang-crypto\
     erlang-syntax-tools erlang-inets erlang-ssl erlang-public-key erlang-xmerl\
-    erlang-asn1 erlang-sasl erlang-erl-interface erlang-dev nodejs git python\
+    erlang-asn1 erlang-sasl erlang-erl-interface erlang-dev erlang-parsetools\
+    nodejs git python\
     && rm -rf /var/cache/apk/*
 
 ENV ELIXIR_VERSION 1.2.0
