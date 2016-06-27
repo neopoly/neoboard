@@ -8,7 +8,6 @@ use Mix.Config
 # Configures the endpoint
 config :neoboard, Neoboard.Endpoint,
   url: [host: "localhost"],
-  root: Path.dirname(__DIR__),
   secret_key_base: "2r2ZqXE8cvNYSn93JVRfWLjplf4pcojSDpXX6BjmewwsyN9Itnua9TxFYeGv0peL",
   debug_errors: false,
   pubsub: [name: Neoboard.PubSub,

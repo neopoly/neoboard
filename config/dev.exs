@@ -12,7 +12,8 @@ config :neoboard, Neoboard.Endpoint,
   code_reloader: true,
   cache_static_lookup: false,
   watchers: [
-    node: ["node_modules/webpack/bin/webpack.js", "--watch", "--colors"]
+    node: ["node_modules/webpack/bin/webpack.js", "--watch", "--colors",
+    cd: Path.expand("../", __DIR__)]
   ]
 
 # Watch static and templates for browser reloading.
