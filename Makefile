@@ -9,7 +9,7 @@ build:
 	docker build -t ${NAME} .
 
 shell: build
-	docker run -it --rm ${NAME} sh
+	docker run -it --rm ${NAME} bash
 
 test: build
 	docker run --rm -it -p 4000:4000 ${NAME}
