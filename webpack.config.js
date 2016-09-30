@@ -24,10 +24,7 @@ module.exports = {
     root: [
       __dirname + "/web/static/js",
       __dirname + "/web/static/vendor"
-    ],
-    alias: {
-      react$: "react/addons"
-    }
+    ]
   },
   plugins: [
     new CommonsChunkPlugin("vendors", "vendors.js")
