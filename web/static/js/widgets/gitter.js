@@ -21,14 +21,14 @@ const Message = React.createClass({
             <span className="displayName">{message.fromUser.displayName}</span>
             <FormattedRelative value={message.sent}/>
           </div>
-          <p ref="body">{message.text}</p>
+          <p ref={(p) => this._body = p}>{message.text}</p>
         </div>
         <div className="clear"/>
       </div>
     )
   },
   componentDidMount() {
-    Emojify.run(this.refs.body.getDOMNode())
+    Emojify.run(this._body)
     this._update()
   },
   componentWillUnmount() {
