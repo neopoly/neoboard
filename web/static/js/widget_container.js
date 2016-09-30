@@ -20,7 +20,7 @@ export default React.createClass({
       let widget = configuration[0]
       let grid   = configuration[1]
       return (
-        <div key={i} _grid={grid}>
+        <div key={i} data-grid={grid}>
           {React.createElement(widget, {channel: channel})}
         </div>
       )
@@ -34,7 +34,7 @@ export default React.createClass({
         isDraggable={false}
         listenToWindowResize={false}
         useCSSTransforms={true}
-        initialWidth={this.props.width}>
+        width={this.props.width}>
         {this.props.widgets.map(renderWidget)}
       </ReactGridLayout>
     )
