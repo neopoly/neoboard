@@ -1,7 +1,7 @@
 import React from "react"
 import WidgetMixin from "../widget_mixin"
 import ImagePreloader from "../image_preloader"
-import TimeoutTransitionGroup from "../timeout_transition_group"
+import ReactCSSTransitionGroup from "react-addons-css-transition-group"
 
 export default React.createClass({
   mixins: [WidgetMixin("owncloud_images:state")],
@@ -37,10 +37,10 @@ export default React.createClass({
   },
   _renderImage(){
     return (
-      <TimeoutTransitionGroup
+      <ReactCSSTransitionGroup
         transitionName={this.props.transition}
-        enterTimeout={500}
-        leaveTimeout={500}
+        transitionEnterTimeout={500}
+        transitionLeaveTimeout={500}
         component="div"
         className="image">
         <div key={this.state.url}>
@@ -51,7 +51,7 @@ export default React.createClass({
             <span className="counter">{this.state.current} / {this.state.count}</span>
           </div>
         </div>
-      </TimeoutTransitionGroup>
+      </ReactCSSTransitionGroup>
     )
   },
   _path(path){
