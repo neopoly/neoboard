@@ -1,4 +1,5 @@
-var CommonsChunkPlugin = require("webpack/lib/optimize/CommonsChunkPlugin")
+var webpack = require("webpack");
+var CommonsChunkPlugin = require("webpack/lib/optimize/CommonsChunkPlugin");
 
 var vendors = [
   "react",
@@ -9,6 +10,8 @@ var vendors = [
   "phoenix",
   "emojify"
 ];
+
+var environment = process.env.MIX_ENV == "prod" ? "production" : "development"
 
 module.exports = {
   entry: {
@@ -27,7 +30,12 @@ module.exports = {
     ]
   },
   plugins: [
-    new CommonsChunkPlugin("vendors", "vendors.js")
+    new CommonsChunkPlugin("vendors", "vendors.js"),
+    new webpack.DefinePlugin({
+        'process.env': {
+            'NODE_ENV': JSON.stringify(environment)
+        }
+    })
   ],
   module: {
     noParse: vendors,

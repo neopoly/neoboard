@@ -33,6 +33,7 @@ COPY priv ${APP_HOME}/priv
 RUN mix compile
 
 COPY webpack.config.js $APP_HOME/webpack.config.js
+COPY .babelrc $APP_HOME/.babelrc
 RUN mkdir -p priv/static \
  && node_modules/webpack/bin/webpack.js -p --progress \
  && mix phoenix.digest
