@@ -13,7 +13,7 @@ defmodule Neoboard.Widgets.NichtLustig do
   end
 
   def init(_) do
-    :random.seed(:os.timestamp)
+    :rand.seed(:exsplus, :os.timestamp)
     {:ok, nil}
   end
 

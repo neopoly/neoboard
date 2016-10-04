@@ -11,7 +11,7 @@ defmodule Neoboard.Widgets.OwncloudImages do
   end
 
   def init(:ok) do
-    :random.seed(:os.timestamp)
+    :rand.seed(:exsplus, :os.timestamp)
     {:ok, %{images: [], count: 0, current: 0}}
   end
 
