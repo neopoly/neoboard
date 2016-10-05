@@ -1,0 +1,10 @@
+language: elixir
+elixir:
+  - "1.3"
+otp_release:
+  - "19.1"
+install:
+  - cp config/widgets.exs.sample config/widgets.exs
+  - mix local.rebar --force # for Elixir 1.3.0 and up
+  - mix local.hex --force
+  - mix deps.get
