@@ -20,9 +20,12 @@ defmodule Neoboard.Mixfile do
      applications: [
        :phoenix,
        :phoenix_html,
+       :phoenix_pubsub,
+       :timex,
        :cowboy,
        :logger,
        :httpoison,
+       :xmerl,
        :tzdata]]
   end
 
@@ -40,6 +43,7 @@ defmodule Neoboard.Mixfile do
      {:bypass, github: "ericmj/bypass", branch: "emj-multi-bypass", only: :test},
      {:cowboy, "~> 1.0"},
      {:timex, "~> 2.2"},
-     {:httpoison, "~> 0.9"}]
+     {:httpoison, "~> 0.9"},
+     {:distillery, "~> 0.9"}]
   end
 end

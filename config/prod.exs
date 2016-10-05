@@ -14,7 +14,10 @@ use Mix.Config
 config :neoboard, Neoboard.Endpoint,
   http: [port: System.get_env("NEOBOARD_PORT")],
   cache_static_manifest: "priv/static/manifest.json",
-  secret_key_base: System.get_env("NEOBOARD_SECRET_BASE_KEY")
+  secret_key_base: System.get_env("NEOBOARD_SECRET_BASE_KEY"),
+  server: true,
+  root: ".",
+  version: Mix.Project.config[:version]
 
 # ## SSL Support
 #
