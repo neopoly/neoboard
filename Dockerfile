@@ -30,6 +30,7 @@ COPY lib ${APP_HOME}/lib
 COPY test ${APP_HOME}/test
 COPY web ${APP_HOME}/web
 COPY priv ${APP_HOME}/priv
+COPY rel/config.exs ${APP_HOME}/rel/
 RUN mix compile
 
 COPY webpack.config.js $APP_HOME/webpack.config.js
