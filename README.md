@@ -16,9 +16,8 @@ This project also needs NodeJS for static assets compilation. Find installation 
 
 ## Start an instance
 
-Configure the widgets by create a configuration file at `config/widgets.exs`. You can use `config/widgets.exs.sample` as your template:
+Configure the widgets you want to use in `config/widgets.exs`:
 
-    $ cp config/widgets.exs.sample config/widgets.exs
     $ vim config/widgets.exs
 
 Install all Elixir dependencies:
