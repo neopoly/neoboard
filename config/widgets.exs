@@ -17,6 +17,11 @@ config :neoboard, Neoboard.Widgets.Time,
 #   every: 10000,
 #   failed_color: "red"
 
+# config :neoboard, Neoboard.Widgets.GitlabCi,
+#   every: 30000,
+#   api_url: "https://gitlab.com/api/v3",
+#   private_token: "verysecret"
+
 # config :neoboard, Neoboard.Widgets.NichtLustig,
 #   url: "http://static.nichtlustig.de/comics/full/",
 #   base: "http://static.nichtlustig.de/comics/full/~s.jpg",

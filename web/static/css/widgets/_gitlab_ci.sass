@@ -1,0 +1,30 @@
+.GitlabCiWidget
+  +widget
+  text-align: center
+  color: $white
+
+  &.happy
+    background: #4ad55e
+  &.sad
+    background: #cd181b
+
+  h2
+    +font-xlarge
+    color: $halfWhite
+    margin: 0
+    line-height: 1.3em
+
+  .status
+    font-size: 150px
+    margin: 0
+    line-height: 0.9em
+
+  ul
+    +inline-list
+    max-height: 70px
+    overflow: hidden
+    margin: 25px 0 35px 0
+    padding: 0 10px
+    li, a
+      color: $halfWhite
+      text-decoration: none
