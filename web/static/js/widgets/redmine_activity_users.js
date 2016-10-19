@@ -1,7 +1,7 @@
 import React from "react"
 import WidgetMixin from "../widget_mixin"
 import LastUpdatedAt from "../last_updated_at"
-import TimeoutTransitionGroup from "../timeout_transition_group"
+import ReactCSSTransitionGroup from "react-addons-css-transition-group"
 
 const NEXT_TIMEOUT = 10000 //ms
 
@@ -41,10 +41,10 @@ export default React.createClass({
   },
   _renderUser(user){
     return (
-      <TimeoutTransitionGroup
+      <ReactCSSTransitionGroup
         transitionName={this.props.transition}
-        enterTimeout={500}
-        leaveTimeout={500}
+        transitionEnterTimeout={500}
+        transitionLeaveTimeout={500}
         component="div"
         className="user">
         <div key={user.email}>
@@ -56,7 +56,7 @@ export default React.createClass({
             </ol>
           </div>
         </div>
-      </TimeoutTransitionGroup>
+      </ReactCSSTransitionGroup>
     )
   },
   _renderProject(project){

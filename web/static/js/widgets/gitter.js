@@ -3,7 +3,7 @@ import WidgetMixin from "../widget_mixin"
 import LastUpdatedAt from "../last_updated_at"
 import Emojify from "emojify"
 import {FormattedRelative} from "react-intl"
-import TimeoutTransitionGroup from "../timeout_transition_group"
+import ReactCSSTransitionGroup from "react-addons-css-transition-group"
 
 const Message = React.createClass({
   getDefaultProps() {
@@ -21,14 +21,14 @@ const Message = React.createClass({
             <span className="displayName">{message.fromUser.displayName}</span>
             <FormattedRelative value={message.sent}/>
           </div>
-          <p ref="body">{message.text}</p>
+          <p ref={(p) => this._body = p}>{message.text}</p>
         </div>
         <div className="clear"/>
       </div>
     )
   },
   componentDidMount() {
-    Emojify.run(this.refs.body.getDOMNode())
+    Emojify.run(this._body)
     this._update()
   },
   componentWillUnmount() {
@@ -64,13 +64,13 @@ export default React.createClass({
         <h2>{this.state.title}</h2>
         <div className="scrollable">
           <div className="scrollable-content">
-            <TimeoutTransitionGroup
+            <ReactCSSTransitionGroup
               transitionName={this.props.transition}
-              enterTimeout={500}
-              leaveTimeout={500}
+              transitionEnterTimeout={500}
+              transitionLeaveTimeout={500}
               component="ol">
               {this.state.messages.reverse().map(this._renderMessage)}
-            </TimeoutTransitionGroup>
+            </ReactCSSTransitionGroup>
           </div>
         </div>
         <img src={this.state.url} />

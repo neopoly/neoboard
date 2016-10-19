@@ -1,4 +1,6 @@
 import React from "react"
+import ReactDOM from "react-dom"
+import {IntlProvider} from "react-intl"
 import App from "./app"
 import TimeWidget from "./widgets/time"
 import GitlabCiWidget from "./widgets/gitlab_ci"
@@ -28,7 +30,12 @@ const widgets = [
 
 const Main = {
   run() {
-    React.render(<App widgets={widgets}/>, document.getElementById("main"))
+    ReactDOM.render(
+      <IntlProvider locale="en">
+        <App widgets={widgets}/>
+      </IntlProvider>,
+      document.getElementById("main")
+    )
   }
 }
 
