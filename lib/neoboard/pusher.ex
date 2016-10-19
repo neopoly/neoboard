@@ -20,7 +20,7 @@ defmodule Neoboard.Pusher do
     namespace = Atom.to_string(module)
     |> String.split(".")
     |> List.last
-    |> String.downcase
+    |> Macro.underscore
     namespace <> ":state"
   end
 

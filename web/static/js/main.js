@@ -1,7 +1,7 @@
 import React from "react"
 import App from "./app"
 import TimeWidget from "./widgets/time"
-import JenkinsWidget from "./widgets/jenkins"
+import GitlabCiWidget from "./widgets/gitlab_ci"
 import NotepadWidget from "./widgets/notepad"
 import NichtLustigWidget from "./widgets/nicht_lustig"
 import RedmineProjectTable from "./widgets/redmine_project_table"
@@ -19,7 +19,7 @@ const widgets = [
   [RedmineActivityUsers,    {x:2, y:0, w:1, h:1}],
   [OwncloudImages,          {x:4, y:1, w:1, h:1}],
   [TimeWidget,              {x:4, y:0, w:1, h:1}],
-  [JenkinsWidget,           {x:3, y:0, w:1, h:1}],
+  [GitlabCiWidget,          {x:3, y:0, w:1, h:1}],
   [NichtLustigWidget,       {x:2, y:1, w:1, h:1}],
   [RedmineProjectTable,     {x:0, y:2, w:3, h:1}],
   [NotepadWidget,           {x:3, y:1, w:1, h:2}],
