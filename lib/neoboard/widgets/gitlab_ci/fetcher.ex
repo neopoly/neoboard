@@ -52,7 +52,7 @@ defmodule Neoboard.Widgets.GitlabCi.Fetcher do
     projects = projects
     |> Enum.map(fn project ->
       url = "#{api_url}/projects/#{project.id}/builds?per_page=1"
-      {:ok, response = %HTTPoison.Response{status_code: 200, body: body}} = fetch(fetcher, url)
+      {:ok, %HTTPoison.Response{status_code: 200, body: body}} = fetch(fetcher, url)
       Project.fill_build_status(project, parse_body(body))
     end)
 
