@@ -39,6 +39,15 @@ config :neoboard, Neoboard.Widgets.Time,
 #   every: 10_000,
 #   title: "gitter.im/yourRoom"
 
+#config :neoboard, Neoboard.Widgets.Mattermost,
+#  api_url: "http://mattermost.company.com/api/v3",
+#  private_token: "verysecret",
+#  team_id: "your_team_id",
+#  channel_id: "the_channel_id",
+#  every: 10_000,
+#  posts: 10,
+#  title: "mattermost/town-square"
+
 # config :neoboard, Neoboard.Widgets.OwncloudImages,
 #   url: "https://owncloud.company.com/public.php?service=files&t=SECRET_TOKEN",
 #   every: 10_000
