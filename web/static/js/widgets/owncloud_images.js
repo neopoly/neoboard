@@ -4,7 +4,7 @@ import ImagePreloader from "../image_preloader"
 import TimeoutTransitionGroup from "../timeout_transition_group"
 
 export default React.createClass({
-  mixins: [WidgetMixin("owncloudimages:state")],
+  mixins: [WidgetMixin("owncloud_images:state")],
   getDefaultProps() {
     return {transition: "transitionFade"}
   },

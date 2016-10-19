@@ -6,7 +6,7 @@ import TimeoutTransitionGroup from "../timeout_transition_group"
 const NEXT_TIMEOUT = 10000 //ms
 
 export default React.createClass({
-  mixins: [WidgetMixin("redmineactivity:state")],
+  mixins: [WidgetMixin("redmine_activity:state")],
   getDefaultProps() {
     return {transition: "transitionSlideFromRight"}
   },

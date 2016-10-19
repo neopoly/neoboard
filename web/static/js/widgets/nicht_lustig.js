@@ -2,7 +2,7 @@ import React from "react"
 import WidgetMixin from "../widget_mixin"
 
 export default React.createClass({
-  mixins: [WidgetMixin("nichtlustig:state")],
+  mixins: [WidgetMixin("nicht_lustig:state")],
   getInitialState() {
     return { image: "" }
   },

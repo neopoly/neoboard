@@ -3,7 +3,7 @@ import WidgetMixin from "../widget_mixin"
 import LastUpdatedAt from "../last_updated_at"
 
 export default React.createClass({
-  mixins: [WidgetMixin("redmineprojecttable:state")],
+  mixins: [WidgetMixin("redmine_project_table:state")],
   getInitialState() {
     return {
       title: "",

@@ -7,7 +7,7 @@ import classNames from "classnames"
 const NEXT_TIMEOUT = 5000 //ms
 
 export default React.createClass({
-  mixins: [WidgetMixin("redmineactivity:state")],
+  mixins: [WidgetMixin("redmine_activity:state")],
   getInitialState() {
     return {
       projects: [],
