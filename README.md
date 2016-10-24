@@ -46,6 +46,14 @@ Phoenix "digest" task:
 
     $ mix phoenix.digest
 
+## Development
+
+You can hack on neoboard without having elixir and NodeJS installed using a Docker image
+
+    $ docker build -t neoboard .
+
+    $ docker run --rm -it -p 4000:4000 -e MIX_ENV=dev -v `pwd`:/app neoboard mix phoenix.server
+
 ## LICENSE
 
 Please have a look at `LICENSE.txt` for further information about the license this project is published under.
