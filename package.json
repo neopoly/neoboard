@@ -2,12 +2,14 @@
   "repository": {},
   "dependencies": {
     "classnames": "~2.2.5",
+    "json-loader": "^0.5.4",
     "lodash": "~4.16.2",
     "react": "~15.3.2",
     "react-addons-css-transition-group": "~15.3.2",
     "react-dom": "~15.3.2",
     "react-grid-layout": "~0.13.6",
-    "react-intl": "~2.1.5"
+    "react-intl": "~2.1.5",
+    "react-markdown": "^2.4.2"
   },
   "devDependencies": {
     "webpack": "~1.13.2",

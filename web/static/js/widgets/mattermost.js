@@ -4,6 +4,7 @@ import LastUpdatedAt from "../last_updated_at"
 import Emojify from "emojify"
 import {FormattedRelative} from "react-intl"
 import ReactCSSTransitionGroup from "react-addons-css-transition-group"
+import ReactMarkdown from "react-markdown"
 
 const Post = React.createClass({
   getDefaultProps() {
@@ -22,7 +23,9 @@ const Post = React.createClass({
             </span>
             <FormattedRelative value={this.props.create_at}/>
           </div>
-          <p ref={(p) => this._body = p}>{this.props.message}</p>
+          <div ref={(p) => this._body = p} className="body">
+            <ReactMarkdown source={this.props.message} />
+          </div>
         </div>
         <div className="clear"/>
       </div>

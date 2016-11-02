@@ -49,16 +49,28 @@
         .displayName
           margin-right: 7px
 
-      p
+      .body
         display: -webkit-box
         color: $twoThirdWhite
         font-size: 0.9rem
-        max-height: 75px
         margin: 0
-        -webkit-line-clamp: 4
-        -webkit-box-orient: vertical
-        overflow: hidden
-        text-overflow: ellipsis
+        word-wrap: break-word
+
+        > div
+          width: 100%
+
+        a:link, a:visited, a:active
+          color: $twoThirdWhite
+        a:hover
+          color: $white
+        p
+          margin: 0
+
+        blockquote
+          margin: 5px 0 5px 0
+          padding-left: 5px
+          border-left: 3px solid $thirdWhite
+
         img.emoji
           width: 1.5em
           height: 1.5em
