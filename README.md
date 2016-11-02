@@ -46,6 +46,16 @@ Phoenix "digest" task:
 
     $ mix phoenix.digest
 
+## Release and run via distillery
+
+    $ node_modules/webpack/bin/webpack.js -p --progress
+    $ export NEOBOARD_SECRET_BASE_KEY=<GENERATED>
+    $ export NEOBOARD_COOKIE=<GENERATED_COOKIE>
+    $ export NEOBOARD_PORT=4000
+    $ MIX_ENV=prod mix do phoenix.digest, release --no-tar
+
+    $ rel/neoboard/bin/neoboard foreground
+
 ## LICENSE
 
 Please have a look at `LICENSE.txt` for further information about the license this project is published under.
