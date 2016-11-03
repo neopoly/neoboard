@@ -2,6 +2,7 @@ defmodule Neoboard.Widgets.RedmineProjectTable do
   use GenServer
   use Neoboard.Pusher
   use Neoboard.Config
+  alias Neoboard.TimeService
 
   def start_link do
     {:ok, pid} = GenServer.start_link(__MODULE__, nil)
@@ -21,8 +22,8 @@ defmodule Neoboard.Widgets.RedmineProjectTable do
   end
 
   defp url_options do
-    now = Neoboard.TimeService.now
-    cache_key = Timex.DateTime.to_secs(now, :zero)
+    now = TimeService.now
+    cache_key = DateTime.to_unix(now)
     [
       Integer.to_string(now.month),
       Integer.to_string(now.year),

@@ -2,7 +2,7 @@ defmodule Neoboard.TimeServiceTest do
   use ExUnit.Case, async: true
 
   test "it determines now" do
-    assert %Timex.DateTime{} = Neoboard.TimeService.now
+    assert %DateTime{} = Neoboard.TimeService.now
   end
 
   test "it returns now formatted" do

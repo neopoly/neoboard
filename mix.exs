@@ -42,7 +42,7 @@ defmodule Neoboard.Mixfile do
      {:phoenix_live_reload, "~> 1.0", only: :dev},
      {:bypass, github: "ericmj/bypass", branch: "emj-multi-bypass", only: :test},
      {:cowboy, "~> 1.0"},
-     {:timex, "~> 2.2"},
+     {:timex, "~> 3.0"},
      {:httpoison, "~> 0.9"},
      {:distillery, "~> 0.9"}]
   end
