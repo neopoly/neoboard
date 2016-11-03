@@ -1,7 +1,6 @@
 defmodule Neoboard.Widgets.Mattermost.Fetcher do
   alias Neoboard.Widgets.Mattermost.Fetcher
   alias Neoboard.Gravatar
-  alias Timex.DateTime
 
   defstruct [:api_url, :private_token, :channel_id, :team_id, :since, :posts, :users]
 
@@ -97,6 +96,6 @@ defmodule Neoboard.Widgets.Mattermost.Fetcher do
   end
 
   defp to_timestamp(since) do
-    DateTime.to_seconds(since) * 1000
+    DateTime.to_unix(since)
   end
 end

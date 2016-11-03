@@ -1,7 +1,6 @@
 defmodule Neoboard.Widgets.MattermostFetcherTest do
   use ExUnit.Case, async: true
   alias Neoboard.Widgets.Mattermost.Fetcher
-  alias Timex.DateTime
 
   setup do
     bypass = Bypass.open
@@ -15,7 +14,7 @@ defmodule Neoboard.Widgets.MattermostFetcherTest do
   }
 
   test "w/o posts and users returns no posts", %{bypass: bypass} do
-    since = DateTime.epoch
+    since = DateTime.from_unix!(0)
     config = build_config(bypass)
 
     posts = "/teams/the_team_id/channels/the_channel_id/posts/since/0"
@@ -36,7 +35,7 @@ defmodule Neoboard.Widgets.MattermostFetcherTest do
   end
 
   test "ignores deleted posts", %{bypass: bypass} do
-    since = DateTime.epoch
+    since = DateTime.from_unix!(0)
     config = build_config(bypass)
     posts = "/teams/the_team_id/channels/the_channel_id/posts/since/0"
     Bypass.expect bypass, "GET", posts, fn conn ->
@@ -72,7 +71,7 @@ defmodule Neoboard.Widgets.MattermostFetcherTest do
   end
 
   test "injects enriched users into posts", %{bypass: bypass} do
-    since = DateTime.epoch
+    since = DateTime.from_unix!(0)
     config = build_config(bypass)
 
     posts = "/teams/the_team_id/channels/the_channel_id/posts/since/0"

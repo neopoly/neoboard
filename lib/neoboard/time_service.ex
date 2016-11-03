@@ -1,8 +1,6 @@
 defmodule Neoboard.TimeService do
-  use Timex
-
   def now do
-    DateTime.now
+    Timex.now
   end
 
   def now(format) do
