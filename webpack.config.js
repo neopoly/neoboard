@@ -1,16 +1,8 @@
 var webpack = require("webpack");
 var CommonsChunkPlugin = require("webpack/lib/optimize/CommonsChunkPlugin");
+var package = require("./package.json");
 
-var vendors = [
-  "react",
-  "lodash",
-  "classnames",
-  "react-intl",
-  "react-grid-layout",
-  "phoenix",
-  "emojify"
-];
-
+var vendors = Object.keys(package.dependencies);
 var environment = process.env.MIX_ENV == "prod" ? "production" : "development"
 
 module.exports = {
@@ -24,29 +16,32 @@ module.exports = {
     filename: "[name].js"
   },
   resolve: {
-    root: [
+    modules: [
       __dirname + "/web/static/js",
-      __dirname + "/web/static/vendor"
+      __dirname + "/web/static/vendor",
+      "node_modules"
     ]
   },
   plugins: [
-    new CommonsChunkPlugin("vendors", "vendors.js"),
+    new CommonsChunkPlugin({
+      name: "vendors",
+      filename: "vendors.js"
+    }),
     new webpack.DefinePlugin({
-        'process.env': {
-            'NODE_ENV': JSON.stringify(environment)
-        }
+      "process.env": {
+        "NODE_ENV": JSON.stringify(environment)
+      }
     })
   ],
   module: {
-    noParse: vendors,
     loaders: [
     {
      test: /\.scss$/,
-     loader: "style!css!sass"
+     loader: "style-loader!css-loader!sass-loader"
     },
     {
      test: /\.sass$/,
-     loader: "style!css!sass?indentedSyntax"
+     loader: "style-loader!css-loader!sass-loader?indentedSyntax"
     },
     {
       test: /\.js$/,
@@ -55,7 +50,7 @@ module.exports = {
     },
     {
       test: /\.json$/,
-      loader: "json"
+      loader: "json-loader"
     }
     ]
   }
