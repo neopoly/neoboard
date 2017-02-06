@@ -2,58 +2,51 @@ defmodule Neoboard.Widgets.Mattermost.Fetcher do
   alias Neoboard.Widgets.Mattermost.Fetcher
   alias Neoboard.Gravatar
 
-  defstruct [:api_url, :private_token, :channel_id, :team_id, :since, :posts, :users]
+  defstruct [:api_url, :private_token, :channel_id, :team_id, :since]
 
-  def fetch(since, config) do
+  @users_per_page 1000
+
+  def users_per_page do
+    @users_per_page
+  end
+
+  def fetch(since, private_token, config) do
     %Fetcher{
       api_url: config[:api_url],
-      private_token: config[:private_token],
+      private_token: private_token,
       team_id: config[:team_id],
       channel_id: config[:channel_id],
-      since: since,
-      posts: [],
-      users: %{}
+      since: since
     } |> fetch
   end
 
   defp fetch(fetcher) do
-    fetcher = fetcher
-    |> fetch_posts
-    |> fetch_users
-    |> inject_users
-
-    {:ok, fetcher.posts}
+    with {:ok, raw_posts} <- fetch_posts(fetcher),
+         {:ok, users} <- fetch_users(fetcher),
+         posts <- inject_users(raw_posts, users) do
+      {:ok, posts}
+    else
+      other -> other
+    end
   end
 
   defp fetch_posts(fetcher) do
-    posts = fetcher
-    |> request(posts_url(fetcher))
-    |> Dict.get("posts")
-    |> extract_posts
-
-    %{fetcher | posts: posts}
+    case request(fetcher, posts_url(fetcher)) do
+      {:ok, data} -> {:ok, extract_posts(data["posts"])}
+      other -> other
+    end
   end
 
-  defp fetch_users(fetcher) do
-    users = fetcher
-    |> request(users_url(fetcher))
-    |> extract_users
-
-    %{fetcher | users: users}
-  end
-
-  defp inject_users(fetcher) do
-    posts = Enum.map(fetcher.posts, fn(post) ->
-      Dict.put(post, "user", Dict.get(fetcher.users, post["user_id"]))
+  defp inject_users(raw_posts, users) do
+    Enum.map(raw_posts, fn(post) ->
+      Map.put(post, "user", Map.get(users, post["user_id"]))
     end)
-
-    %{fetcher | posts: posts}
   end
 
   defp extract_posts(nil), do: []
   defp extract_posts(posts) do
     posts
-    |> Dict.values
+    |> Map.values
     |> Enum.filter(&(&1["delete_at"] == 0))
     |> Enum.sort(&(&1["create_at"] > &2["create_at"]))
   end
@@ -61,14 +54,39 @@ defmodule Neoboard.Widgets.Mattermost.Fetcher do
   defp extract_users(nil), do: %{}
   defp extract_users(users) do
     Enum.reduce(users, %{}, fn({id, user}, acc) ->
-      Dict.put(acc, id, Dict.put(user, "avatar_url", avatar_url(user)))
+      Map.put(acc, id, Map.put(user, "avatar_url", avatar_url(user)))
     end)
   end
 
+  defp fetch_users(fetcher), do: fetch_users(fetcher, 0, %{})
+  defp fetch_users(fetcher, page, pool) do
+    case request(fetcher, users_url(fetcher, page, @users_per_page)) do
+      {:ok, data} ->
+        users = extract_users(data)
+        pool  = Map.merge(pool, users)
+        if map_size(users) >= @users_per_page do
+          fetch_users(fetcher, page+1, pool)
+        else
+          {:ok, pool}
+        end
+      other -> other
+    end
+  end
+
   defp request(fetcher, url) do
-    result = HTTPoison.get(url, headers(fetcher))
-    {:ok, %HTTPoison.Response{status_code: 200, body: body}} = result
-    body |> Poison.decode!
+    {:ok, response} = HTTPoison.get(url, headers(fetcher))
+    parse_response(response)
+  end
+
+  defp parse_response(%HTTPoison.Response{status_code: 200, body: body}) do
+    Poison.decode(body)
+  end
+
+  defp parse_response(%HTTPoison.Response{status_code: 401, body: body}) do
+    case Poison.decode(body) do
+      {:ok, data} -> {:authentication_failure, data["message"]}
+      other -> other
+    end
   end
 
   defp headers(%Fetcher{private_token: token}) do
@@ -83,10 +101,7 @@ defmodule Neoboard.Widgets.Mattermost.Fetcher do
     fetcher |> url("teams/#{team}/channels/#{channel}/posts/since/#{timestamp}")
   end
 
-  defp users_url(fetcher = %Fetcher{team_id: team}) do
-    # Fetch the first 100_000 users. (Won't work for larger teams.)
-    page     = 0
-    per_page = 100_000
+  defp users_url(fetcher = %Fetcher{team_id: team}, page, per_page) do
     fetcher |> url("teams/#{team}/users/#{page}/#{per_page}")
   end
 
