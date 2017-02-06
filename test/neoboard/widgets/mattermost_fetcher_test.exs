@@ -24,7 +24,7 @@ defmodule Neoboard.Widgets.MattermostFetcherTest do
       send_json(conn, %{})
     end
 
-    users = "/users/profiles/the_team_id"
+    users = "/teams/the_team_id/users/0/100000"
     Bypass.expect bypass, "GET", users, fn conn ->
       conn = Plug.Conn.fetch_query_params(conn)
       assert_request_header(conn, "authorization", "Bearer the_private_token")
@@ -55,7 +55,7 @@ defmodule Neoboard.Widgets.MattermostFetcherTest do
       })
     end
 
-    users = "/users/profiles/the_team_id"
+    users = "/teams/the_team_id/users/0/100000"
     Bypass.expect bypass, "GET", users, fn conn ->
       conn = Plug.Conn.fetch_query_params(conn)
       assert_request_header(conn, "authorization", "Bearer the_private_token")
@@ -92,7 +92,7 @@ defmodule Neoboard.Widgets.MattermostFetcherTest do
       })
     end
 
-    users = "/users/profiles/the_team_id"
+    users = "/teams/the_team_id/users/0/100000"
     Bypass.expect bypass, "GET", users, fn conn ->
       conn = Plug.Conn.fetch_query_params(conn)
       assert_request_header(conn, "authorization", "Bearer the_private_token")

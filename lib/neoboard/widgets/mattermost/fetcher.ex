@@ -83,8 +83,11 @@ defmodule Neoboard.Widgets.Mattermost.Fetcher do
     fetcher |> url("teams/#{team}/channels/#{channel}/posts/since/#{timestamp}")
   end
 
-  defp users_url(fetcher = %Fetcher{team_id: team_id}) do
-    fetcher |> url("users/profiles/#{team_id}")
+  defp users_url(fetcher = %Fetcher{team_id: team}) do
+    # Fetch the first 100_000 users. (Won't work for larger teams.)
+    page     = 0
+    per_page = 100_000
+    fetcher |> url("teams/#{team}/users/#{page}/#{per_page}")
   end
 
   defp avatar_url(user) do
