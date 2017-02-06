@@ -28,8 +28,7 @@ defmodule Neoboard.ConnCase do
     end
   end
 
-  setup tags do
-
+  setup _ do
     :ok
   end
 end
