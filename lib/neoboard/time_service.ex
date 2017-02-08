@@ -4,7 +4,7 @@ defmodule Neoboard.TimeService do
   end
 
   def now(format) do
-    Timex.format!(now, format)
+    Timex.format!(now(), format)
   end
 
   def now_as_iso do

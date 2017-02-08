@@ -24,7 +24,7 @@ defmodule Neoboard.Broadcaster do
   end
 
   def handle_cast({:push, message, payload}, state) do
-    {:noreply, Dict.put(state, message, payload)}
+    {:noreply, Map.put(state, message, payload)}
   end
 
   def handle_call(:join, _from, state) do

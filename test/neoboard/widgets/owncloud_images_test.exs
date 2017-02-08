@@ -4,7 +4,7 @@ defmodule Neoboard.Widgets.OwncloudImagesTest do
   alias Neoboard.Widgets.OwncloudImages.FolderDoc
 
   setup do
-    {:ok, doc: load_fixture!}
+    {:ok, doc: load_fixture!()}
   end
 
   test "doc finds all folders without base path", %{doc: doc} do

@@ -31,7 +31,7 @@ defmodule Neoboard.ProcessCushionTest do
       receive do
         {:EXIT, pid, :fake_timeout} ->
           send(holder, {:exit, pid, :fake_timeout})
-          :timer.send_after(15, self, :wait)
+          :timer.send_after(15, self(), :wait)
           receive do
             :wait ->
               :ok
@@ -42,7 +42,7 @@ defmodule Neoboard.ProcessCushionTest do
           send(holder, {:ping, :pong})
           listen(holder)
         :pid ->
-          send(holder, {:pid, self})
+          send(holder, {:pid, self()})
           listen(holder)
         {:match, some} ->
           send(holder, {:match, some})
@@ -167,12 +167,12 @@ defmodule Neoboard.ProcessCushionTest do
 
   defp cushion(delay, shutdown_timeout) do
     {:ok, pid} = ProcessCushion.start_link(__MODULE__, delay, shutdown_timeout,
-                                           DummyProcess, :foo, [self])
+                                           DummyProcess, :foo, [self()])
     {pid, ProcessCushion.child_pid(pid)}
   end
 
   defp wait(time) do
-    :timer.send_after(time, self, :wait)
+    :timer.send_after(time, self(), :wait)
     assert_receive :wait
   end
 end

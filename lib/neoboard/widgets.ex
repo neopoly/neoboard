@@ -1,12 +1,12 @@
 defmodule Neoboard.Widgets do
   def enabled do
     Application.get_all_env(:neoboard)
-    |> Dict.keys
+    |> Keyword.keys
     |> Enum.filter(&widget_module?/1)
   end
 
   def auto_start? do
-    Dict.get(config, :auto_start, true)
+    Keyword.get(config(), :auto_start, true)
   end
 
   defp widget_module?(mod) do

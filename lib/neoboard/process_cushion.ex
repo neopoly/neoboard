@@ -82,11 +82,11 @@ defmodule Neoboard.ProcessCushion do
       true ->
         Logger.info("[ProcessCushion] Service #{state.name} exited on node" <>
                     " #{node()} in #{lifetime}. Delay exit!")
-        :timer.send_after(state.delay, self, {:die, reason})
+        :timer.send_after(state.delay, self(), {:die, reason})
       _ ->
         Logger.debug("[ProcessCushion] Service #{state.name} exited late." <>
                      " Exit now!")
-        send(self, {:die, reason})
+        send(self(), {:die, reason})
     end
     %{state | child_pid: nil}
   end

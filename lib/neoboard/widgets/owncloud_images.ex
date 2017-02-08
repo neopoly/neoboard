@@ -16,12 +16,12 @@ defmodule Neoboard.Widgets.OwncloudImages do
   end
 
   def handle_cast(:fetch, _) do
-    state = push_image!(reset!)
+    state = reset!() |> push_image!()
     {:noreply, state}
   end
 
   def handle_info(:tick, %{images: []}) do
-    state = push_image!(reset!)
+    state = reset!() |> push_image!
     {:noreply, state}
   end
 
@@ -30,14 +30,14 @@ defmodule Neoboard.Widgets.OwncloudImages do
   end
 
   defp reset! do
-    images = Parser.parse!(config[:url]) |> Enum.shuffle
+    images = Parser.parse!(config()[:url]) |> Enum.shuffle
     %{images: images, count: length(images), current: 0}
   end
 
   defp push_image!(%{images: [%{name: name, url: url, path: path} | images], current: current, count: count}) do
     next = current + 1
     push! %{name: name, url: url, path: path, current: next, count: count}
-    :timer.send_after(config[:every], self, :tick)
+    :timer.send_after(config()[:every], self(), :tick)
     %{images: images, current: next, count: count}
   end
 end
@@ -71,7 +71,7 @@ defmodule Neoboard.Widgets.OwncloudImages.FolderDoc do
 
   def find_folders(doc, base_url) do
     doc
-    |> DocHelper.all(~r{<tr[^>]+data-type="dir".*</tr>}isr)
+    |> DocHelper.all(~r{<tr[^>]+data-type="dir".*</tr>}isU)
     |> Enum.map(fn row ->
       name = file_name(row)
       url  = build_folder_url(base_url, name)
@@ -82,7 +82,7 @@ defmodule Neoboard.Widgets.OwncloudImages.FolderDoc do
   def find_images(doc) do
     path = extract_path(doc)
     doc
-    |> DocHelper.all(~r{<tr[^>]+data-mime="image/\w+".*</tr>}isr)
+    |> DocHelper.all(~r{<tr[^>]+data-mime="image/\w+".*</tr>}isU)
     |> Enum.map(fn row ->
       name = file_name(row)
       url  = image_url(row)
@@ -106,7 +106,7 @@ defmodule Neoboard.Widgets.OwncloudImages.FolderDoc do
   defp build_folder_url(base_url, folder) do
     uri     = URI.parse(base_url)
     query   = URI.decode_query(uri.query || "", %{"path" => ""})
-    updated = Dict.put(query, "path", query["path"] <> "\\" <> folder)
+    updated = Map.put(query, "path", query["path"] <> "\\" <> folder)
     to_string(%{uri | query: URI.encode_query(updated)})
   end
 
