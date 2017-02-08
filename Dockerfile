@@ -1,4 +1,4 @@
-FROM elixir:1.3
+FROM elixir:1.4
 MAINTAINER Jonas Thiel <jonas@thiel.io>
 
 ENV REQUIRED_PACKAGES="nodejs" \
