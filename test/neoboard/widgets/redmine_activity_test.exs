@@ -3,7 +3,7 @@ defmodule Neoboard.Widgets.RedmineActivityTest do
   alias Neoboard.Widgets.RedmineActivity.Parser
 
   setup do
-    {:ok, xml: load_fixture!}
+    {:ok, xml: load_fixture!()}
   end
 
   test "parser collects projects", %{xml: xml} do

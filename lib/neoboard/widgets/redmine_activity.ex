@@ -8,21 +8,22 @@ defmodule Neoboard.Widgets.RedmineActivity do
   def start_link do
     {:ok, pid} = GenServer.start_link(__MODULE__, nil)
     send(pid, :tick)
-    :timer.send_interval(config[:every], pid, :tick)
+    :timer.send_interval(config()[:every], pid, :tick)
     {:ok, pid}
   end
 
   def handle_info(:tick, _) do
-    {:ok, response} = fetch
+    {:ok, response} = fetch()
     push! response
     {:noreply, nil}
   end
 
   defp fetch do
-    HTTPoison.start
-    {:ok, %HTTPoison.Response{status_code: 200, body: body}} = HTTPoison.get(config[:url])
-    response = process_body(body) |> build_response
-    {:ok, response}
+    case HTTPoison.get(config()[:url]) do
+      {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
+        response = process_body(body) |> build_response
+        {:ok, response}
+    end
   end
 
   defp process_body(body) do
@@ -42,7 +43,7 @@ defmodule Neoboard.Widgets.RedmineActivity.Project do
   defstruct name: nil, users: [], activity: 0, updated_at: nil
 
   def add_user(project, user) do
-    users = Enum.uniq([user | project.users], &(&1.email))
+    users = Enum.uniq_by([user | project.users], &(&1.email))
     %{project | users: users}
   end
 
@@ -106,7 +107,7 @@ defmodule Neoboard.Widgets.RedmineActivity.Parser do
   end
 
   defp collect_projects(actitivities) do
-    Dict.values(actitivities)
+    Map.values(actitivities)
     |> Enum.sort(&Project.compare/2)
   end
 
@@ -115,20 +116,20 @@ defmodule Neoboard.Widgets.RedmineActivity.Parser do
     |> Enum.map(&(&1.users))
     |> List.flatten
     |> Enum.reduce(%{}, fn (user, all) ->
-      u = Dict.get(all, user.email, user)
-      Dict.put(all, user.email, User.add_projects(u, user.projects))
+      u = Map.get(all, user.email, user)
+      Map.put(all, user.email, User.add_projects(u, user.projects))
     end)
-    |> Dict.values
+    |> Map.values
   end
 
   defp reduce_project(entry, dict) do
     project = extract_project(entry)
     reduced =
-      Dict.get(dict, project.name, project)
+      Map.get(dict, project.name, project)
       |> Project.add_user(extract_user(entry))
       |> Project.add_activity
       |> Project.updated_at(extract_updated(entry))
-    Dict.put(dict, project.name, reduced)
+    Map.put(dict, project.name, reduced)
   end
 
   defp extract_project(entry) do

@@ -8,7 +8,7 @@ defmodule Neoboard.Widgets.NichtLustig do
   def start_link do
     {:ok, pid} = GenServer.start_link(__MODULE__, [])
     send(pid, :tick)
-    :timer.send_interval(config[:every], pid, :tick)
+    :timer.send_interval(config()[:every], pid, :tick)
     {:ok, pid}
   end
 
@@ -18,16 +18,17 @@ defmodule Neoboard.Widgets.NichtLustig do
   end
 
   def handle_info(:tick, _) do
-    {:ok, reponse} = fetch
+    {:ok, reponse} = fetch()
     push! reponse
     {:noreply, nil}
   end
 
   defp fetch do
-    HTTPoison.start
-    {:ok, %HTTPoison.Response{status_code: 200, body: body}} = HTTPoison.get(config[:url])
-    response = process_body(body) |> build_response
-    {:ok, response}
+    case HTTPoison.get(config()[:url]) do
+      {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
+        response = process_body(body) |> build_response
+        {:ok, response}
+    end
   end
 
   defp process_body(body) do
@@ -44,7 +45,7 @@ defmodule Neoboard.Widgets.NichtLustig do
   end
 
   defp build_url(image) do
-    :io_lib.format(config[:base], [image])
+    :io_lib.format(config()[:base], [image])
     |> List.to_string
   end
 

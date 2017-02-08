@@ -26,6 +26,6 @@ defmodule Neoboard.Pusher do
 
   defp add_timestamp!(payload) do
     now = Neoboard.TimeService.now_as_iso
-    Dict.put(payload, :updated_at, now)
+    Map.put(payload, :updated_at, now)
   end
 end

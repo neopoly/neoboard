@@ -17,7 +17,7 @@ defmodule Neoboard.Widgets.Gitter do
     cond do
       String.match?(chunk, ~r/\{.*\}/) ->
         message = chunk |> Poison.decode!
-        updated = [message | state] |> Enum.take(config[:messages])
+        updated = [message | state] |> Enum.take(config()[:messages])
         push_messages! updated
         {:noreply, updated}
       true ->
@@ -36,35 +36,39 @@ defmodule Neoboard.Widgets.Gitter do
   end
 
   def handle_cast(:listen, _state) do
-    messages = fetch
+    messages = fetch()
     push_messages! messages
-    do_listen
+    do_listen()
     {:noreply, messages}
   end
 
   defp fetch do
-    HTTPoison.start
-    {:ok, %HTTPoison.Response{status_code: 200, body: body}} = HTTPoison.get(url, headers)
-    body |> Poison.decode! |> Enum.reverse
+    case HTTPoison.get(url(), headers()) do
+      {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
+        body |> Poison.decode! |> Enum.reverse
+    end
   end
 
   defp push_messages!(messages) do
-    push! %{messages: messages, title: config[:title]}
+    push! %{messages: messages, title: config()[:title]}
   end
 
   defp headers do
     %{
-      "Authorization" => "Bearer #{config[:token]}",
+      "Authorization" => "Bearer #{config()[:token]}",
       "Accept" => "application/json"
     }
   end
 
   defp url(host \\ "api.gitter.im") do
-    "https://#{host}/v1/rooms/#{config[:room]}/chatMessages?limit=#{config[:messages]}"
+    room     = config()[:room]
+    messages = config()[:messages]
+    "https://#{host}/v1/rooms/#{room}/chatMessages?limit=#{messages}"
   end
 
   defp do_listen do
-    HTTPoison.start
-    HTTPoison.get! url("stream.gitter.im"), headers, [stream_to: self, recv_timeout: :infinity]
+    HTTPoison.get! url("stream.gitter.im"), headers(), [
+      stream_to: self(),
+      recv_timeout: :infinity]
   end
 end

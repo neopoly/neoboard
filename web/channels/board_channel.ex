@@ -3,12 +3,12 @@ defmodule Neoboard.BoardChannel do
   require Logger
 
   def join("board:neo", _auth_msg, socket) do
-    send(self, :after_join)
+    send(self(), :after_join)
     {:ok, socket}
   end
 
   def terminate(_reason, _socket) do
-    send(self, :after_leave)
+    send(self(), :after_leave)
     :ok
   end
 

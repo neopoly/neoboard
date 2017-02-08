@@ -31,7 +31,7 @@ defmodule Neoboard.Widgets.MattermostAuthenticationTest do
   end
 
   defp build_config(bypass) do
-    Dict.merge(@config, %{
+    Map.merge(@config, %{
       api_url: endpoint_url(bypass)
     })
   end
