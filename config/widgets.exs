@@ -75,5 +75,9 @@ config :neoboard, Neoboard.Widgets.Time,
 #   ],
 #   every: 10_000
 
-#config :neoboard, Neoboard.Widgets.Youtube,
-#  url: "https://www.youtube.com/embed/uNYEZXvRlB8?&autoplay=1"
+# config :neoboard, Neoboard.Widgets.Youtube,
+#   url: "https://www.youtube.com/embed/uNYEZXvRlB8?&autoplay=1"
+
+# config :neoboard, Neoboard.Widgets.Calendar,
+#   url: "https://calendar.company.com/projects.ics",
+#   every: 600_000

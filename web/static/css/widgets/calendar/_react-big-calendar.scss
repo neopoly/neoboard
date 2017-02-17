@@ -1,0 +1,121 @@
+.rbc-off-range {
+  color: #b3b3b3;
+}
+.rbc-row-content {
+  position: relative;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+  z-index: 4;
+}
+.rbc-today {
+  background-color: #eaf6ff;
+}
+.rbc-event {
+  padding: 2px 5px;
+  background-color: #3174ad;
+  border-radius: 5px;
+  color: #fff;
+}
+.rbc-event-label {
+  font-size: 80%;
+}
+.rbc-event-overlaps {
+  box-shadow: -1px 1px 5px 0px rgba(51, 51, 51, 0.5);
+}
+.rbc-event-continues-prior {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+.rbc-event-continues-after {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.rbc-event-continues-earlier {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+.rbc-event-continues-later {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.rbc-row {
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-direction: row;
+      flex-direction: row;
+}
+.rbc-row-segment {
+  padding: 0 1px 1px 1px;
+}
+.rbc-month-view {
+  position: relative;
+  border: 1px solid #DDD;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-direction: column;
+      flex-direction: column;
+  -ms-flex: 1 0 0px;
+      flex: 1 0 0;
+  width: 100%;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+  height: 100%;
+}
+.rbc-month-view .rbc-header {
+  border-bottom: 1px solid #DDD;
+}
+.rbc-month-view .rbc-header + .rbc-header {
+  border-left: 1px solid #DDD;
+}
+.rbc-month-header {
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-direction: row;
+      flex-direction: row;
+}
+.rbc-month-row {
+  display: -ms-flexbox;
+  display: flex;
+  position: relative;
+  -ms-flex-direction: column;
+      flex-direction: column;
+  -ms-flex: 1 0 0px;
+      flex: 1 0 0;
+  overflow: hidden;
+  height: 100%;
+}
+.rbc-month-row + .rbc-month-row {
+  border-top: 1px solid #DDD;
+}
+.rbc-date-cell {
+  padding-right: 5px;
+  text-align: right;
+}
+.rbc-date-cell.rbc-now {
+  font-weight: bold;
+}
+.rbc-date-cell > a,
+.rbc-date-cell > a:active,
+.rbc-date-cell > a:visited {
+  color: inherit;
+  text-decoration: none;
+}
+.rbc-row-bg {
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-direction: row;
+      flex-direction: row;
+  -ms-flex: 1 0 0px;
+      flex: 1 0 0;
+  overflow: hidden;
+}
+.rbc-day-bg + .rbc-day-bg {
+  border-left: 1px solid #DDD;
+}
+.rbc-label {
+  padding: 0 5px;
+}

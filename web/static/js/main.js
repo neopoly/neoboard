@@ -14,22 +14,26 @@ import RedmineActivityProjects from "./widgets/redmine_activity_projects"
 import RedmineActivityUsers from "./widgets/redmine_activity_users"
 import OwncloudImages from "./widgets/owncloud_images"
 import Images from "./widgets/images"
+import Calendar from "./widgets/calendar"
 
 const widgets = [
   // Format:
   // [widget, grid configuration]
   [Mattermost,              {x:0, y:0, w:1, h:2}],
-  [RedmineActivityProjects, {x:1, y:0, w:1, h:2}],
-  [RedmineActivityUsers,    {x:2, y:0, w:1, h:1}],
+  [RedmineActivityProjects, {x:1, y:1, w:1, h:2}],
+  //[RedmineActivityUsers,    {x:1, y:2, w:1, h:1}],
+  [GiphyWidget,             {x:0, y:2, w:1, h:1}],
+  [Calendar,                {x:2, y:0, w:2, h:2}],
   [OwncloudImages,          {x:4, y:1, w:1, h:1}],
   [TimeWidget,              {x:4, y:0, w:1, h:1}],
-  [GitlabCiWidget,          {x:3, y:0, w:1, h:1}],
-  [YoutubeWidget,           {x:2, y:1, w:1, h:1}],
-  //[GiphyWidget,             {x:2, y:1, w:1, h:1}],
-  //[NichtLustigWidget,       {x:2, y:1, w:1, h:1}],
-  [RedmineProjectTable,     {x:0, y:2, w:3, h:1}],
-  [NotepadWidget,           {x:3, y:1, w:1, h:2}],
-  [Images,                  {x:4, y:2, w:1, h:1}]
+  //[GitlabCiWidget,          {x:3, y:0, w:1, h:1}],
+  [YoutubeWidget,           {x:3, y:2, w:1, h:1}],
+  //[GiphyWidget,             {x:3, y:2, w:1, h:1}],
+  //[NichtLustigWidget,       {x:3, y:2, w:1, h:1}],
+  //[RedmineProjectTable,     {x:0, y:2, w:3, h:1}],
+  //[NotepadWidget,           {x:3, y:1, w:1, h:2}],
+  //[Images,                  {x:4, y:2, w:1, h:1}]
+  [Images,                  {x:4, y:2, w:1, h:1}],
 ]
 
 const Main = {
