@@ -19,7 +19,7 @@ const widgets = [
   // Format:
   // [widget, grid configuration]
   [GiphyWidget,             {x:0, y:0, w:1, h:1}],
-  [Mattermost,              {x:0, y:0, w:1, h:1}],
+  [Mattermost,              {x:0, y:1, w:1, h:1}],
   [RedmineActivityProjects, {x:1, y:0, w:1, h:2}],
   [RedmineActivityUsers,    {x:2, y:0, w:1, h:1}],
   [OwncloudImages,          {x:4, y:1, w:1, h:1}],
