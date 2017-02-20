@@ -33,7 +33,11 @@ defmodule Neoboard.Widgets.Calendar.EventTest do
       categories: "the_categories"
     }
 
-    expected = Map.merge(event, %{allDay: true})
+    expected = Map.merge(event, %{
+      start: "2017-02-01T00:00:00",
+      end: "2017-02-01T00:00:00",
+      allDay: true
+    })
 
     assert expected == Event.to_export(event)
   end

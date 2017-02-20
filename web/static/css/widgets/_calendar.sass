@@ -1,121 +1,87 @@
+@import calendar/react-big-calendar
+
 .CalendarWidget
+  $backgroundColor: #254763
+  $borderColor: #667E91
+  $borderSize: 1px
+
   +widget
-  background: white
+  background: $backgroundColor
   font-size: 12px
 
   .rbc-calendar
     height: 100%
-    display: flex
-    flex-direction: column
-    align-items: stretch
+    padding: 10px
 
-    .rbc-abs-full,
-    .rbc-row-bg
-      overflow: hidden
-      position: absolute
-      top: 0
-      left: 0
-      right: 0
-      bottom: 0
+  .rbc-header
+    color: $white
+    font-size: 100%
 
-    .rbc-off-range
-      color: #b3b3b3
+  .rbc-date-cell
+    padding-top: 5px
+    a
+      color: $white
 
-    .rbc-row-content
-      position: relative
-      user-select: none
-      z-index: 4
+  .rbc-off-range a
+    color: $halfWhite
 
-    .rbc-today
-      background-color: #eaf6ff
+  .rbc-today
+    background-color: darken($backgroundColor, 5%)
 
+  .rbc-event
+    background-color: lighten($backgroundColor, 20%)
+    color: $white
+
+  .rbc-show-more
+    background-color: lighten($backgroundColor, 10%)
+    border-radius: 5px
+    padding: 2px 5px
+    color: $white
+    text-decoration: none
+    font-size: 100%
+    font-weight: normal
+
+  .rbc-overlay
     .rbc-event
-      padding: 2px 5px
-      background-color: #3174ad
       border-radius: 5px
-      color: #fff
 
-    .rbc-event-label
-      font-size: 80%
+  .rbc-label
+    color: $white
 
-    .rbc-event-overlaps
-      box-shadow: -1px 1px 5px 0px rgba(51, 51, 51, 0.5)
+  .rbc-time-slot
+    border: none
 
-    .rbc-event-continues-prior
-      border-top-left-radius: 0
-      border-bottom-left-radius: 0
+  .rbc-agenda-view
+    color: $white
 
-    .rbc-event-continues-after
-      border-top-right-radius: 0
-      border-bottom-right-radius: 0
+  .rbc-agenda-event-cell
+    text-align: left
 
-    .rbc-event-continues-earlier
-      border-top-left-radius: 0
-      border-top-right-radius: 0
+  .rbc-toolbar
+    justify-content: space-between
 
-    .rbc-event-continues-later
-      border-bottom-left-radius: 0
-      border-bottom-right-radius: 0
+    button
+      outline: none
+      border-radius: 0
+      border: none
+      background: none!important
+      box-shadow: none
+      color: $halfWhite
 
-    .rbc-row
-      display: flex
-      flex-direction: row
+      &.rbc-active
+        color: $white
 
-    .rbc-row-segment
-      padding: 0 1px 1px 1px
+      &.rbc-btn-today
+        width: 200px
+        color: $white
 
-    .rbc-month-view
-      position: relative
-      border: 1px solid #DDD
-      display: flex
-      flex-direction: column
-      flex: 1 0 0
-      width: 100%
-      user-select: none
-      height: 100%
-
-    .rbc-month-view .rbc-header
-      border-bottom: 1px solid #DDD
-
-    .rbc-month-view .rbc-header + .rbc-header
-      border-left: 1px solid #DDD
-
-    .rbc-month-header
-      display: flex
-      flex-direction: row
-
-    .rbc-month-row
-      display: flex
-      position: relative
-      flex-direction: column
-      flex: 1 0 0
-      overflow: hidden
-      height: 100%
-
-    .rbc-month-row + .rbc-month-row
-      border-top: 1px solid #DDD
-
-    .rbc-date-cell
-      padding-right: 5px
-      text-align: right
-
-    .rbc-date-cell.rbc-now
-      font-weight: bold
-
-    .rbc-date-cell > a,
-    .rbc-date-cell > a:active,
-    .rbc-date-cell > a:visited
-      color: inherit
-      text-decoration: none
-
-    .rbc-row-bg
-      display: flex
-      flex-direction: row
-      flex: 1 0 0
-      overflow: hidden
-
-    .rbc-day-bg + .rbc-day-bg
-      border-left: 1px solid #DDD
-
-    .rbc-label
-      padding: 0 5px
+  .rbc-month-view,
+  .rbc-month-view .rbc-header,
+  .rbc-month-view .rbc-header + .rbc-header,
+  .rbc-month-row + .rbc-month-row,
+  .rbc-day-bg + .rbc-day-bg,
+  .rbc-time-content > * + * > *,
+  .rbc-agenda-view table thead > tr > th,
+  .rbc-agenda-view table tbody > tr > td + td,
+  .rbc-agenda-view table tbody > tr > td + td
+    border-color: $borderColor

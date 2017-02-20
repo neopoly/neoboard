@@ -1,6 +1,7 @@
 defmodule Neoboard.Widgets.Calendar do
   alias Neoboard.Widgets.Calendar.Parser
   alias Neoboard.Widgets.Calendar.Event
+  alias Neoboard.TimeService
   use GenServer
   use Neoboard.Pusher
   use Neoboard.Config
@@ -28,6 +29,6 @@ defmodule Neoboard.Widgets.Calendar do
   defp process_body(body) do
     data = Parser.deserialize(body)
     events = Enum.map(data.events, &Event.to_export/1)
-    {:ok, %{events: events}}
+    {:ok, %{events: events, current: TimeService.now_as_iso}}
   end
 end
