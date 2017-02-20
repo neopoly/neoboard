@@ -5,9 +5,9 @@ import ReactGridLayout from "react-grid-layout"
 export default React.createClass({
   getDefaultProps() {
     return {
-      width: 1900,
+      width: 1920,
       cols: 5,
-      rowHeight: 380,
+      rowHeight: 350,
       widgets: []
     }
   },
@@ -34,7 +34,10 @@ export default React.createClass({
         isDraggable={false}
         listenToWindowResize={false}
         useCSSTransforms={true}
-        width={this.props.width}>
+        width={this.props.width}
+        margin={[5,5]}
+        containerPadding={[5,5]}
+      >
         {this.props.widgets.map(renderWidget)}
       </ReactGridLayout>
     )
