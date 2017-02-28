@@ -82,7 +82,11 @@ config :neoboard, Neoboard.Widgets.Time,
 #   calendars: [
 #     %{
 #       url: "https://calendar.company.com/projects.ics",
-#       color: "#256335"
+#       colors: ["#0B467F", "#62B2FF", "#158CFF", "#31597F", "#1170CC"]
+#     },
+#     %{
+#       url: "https://calendar.company.com/meetings.ics",
+#       colors: ["#AF1E7F"]
 #     },
 #   ],
 #   every: 600_000

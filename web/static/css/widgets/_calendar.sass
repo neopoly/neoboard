@@ -1,5 +1,3 @@
-@import calendar/react-big-calendar
-
 .CalendarWidget
   $backgroundColor: #254763
   $borderColor: #667E91
@@ -9,79 +7,94 @@
   background: $backgroundColor
   font-size: 12px
 
-  .rbc-calendar
+  .Calendar
+    width: 100%
     height: 100%
-    padding: 10px
+    display: flex
+    flex-direction: column
 
-  .rbc-header
+  .Weeks
+    position: relative
+    display: flex
+    flex-direction: column
+    flex: 1 0 0
+    width: 100%
+    height: 100%
+
+  .Week
+    position: relative
+    display: flex
+    flex: 1 0 0
+    height: 100%
+
+  .BackgroundCells
+    display: flex
+    align-items: stretch
+    position: absolute
+    top: 0
+    right: 0
+    bottom: 0
+    left: 0
+    .Day
+      background: white
+      border: $borderSize solid $borderColor
+      &.isCurrentMonth
+        background: lighten($backgroundColor, 69%)
+      &.isCurrentDay
+        background: lighten($backgroundColor, 50%)
+
+  .LabelCells
+    display: flex
+    align-items: stretch
+    position: absolute
+    top: 0
+    right: 0
+    bottom: 0
+    left: 0
+    .Labels
+      padding: 5px
+      text-align: right
+      .Day-1
+        font-weight: bold
+
+  .WeekEvents
+    display: flex
+    flex-direction: column
+    position: absolute
+    top: 20px
+    right: 0
+    bottom: 0
+    left: 0
+
+    .EventsRow
+      display: flex
+      flex-direction: row
+
+  .Event
+    background: $backgroundColor
     color: $white
-    font-size: 100%
+    margin: 1px 2px
+    padding: 1px 5px
+    overflow: hidden
+    text-overflow: ellipsis
+    white-space: nowrap
 
-  .rbc-date-cell
-    padding-top: 5px
-    a
-      color: $white
-
-  .rbc-off-range a
-    color: $halfWhite
-
-  .rbc-today
-    background-color: darken($backgroundColor, 5%)
-
-  .rbc-event
-    background-color: lighten($backgroundColor, 20%)
-    color: $white
-
-  .rbc-show-more
-    background-color: lighten($backgroundColor, 10%)
-    border-radius: 5px
-    padding: 2px 5px
-    color: $white
-    text-decoration: none
-    font-size: 100%
-    font-weight: normal
-
-  .rbc-overlay
-    .rbc-event
-      border-radius: 5px
-
-  .rbc-label
-    color: $white
-
-  .rbc-time-slot
-    border: none
-
-  .rbc-agenda-view
-    color: $white
-
-  .rbc-agenda-event-cell
-    text-align: left
-
-  .rbc-toolbar
-    justify-content: space-between
-
-    button
-      outline: none
-      border-radius: 0
-      border: none
-      background: none!important
-      box-shadow: none
-      color: $halfWhite
-
-      &.rbc-active
-        color: $white
-
-      &.rbc-btn-today
-        width: 200px
-        color: $white
-
-  .rbc-month-view,
-  .rbc-month-view .rbc-header,
-  .rbc-month-view .rbc-header + .rbc-header,
-  .rbc-month-row + .rbc-month-row,
-  .rbc-day-bg + .rbc-day-bg,
-  .rbc-time-content > * + * > *,
-  .rbc-agenda-view table thead > tr > th,
-  .rbc-agenda-view table tbody > tr > td + td,
-  .rbc-agenda-view table tbody > tr > td + td
-    border-color: $borderColor
+    &.isStarted
+      border-top-left-radius: 5px
+      border-bottom-left-radius: 5px
+    &.isEnded
+      border-top-right-radius: 5px
+      border-bottom-right-radius: 5px
+    &.isUnconfirmed
+      $unconfirmedBorderSize: 2px
+      padding: 1px-$unconfirmedBorderSize 5px-$unconfirmedBorderSize
+      border-top-style: solid
+      border-top-width: $unconfirmedBorderSize
+      border-bottom-style: solid
+      border-bottom-width: $unconfirmedBorderSize
+      &.isStarted
+        border-left-style: solid
+        border-left-width: $unconfirmedBorderSize
+      &.isEnded
+        border-right-style: solid
+        border-right-width: $unconfirmedBorderSize

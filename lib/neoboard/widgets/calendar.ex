@@ -42,9 +42,11 @@ defmodule Neoboard.Widgets.Calendar do
   end
 
   defp inject_calendar_data_into_events(data) do
-    updated_events = Enum.map(data.events, fn(event) ->
-      Map.merge(event, %{color: data.color, calendar: data.title})
+    events = Stream.cycle(data.colors)
+    |> Enum.zip(data.events)
+    |> Enum.map(fn({color, event}) ->
+      Map.merge(event, %{color: color, calendar: data.title})
     end)
-    Map.put(data, :events, updated_events)
+    Map.put(data, :events, events)
   end
 end
