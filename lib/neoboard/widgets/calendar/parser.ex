@@ -1,13 +1,14 @@
 defmodule Neoboard.Widgets.Calendar.Parser do
+  alias Neoboard.Widgets.Calendar.Data
   alias Neoboard.Widgets.Calendar.Event
   alias Neoboard.Widgets.Calendar.DateTimeHelper
 
-  def deserialize(input) do
+  def deserialize(%Data{} = data, input) do
     input
     |> String.split("\n")
     |> Enum.map(&extract_properties/1)
     |> Enum.reject(&(&1 == nil))
-    |> Enum.reduce(%{events: []}, &parse/2)
+    |> Enum.reduce(data, &parse/2)
     |> reverse_events
   end
 
@@ -22,23 +23,26 @@ defmodule Neoboard.Widgets.Calendar.Parser do
     update_event(data, :title, value)
   end
   defp parse({"DTSTART", value, params}, data) do
-    update_event(data, :start, DateTimeHelper.parse(value, params, data[:tzid]))
+    update_event(data, :start, DateTimeHelper.parse(value, params, data.tzid))
   end
   defp parse({"DTEND", value, params}, data) do
-    update_event(data, :end, DateTimeHelper.parse(value, params, data[:tzid]))
+    update_event(data, :end, DateTimeHelper.parse(value, params, data.tzid))
   end
   defp parse({"CATEGORIES", value, _}, data) do
     update_event(data, :categories, value)
   end
+  defp parse({"X-WR-CALNAME", value, _}, data) do
+    Map.put(data, :title, value)
+  end
   defp parse(_, data), do: data
 
   defp add_event(%{events: events} = data) do
-    %{data | events: [%Event{} | events]}
+    Map.put(data, :events, [%Event{} | events])
   end
 
   defp update_event(%{events: [event | rest]} = data, key, value) do
     updated_event = %{event | key => value}
-    %{data | events: [updated_event | rest]}
+    Map.put(data, :events, [updated_event | rest])
   end
   defp update_event(data, _, _), do: data
 

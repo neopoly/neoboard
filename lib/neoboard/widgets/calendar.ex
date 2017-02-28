@@ -1,6 +1,6 @@
 defmodule Neoboard.Widgets.Calendar do
   alias Neoboard.Widgets.Calendar.Parser
-  alias Neoboard.Widgets.Calendar.Event
+  alias Neoboard.Widgets.Calendar.Data
   alias Neoboard.TimeService
   use GenServer
   use Neoboard.Pusher
@@ -14,21 +14,37 @@ defmodule Neoboard.Widgets.Calendar do
   end
 
   def handle_info(:tick, _) do
-    {:ok, response} = fetch()
-    push! response
+    events = fetch_calendars(config()[:calendars])
+    |> Enum.map(fn(data) -> data.events end)
+    |> List.flatten
+
+    push! %{events: events, current: TimeService.now_as_iso}
     {:noreply, nil}
   end
 
-  defp fetch do
-    case HTTPoison.get(config()[:url]) do
+  defp fetch_calendars([]), do: []
+  defp fetch_calendars([configuration | rest]) do
+    data = struct(Data, configuration)
+    [fetch(data)] ++ fetch_calendars(rest)
+  end
+
+  defp fetch(data) do
+    case HTTPoison.get(data.url) do
       {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
-        process_body(body)
+        process_body(data, body)
     end
   end
 
-  defp process_body(body) do
-    data = Parser.deserialize(body)
-    events = Enum.map(data.events, &Event.to_export/1)
-    {:ok, %{events: events, current: TimeService.now_as_iso}}
+  defp process_body(data, body) do
+    Parser.deserialize(data, body)
+    |> Data.to_export
+    |> inject_calendar_data_into_events
+  end
+
+  defp inject_calendar_data_into_events(data) do
+    updated_events = Enum.map(data.events, fn(event) ->
+      Map.merge(event, %{color: data.color, calendar: data.title})
+    end)
+    Map.put(data, :events, updated_events)
   end
 end

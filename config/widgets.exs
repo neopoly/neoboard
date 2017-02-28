@@ -79,5 +79,10 @@ config :neoboard, Neoboard.Widgets.Time,
 #   url: "https://www.youtube.com/embed/uNYEZXvRlB8?&autoplay=1"
 
 # config :neoboard, Neoboard.Widgets.Calendar,
-#   url: "https://calendar.company.com/projects.ics",
+#   calendars: [
+#     %{
+#       url: "https://calendar.company.com/projects.ics",
+#       color: "#256335"
+#     },
+#   ],
 #   every: 600_000
