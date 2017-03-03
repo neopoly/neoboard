@@ -76,28 +76,32 @@ const Navigation = React.createClass({
   render() {
     return (
       <div className="Navigation">
-        <button onClick={this._onPrev}>{"<"}</button>
+        <button className="Prev" onClick={this._onPrev}>{"<"}</button>
         <span className="Focus">
-          Week {formatWeekLabel(this.props.focus)}
+          Week {formatWeekLabel(this.props.current)}
         </span>
-        <button onClick={this._onNext}>{">"}</button>
+        <button className="Next" onClick={this._onNext}>{">"}</button>
       </div>
     )
   },
   _onPrev() {
-    const focus = moment(this.props.focus).subtract(1, "week")
+    const focus = moment(this.props.focus).subtract(4, "week")
     this.props.onFocus(focus.toDate())
   },
   _onNext() {
-    const focus = moment(this.props.focus).add(1, "week")
+    const focus = moment(this.props.focus).add(4, "week")
     this.props.onFocus(focus.toDate())
   },
 })
 
 const Week = React.createClass({
   render() {
+    const {current, week, focus} = this.props
+    const css = classnames("Week", {
+      isCurrentWeek: moment(week[0]).isSame(current, "week")
+    })
     return (
-      <div className="Week">
+      <div className={css}>
         <BackgroundCells {...this.props} />
         <LabelCells {...this.props} />
         <WeekEvents {...this.props}/>
@@ -116,6 +120,7 @@ const BackgroundCells = React.createClass({
             "Day",
             {
               isCurrentDay: moment(date).isSame(current, "day"),
+              isCurrentWeek: moment(week[0]).isSame(current, "week"),
               isCurrentMonth: moment(date).isSame(current, "month"),
               isCurrentYear: moment(date).isSame(current, "year"),
             }
@@ -144,7 +149,7 @@ function formatMonthLabel(date) {
 }
 
 function formatWeekLabel(date) {
-  return moment(date).week()
+  return moment(date).isoWeek()
 }
 
 const LabelCells = React.createClass({
@@ -171,6 +176,7 @@ const Labels = React.createClass({
   render(){
     return (
       <div className="Labels">
+        {this._renderWeek()}
         {this._renderDate()}
       </div>
     )
@@ -179,6 +185,13 @@ const Labels = React.createClass({
     const {date} = this.props
     return (
       <span className={`Date Day-${moment(date).date()}`}>{formatDateLabel(date)}</span>
+    )
+  },
+  _renderWeek() {
+    const {date} = this.props
+    if(moment(date).weekday() !== 0) return null
+    return (
+      <span className={`CalendarWeek Week-${moment(date).isoWeek()}`}>{formatWeekLabel(date)}</span>
     )
   }
 })
@@ -196,7 +209,7 @@ const WeekEvents = React.createClass({
       return utils.segementizeEventBetween(event, from, to)
     })
 
-    const { levels, rest } = utils.eventLevels(segments.concat(segments), EVENTS_PER_CELL)
+    const { levels, rest } = utils.eventLevels(segments, EVENTS_PER_CELL)
 
     return (
       <div className="WeekEvents">
