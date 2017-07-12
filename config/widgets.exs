@@ -74,3 +74,6 @@ config :neoboard, Neoboard.Widgets.Time,
 #     "http://www.company.com/logo-b.png",
 #   ],
 #   every: 10_000
+
+#config :neoboard, Neoboard.Widgets.Youtube,
+#  url: "https://www.youtube.com/embed/uNYEZXvRlB8?&autoplay=1"

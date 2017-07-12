@@ -6,7 +6,7 @@ import TimeWidget from "./widgets/time"
 import GitlabCiWidget from "./widgets/gitlab_ci"
 import NotepadWidget from "./widgets/notepad"
 import NichtLustigWidget from "./widgets/nicht_lustig"
-import GiphyWidget from "./widgets/giphy"
+import YoutubeWidget from "./widgets/youtube"
 import RedmineProjectTable from "./widgets/redmine_project_table"
 import Gitter from "./widgets/gitter"
 import Mattermost from "./widgets/mattermost"
@@ -24,7 +24,8 @@ const widgets = [
   [OwncloudImages,          {x:4, y:1, w:1, h:1}],
   [TimeWidget,              {x:4, y:0, w:1, h:1}],
   [GitlabCiWidget,          {x:3, y:0, w:1, h:1}],
-  [GiphyWidget,             {x:2, y:1, w:1, h:1}],
+  [YoutubeWidget,           {x:2, y:1, w:1, h:1}],
+  //[GiphyWidget,             {x:2, y:1, w:1, h:1}],
   //[NichtLustigWidget,       {x:2, y:1, w:1, h:1}],
   [RedmineProjectTable,     {x:0, y:2, w:3, h:1}],
   [NotepadWidget,           {x:3, y:1, w:1, h:2}],
