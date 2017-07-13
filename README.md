@@ -10,9 +10,12 @@ Steps to start the Dashboard application
 
 Detailed instructions to install Elixir are available at: http://elixir-lang.org/install.html
 
-### Install NodeJS
+### Install Javascript tools
 
-This project also needs NodeJS for static assets compilation. Find installation instructions at: https://nodejs.org/download/
+This project also needs NodeJS for static assets compilation:
+
+* Install [NodeJS](https://nodejs.org/download/)
+* Install [yarn](https://yarnpkg.com/en/docs/install)
 
 ## Start an instance
 
@@ -26,7 +29,7 @@ Install all Elixir dependencies:
 
 Install all NPM dependencies:
 
-    $ npm install
+    $ yarn install
 
 Now you can startup a server instance:
 
@@ -36,12 +39,12 @@ Now you can visit `localhost:4000` from your browser.
 
 ## Production system
 
-For a productive system you should pre-compile the used assets. A custom mix 
+For a productive system you should pre-compile the used assets. A custom mix
 tasks is provided to instrument webpack's build process:
 
     $ mix assets.precompile
 
-Also you should generate hashed versions of the static files by invoking 
+Also you should generate hashed versions of the static files by invoking
 Phoenix "digest" task:
 
     $ mix phoenix.digest
