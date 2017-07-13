@@ -7,4 +7,4 @@ _build
 deps
 node_modules
 Makefile
-priv/static
+priv/static/images/emoji
