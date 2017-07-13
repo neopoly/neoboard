@@ -7,12 +7,12 @@ var environment = process.env.MIX_ENV == "prod" ? "production" : "development"
 
 module.exports = {
   entry: {
-    application: "./web/static/entry.js",
+    application: __dirname + "/web/static/entry.js",
     vendors: vendors
   },
   devtool: "source-map",
   output: {
-    path: "./priv/static/js",
+    path: __dirname + "/priv/static/js",
     filename: "[name].js"
   },
   resolve: {
