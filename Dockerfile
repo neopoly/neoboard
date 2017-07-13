@@ -20,7 +20,7 @@ RUN curl -sL https://deb.nodesource.com/setup_6.x | bash - \
 
 WORKDIR $APP_HOME
 COPY ["package.json", "yarn.lock", "${APP_HOME}/"]
-
+COPY tools ${APP_HOME}/tools
 RUN yarn install --pure-lockfile
 
 COPY ["mix.exs", "mix.lock", "${APP_HOME}/"]
@@ -32,14 +32,11 @@ COPY config ${APP_HOME}/config
 COPY lib ${APP_HOME}/lib
 COPY test ${APP_HOME}/test
 COPY web ${APP_HOME}/web
-COPY priv ${APP_HOME}/priv
 COPY rel/config.exs ${APP_HOME}/rel/
 RUN mix compile
 
-COPY webpack.config.js $APP_HOME/webpack.config.js
-COPY .babelrc $APP_HOME/.babelrc
-RUN mkdir -p priv/static \
- && mix assets.compile \
+COPY ["webpack.config.js", ".babelrc", "${APP_HOME}/"]
+RUN mix assets.compile \
  && mix phoenix.digest
 
 EXPOSE 4000

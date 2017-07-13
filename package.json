@@ -2,6 +2,9 @@
   "name": "Neoboard",
   "private": true,
   "repository": {},
+  "scripts": {
+    "postinstall": "./tools/js-postinstall.sh"
+  },
   "dependencies": {
     "classnames": "~2.2.5",
     "emojify.js": "^1.1.0",
