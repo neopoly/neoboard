@@ -9,10 +9,6 @@ erl_crash.dump
 # Static artifacts
 /node_modules
 
-# Since we are building js and css from web/static,
-# we ignore priv/static completely because of releasing.
-/priv/static
-
 # The config/prod.secret.exs file by default contains sensitive
 # data and you should not commit it into version control.
 #
