@@ -9,7 +9,9 @@ export default React.createClass({
   render() {
     return (
       <div className="YoutubeWidget">
-        <iframe width="100%" height="100%" src={this.state.url} frameborder="0" allowfullscreen></iframe>
+        {this.state.url &&
+          <iframe src={this.state.url} allowFullScreen></iframe>
+        }
       </div>
     )
   }
