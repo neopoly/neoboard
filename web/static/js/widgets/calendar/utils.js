@@ -93,3 +93,29 @@ export function inRange(event, from, to, unit = "days") {
   return moment(event.start).isSameOrBefore(to, unit)
     && moment(event.end).isSameOrAfter(from, unit)
 }
+
+export function hex2components(hex) {
+  return {
+    r: parseInt(hex.substring(1,3), 16),
+    g: parseInt(hex.substring(3,5), 16),
+    b: parseInt(hex.substring(5,7), 16)
+  }
+}
+
+export function components2rgba(colorComponents, opacity = 1) {
+  const {r, g, b} = colorComponents
+  return `rgba(${r},${g},${b},${opacity})`
+}
+
+export function lightenColor(colorComponents, amount) {
+  const {r, g, b} = colorComponents
+  return {
+    r: lighten(r, amount),
+    g: lighten(g, amount),
+    b: lighten(b, amount)
+  }
+}
+
+function lighten(colorComponent, amount) {
+  return Math.max(0, Math.min(255, Math.round(colorComponent * amount)))
+}

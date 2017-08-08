@@ -1,6 +1,6 @@
 .CalendarWidget
   $backgroundColor: #254763
-  $borderColor: #667E91
+  $borderColor: #e1e1e1
   $borderSize: 1px
 
   +widget
@@ -24,7 +24,7 @@
       background: none
       border: none
       font-size: 140%
-      color: $halfWhite
+      color: $thirdWhite
       outline: none
       padding: 0 10px
       &:hover
@@ -32,6 +32,7 @@
     .Focus
       font-size: 120%
       color: $white
+      cursor: pointer
     .Prev
       float: left
     .Next
@@ -61,22 +62,14 @@
     left: 0
     .Day
       background: white
-      border: $borderSize solid $borderColor
-      &.isCurrentMonth
-        background: lighten($backgroundColor, 69%)
+      border-left: $borderSize solid $borderColor
+      border-top: $borderSize solid $borderColor
+      &:first-child
+        border-left: none
       &.isCurrentWeek
-        background: lighten($backgroundColor, 61%)
+        background: lighten($backgroundColor, 69%)
       &.isCurrentDay
         background: lighten($backgroundColor, 50%)
-  .isCurrentWeek
-    .BackgroundCells
-      .Day
-        border-top: $borderSize*2 solid darken($borderColor, 10%)
-        border-bottom: $borderSize*2 solid darken($borderColor, 10%)
-        &:first-child
-          border-left: $borderSize*2 solid darken($borderColor, 10%)
-        &:last-child
-          border-right: $borderSize*2 solid darken($borderColor, 10%)
 
   .LabelCells
     display: flex
@@ -87,12 +80,17 @@
     bottom: 0
     left: 0
     .Labels
-      padding: 5px
+      padding: 2px
       text-align: left
       .CalendarWeek
         color: $halfBlack
       .Date
         float: right
+        padding: 1px 7px
+        &.isCurrentDay
+          background: $backgroundColor
+          color: $white
+          border-radius: 20px
       .Day-1
         font-weight: bold
 
@@ -100,7 +98,7 @@
     display: flex
     flex-direction: column
     position: absolute
-    top: 20px
+    top: 22px
     right: 0
     bottom: 0
     left: 0
@@ -111,29 +109,25 @@
 
   .Event
     background: $backgroundColor
-    color: $white
+    color: $black
     margin: 1px 2px
-    padding: 1px 5px
+    padding: 1px 8px
     overflow: hidden
     text-overflow: ellipsis
     white-space: nowrap
+    text-align: left
+    border-color: darken($backgroundColor, 15%)
+    border-style: solid
+    border-left-width: 0
+    border-right-width: 0
+    border-top-width: 1px
+    border-bottom-width: 1px
 
     &.isStarted
-      border-top-left-radius: 5px
-      border-bottom-left-radius: 5px
+      border-top-left-radius: 8px
+      border-bottom-left-radius: 8px
+      border-left-width: 1px
     &.isEnded
-      border-top-right-radius: 5px
-      border-bottom-right-radius: 5px
-    &.isUnconfirmed
-      $unconfirmedBorderSize: 2px
-      padding: 1px-$unconfirmedBorderSize 5px-$unconfirmedBorderSize
-      border-top-style: solid
-      border-top-width: $unconfirmedBorderSize
-      border-bottom-style: solid
-      border-bottom-width: $unconfirmedBorderSize
-      &.isStarted
-        border-left-style: solid
-        border-left-width: $unconfirmedBorderSize
-      &.isEnded
-        border-right-style: solid
-        border-right-width: $unconfirmedBorderSize
+      border-top-right-radius: 8px
+      border-bottom-right-radius: 8px
+      border-right-width: 1px

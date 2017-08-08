@@ -56,7 +56,12 @@ export default React.createClass({
           <Navigation onFocus={this._focus} focus={focus} {...this.props}/>
           <div className="Weeks">
             {weeks.map((week, idx) => {
-              return <Week week={week} events={events} key={idx}/>
+              return <Week
+                current={current}
+                week={week}
+                events={events}
+                key={idx}
+              />
             })}
           </div>
         </div>
@@ -76,11 +81,11 @@ const Navigation = React.createClass({
   render() {
     return (
       <div className="Navigation">
-        <button className="Prev" onClick={this._onPrev}>{"<"}</button>
-        <span className="Focus">
-          Week {formatWeekLabel(this.props.current)}
+        <button className="Prev" onClick={this._onPrev}>{"◀"}</button>
+        <span className="Focus" onClick={this._onReset}>
+          {formatMonthLabel(this.props.focus)}
         </span>
-        <button className="Next" onClick={this._onNext}>{">"}</button>
+        <button className="Next" onClick={this._onNext}>{"▶"}</button>
       </div>
     )
   },
@@ -91,6 +96,9 @@ const Navigation = React.createClass({
   _onNext() {
     const focus = moment(this.props.focus).add(4, "week")
     this.props.onFocus(focus.toDate())
+  },
+  _onReset() {
+    this.props.onFocus(this.props.current)
   },
 })
 
@@ -163,7 +171,7 @@ const LabelCells = React.createClass({
               className="Label"
               style={utils.styleForSegement(1, this.props.week.length)}
             >
-              <Labels date={date}/>
+              <Labels date={date} current={this.props.current}/>
             </div>
           )
         })}
@@ -182,9 +190,16 @@ const Labels = React.createClass({
     )
   },
   _renderDate() {
-    const {date} = this.props
+    const {current, date} = this.props
+    const css = classnames(
+      "Date",
+      `Day-${moment(date).date()}`,
+      {
+        isCurrentDay: moment(date).isSame(current, "day"),
+      }
+    )
     return (
-      <span className={`Date Day-${moment(date).date()}`}>{formatDateLabel(date)}</span>
+      <span className={css}>{formatDateLabel(date)}</span>
     )
   },
   _renderWeek() {
@@ -274,22 +289,29 @@ function isUnconfirmed(event) {
   return !!event.title.match(/\?$/)
 }
 
-function hex2rgba(hex, opacity) {
-  const r = parseInt(hex.substring(1,3), 16);
-  const g = parseInt(hex.substring(3,5), 16);
-  const b = parseInt(hex.substring(5,7), 16);
-  return `rgba(${r},${g},${b},${opacity})`
-}
-
 function colorizeEvent(event) {
+  const color = utils.hex2components(event.color)
+  const border     = utils.lightenColor(color, 0.85)
+  const borderRgba = utils.components2rgba(border)
+
   if(isUnconfirmed(event)) {
+    const alternate  = utils.lightenColor(color, 1.2)
+    const altRgba    = utils.components2rgba(alternate)
     return {
-      backgroundColor: hex2rgba(event.color, 0.5),
-      borderColor: event.color
+      background: `repeating-linear-gradient(
+        45deg,
+        ${event.color},
+        ${event.color} 10px,
+        ${altRgba} 10px,
+        ${altRgba} 20px
+      )`,
+      borderColor: borderRgba
     }
   }
+
   return {
-    backgroundColor: event.color
+    backgroundColor: event.color,
+    borderColor: borderRgba
   }
 }
 
