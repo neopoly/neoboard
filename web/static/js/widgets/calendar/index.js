@@ -218,7 +218,7 @@ const Labels = React.createClass({
   }
 })
 
-const EVENTS_PER_CELL = 8
+const EVENTS_PER_CELL = 7
 
 const WeekEvents = React.createClass({
   render(){
@@ -232,7 +232,6 @@ const WeekEvents = React.createClass({
     })
 
     const { levels, rest } = utils.eventLevels(segments, EVENTS_PER_CELL)
-
     return (
       <div className="WeekEvents">
         {levels.map((segments, idx) => {
@@ -246,6 +245,14 @@ const WeekEvents = React.createClass({
             />
           )
         })}
+        {rest.length > 0 &&
+          <EventRestRow
+            segments={rest}
+            from={from}
+            to={to}
+            {...this.props}
+          />
+        }
       </div>
     )
   }
@@ -263,30 +270,57 @@ const EventsRow = React.createClass({
             const key = `span_${idx}`
             const gap = segment.left - lastEnd
             if(gap) {
-              row.push(this._renderSpan(`${key}_gap`, gap))
+              row.push(renderSpan(`${key}_gap`, gap, this.props.week.length))
             }
             const content = <Event
               event={segment.event}
               from={this.props.from}
               to={this.props.to}
             />
-            row.push(this._renderSpan(key, segment.span, content))
+            row.push(renderSpan(key, segment.span, this.props.week.length, content))
             lastEnd = segment.right + 1
             return row
           }, [])
         }
       </div>
     )
-  },
-  _renderSpan(key, span, content = null) {
-    const style = utils.styleForSegement(span, this.props.week.length)
+  }
+})
+
+function renderSpan(key, span, slots, content = null) {
+  const style = utils.styleForSegement(span, slots)
+  return (
+    <div
+      key={key}
+      className="Span"
+      style={style}
+    >
+      {content}
+    </div>
+  )
+}
+
+const EventRestRow = React.createClass({
+  render() {
+    const {week, segments} = this.props
     return (
-      <div
-        key={key}
-        className="Span"
-        style={style}
-      >
-        {content}
+      <div className="EventRestRow">
+        {week.map((date, idx) => {
+          const events = segments.filter(({event}) => {
+            return utils.inRange(event, date, date)
+          }).map(({event}) => event)
+          return (
+            <div key={idx} className="More" style={utils.styleForSegement(1, week.length)}>
+              {events.length > 0 &&
+                <EventsPopOverHolder
+                  events={events}
+                >
+                  <span>+{events.length} more</span>
+                </EventsPopOverHolder>
+              }
+            </div>
+          )
+        })}
       </div>
     )
   }
@@ -323,9 +357,6 @@ function colorizeEvent(event) {
 }
 
 const Event = React.createClass({
-  getInitialState() {
-    return { tooltip: null }
-  },
   render(){
     const {event, from, to} = this.props
     const className = classnames("Event", {
@@ -339,70 +370,86 @@ const Event = React.createClass({
       borderColor: event.color
     }
     return (
-      <div
+      <EventsPopOverHolder
         className={className}
         style={colorizeEvent(event)}
+        events={[event]}
+      >
+        <div className="EventTitle">{event.title}</div>
+      </EventsPopOverHolder>
+    )
+  }
+})
+
+const EventsPopOverHolder = React.createClass({
+  getInitialState() {
+    return { tooltip: false }
+  },
+  render() {
+    const className = classnames("EventsPopOverHolder", this.props.className)
+    return (
+      <div
+        className={className}
+        style={this.props.style}
         onMouseMove={this._onEnter}
         onMouseEnter={this._onEnter}
         onMouseOut={this._onExit}
       >
-        <div className="EventTitle">{event.title}</div>
-        <EventPopOver
-          event={event}
-          position={this.state.tooltip}
-        />
+        {this.props.children}
+        {this.state.tooltip &&
+          <EventsPopOver
+            top={this.state.top}
+            events={this.props.events}
+          />
+        }
       </div>
     )
   },
   _onEnter(e) {
-    const tooltip = {
-      x: e.nativeEvent.offsetX,
-      y: e.nativeEvent.offsetY
-    }
-    this.setState({tooltip})
+    const top = e.screenY > screen.height / 2
+    this.setState({tooltip: true, top})
   },
   _onExit() {
-    this.setState({tooltip: null})
+    this.setState({tooltip: false})
   }
 })
 
-const EventPopOver = React.createClass({
-  getDefaultProps: function() {
-   return {
-     offset: 5,
-   }
-  },
+const EventsPopOver = React.createClass({
   render() {
-    const {event, position} = this.props
-    if (!position) return <div />
-
-    const style = {
-      left: position.x,
-      top: position.y + this.props.offset,
-    }
-
+    const {events} = this.props
+    const className = classnames("EventsPopOver", {
+      top: this.props.top,
+      bottom: !this.props.top,
+    })
     return (
-      <div className="EventPopOver" style={style}>
+      <div className={className}>
+        <span className="Arrow"></span>
         <div className="Content">
-          <h2>
-            {event.calendar}
-          </h2>
-          <h3>
-            <span className="Title" style={colorizeEvent(event)}>
-              {event.title}
-            </span>
-            {isUnconfirmed(event) &&
-              <span className="Unconfirmed">(Unconfirmed)</span>
-            }
-          </h3>
-          <table>
-            <tbody>
-              <tr>
-                <th>Date:</th>
-                <td>{formatEventDate(event)}</td>
-              </tr>
-            </tbody>
-          </table>
+          {events.map((event, idx) => {
+            return (
+              <div key={idx} className="EventDetails">
+                <h2>
+                  {event.calendar}
+                </h2>
+                <h3>
+                  <span className="Title" style={colorizeEvent(event)}>
+                    {event.title}
+                  </span>
+                  {isUnconfirmed(event) &&
+                    <span className="Unconfirmed">(Unconfirmed)</span>
+                  }
+                </h3>
+                <table>
+                  <tbody>
+                    <tr>
+                      <th>Date:</th>
+                      <td>{formatEventDate(event)}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            )
+          })}
         </div>
       </div>
     )

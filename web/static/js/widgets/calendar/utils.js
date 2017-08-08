@@ -57,6 +57,10 @@ export function segementizeEventBetween(event, first, last, unit = "days") {
   }
 }
 
+function sortSegments(a, b) {
+  return a.left - b.left
+}
+
 export function eventLevels(rowSegments, limit = Infinity){
   let i
   let j
@@ -80,8 +84,10 @@ export function eventLevels(rowSegments, limit = Infinity){
   }
 
   for (let k = 0; k < levels.length; k++) {
-    levels[k].sort((a, b) => a.left - b.left)
+    levels[k].sort(sortSegments)
   }
+
+  rest.sort(sortSegments)
 
   return { levels, rest }
 }

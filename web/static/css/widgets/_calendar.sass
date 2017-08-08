@@ -108,6 +108,16 @@
       display: flex
       flex-direction: row
 
+  .EventRestRow
+    display: flex
+    align-items: stretch
+    position: absolute
+    right: 0
+    bottom: 0
+    left: 0
+    .More
+      line-height: 28px
+
   .Event
     background: $backgroundColor
     color: $black
@@ -143,7 +153,10 @@
       white-space: nowrap
       pointer-events: none
 
-  .EventPopOver
+  .EventsPopOverHolder
+    position: relative
+
+  .EventsPopOver
     $arrow: 10px
     $width: 360px
 
@@ -151,59 +164,87 @@
     z-index: 9999
     cursor: default
     pointer-events: none
+    left: 50%
+    top: 10px
 
-    .Content
-      position: relative
-      top: $arrow
-      width: $width
-      left: -$width / 2
-      background: white
-      text-align: left
-      box-shadow: 1px 1px 10px #d0d0d0
-      padding: 10px
-
-    &::before
-      content: ''
+    .Arrow
       border: solid transparent
       height: 0
+      left: 0
+      top: 0
       width: 0
       position: absolute
       pointer-events: none
       border-color: transparent
-      border-bottom-color: white
       border-width: $arrow
       margin-left: -$arrow
       margin-top: -$arrow
+      z-index: 1
 
-    h2
-      font-size: 14px
-      font-weight: normal
-      margin: 0
-      float: right
-      padding: 3px
-      display: inline
-      width: auto
-      background: $borderColor
+    .Content
+      position: absolute
+      width: $width
+      left: -$width / 2
+      background: white
+      text-align: left
+      box-shadow: 1px 1px 10px #b0b0b0
+      padding: 10px
 
-    h3
-      font-size: 14px
-      font-weight: bold
-      line-height: 23px
-      margin: 0
+    &.bottom
+      bottom: 10px
 
-      .Title
-        padding: 3px 5px
-        border-radius: 8px
-        border-color: darken($backgroundColor, 15%)
-        border-style: solid
-        border-width: 1px
+      .Arrow
+        border-bottom-color: white
 
-      .Unconfirmed
-        color: #ccc
+      .Content
+        top: $arrow
+
+    &.top
+      top: 10px
+
+      .Arrow
+        border-top-color: white
+
+      .Content
+        bottom: $arrow
+
+    .EventDetails
+      border-bottom: 1px solid $borderColor
+      margin-bottom: 10px
+      &:last-child
+        border: none
+        margin-bottom: 0
+
+      h2
+        font-size: 14px
         font-weight: normal
-        padding-left: 10px
+        margin: 0
+        float: right
+        padding: 3px
+        display: inline
+        width: auto
+        background: $borderColor
 
-    table
-      margin-top: 10px
-      th
-        padding-right: 5px
+      h3
+        font-size: 14px
+        font-weight: bold
+        line-height: 23px
+        margin: 0
+
+        .Title
+          padding: 3px 5px
+          border-radius: 8px
+          border-color: darken($backgroundColor, 15%)
+          border-style: solid
+          border-width: 1px
+
+        .Unconfirmed
+          color: #ccc
+          font-weight: normal
+          padding-left: 10px
+
+      table
+        margin-top: 5px
+        margin-bottom: 5px
+        th
+          padding-right: 5px
