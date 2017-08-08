@@ -160,6 +160,13 @@ function formatWeekLabel(date) {
   return moment(date).isoWeek()
 }
 
+function formatEventDate(event) {
+  if (event.allDay) {
+    return `${moment(event.start).format("L")} - ${moment(event.end).format("L")}`
+  }
+  return moment(event.start).format("LLL")
+}
+
 const LabelCells = React.createClass({
   render(){
     return (
@@ -290,13 +297,13 @@ function isUnconfirmed(event) {
 }
 
 function colorizeEvent(event) {
-  const color = utils.hex2components(event.color)
+  const color      = utils.hex2components(event.color)
   const border     = utils.lightenColor(color, 0.85)
   const borderRgba = utils.components2rgba(border)
 
   if(isUnconfirmed(event)) {
-    const alternate  = utils.lightenColor(color, 1.2)
-    const altRgba    = utils.components2rgba(alternate)
+    const alternate = utils.lightenColor(color, 1.2)
+    const altRgba   = utils.components2rgba(alternate)
     return {
       background: `repeating-linear-gradient(
         45deg,
@@ -316,6 +323,9 @@ function colorizeEvent(event) {
 }
 
 const Event = React.createClass({
+  getInitialState() {
+    return { tooltip: null }
+  },
   render(){
     const {event, from, to} = this.props
     const className = classnames("Event", {
@@ -329,8 +339,71 @@ const Event = React.createClass({
       borderColor: event.color
     }
     return (
-      <div className={className} style={colorizeEvent(event)}>
-        {event.title}
+      <div
+        className={className}
+        style={colorizeEvent(event)}
+        onMouseMove={this._onEnter}
+        onMouseEnter={this._onEnter}
+        onMouseOut={this._onExit}
+      >
+        <div className="EventTitle">{event.title}</div>
+        <EventPopOver
+          event={event}
+          position={this.state.tooltip}
+        />
+      </div>
+    )
+  },
+  _onEnter(e) {
+    const tooltip = {
+      x: e.nativeEvent.offsetX,
+      y: e.nativeEvent.offsetY
+    }
+    this.setState({tooltip})
+  },
+  _onExit() {
+    this.setState({tooltip: null})
+  }
+})
+
+const EventPopOver = React.createClass({
+  getDefaultProps: function() {
+   return {
+     offset: 5,
+   }
+  },
+  render() {
+    const {event, position} = this.props
+    if (!position) return <div />
+
+    const style = {
+      left: position.x,
+      top: position.y + this.props.offset,
+    }
+
+    return (
+      <div className="EventPopOver" style={style}>
+        <div className="Content">
+          <h2>
+            {event.calendar}
+          </h2>
+          <h3>
+            <span className="Title" style={colorizeEvent(event)}>
+              {event.title}
+            </span>
+            {isUnconfirmed(event) &&
+              <span className="Unconfirmed">(Unconfirmed)</span>
+            }
+          </h3>
+          <table>
+            <tbody>
+              <tr>
+                <th>Date:</th>
+                <td>{formatEventDate(event)}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     )
   }

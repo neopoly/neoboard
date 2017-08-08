@@ -6,6 +6,7 @@
   +widget
   background: $backgroundColor
   font-size: 12px
+  overflow: visible
 
   .Calendar
     width: 100%
@@ -111,10 +112,6 @@
     background: $backgroundColor
     color: $black
     margin: 1px 2px
-    padding: 1px 8px
-    overflow: hidden
-    text-overflow: ellipsis
-    white-space: nowrap
     text-align: left
     border-color: darken($backgroundColor, 15%)
     border-style: solid
@@ -122,6 +119,8 @@
     border-right-width: 0
     border-top-width: 1px
     border-bottom-width: 1px
+    position: relative
+    height: 20px
 
     &.isStarted
       border-top-left-radius: 8px
@@ -131,3 +130,80 @@
       border-top-right-radius: 8px
       border-bottom-right-radius: 8px
       border-right-width: 1px
+
+    .EventTitle
+      position: absolute
+      left: 0
+      right: 0
+      bottom: 0
+      top: 0
+      padding: 1px 8px
+      overflow: hidden
+      text-overflow: ellipsis
+      white-space: nowrap
+      pointer-events: none
+
+  .EventPopOver
+    $arrow: 10px
+    $width: 360px
+
+    position: absolute
+    z-index: 9999
+    cursor: default
+    pointer-events: none
+
+    .Content
+      position: relative
+      top: $arrow
+      width: $width
+      left: -$width / 2
+      background: white
+      text-align: left
+      box-shadow: 1px 1px 10px #d0d0d0
+      padding: 10px
+
+    &::before
+      content: ''
+      border: solid transparent
+      height: 0
+      width: 0
+      position: absolute
+      pointer-events: none
+      border-color: transparent
+      border-bottom-color: white
+      border-width: $arrow
+      margin-left: -$arrow
+      margin-top: -$arrow
+
+    h2
+      font-size: 14px
+      font-weight: normal
+      margin: 0
+      float: right
+      padding: 3px
+      display: inline
+      width: auto
+      background: $borderColor
+
+    h3
+      font-size: 14px
+      font-weight: bold
+      line-height: 23px
+      margin: 0
+
+      .Title
+        padding: 3px 5px
+        border-radius: 8px
+        border-color: darken($backgroundColor, 15%)
+        border-style: solid
+        border-width: 1px
+
+      .Unconfirmed
+        color: #ccc
+        font-weight: normal
+        padding-left: 10px
+
+    table
+      margin-top: 10px
+      th
+        padding-right: 5px
