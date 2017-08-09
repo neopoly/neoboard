@@ -18,7 +18,7 @@ import Calendar from "./widgets/calendar"
 
 const widgets = [
   // Format:
-  // [widget, grid configuration]
+  // [widget, grid configuration, widget props (optional)]
   [Mattermost,              {x:0, y:0, w:1, h:2}],
   [RedmineActivityProjects, {x:1, y:1, w:1, h:2}],
   //[RedmineActivityUsers,    {x:1, y:2, w:1, h:1}],
