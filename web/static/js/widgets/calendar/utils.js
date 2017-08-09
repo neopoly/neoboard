@@ -36,8 +36,8 @@ export function sortEvents(a, b, unit = "days") {
 }
 
 export function segementizeEventBetween(event, first, last, unit = "days") {
-  const mStart = moment(event.start)//.startOf(unit)
-  const mEnd   = moment(event.end)//.endOf(unit)
+  const mStart = moment(event.start)
+  const mEnd   = moment(event.end)
   const mFirst = moment(first).startOf(unit)
   const mLast  = moment(last).endOf(unit)
   const slots  = diff(mFirst, mLast, unit)+1
@@ -62,24 +62,23 @@ function sortSegments(a, b) {
 }
 
 export function eventLevels(rowSegments, limit = Infinity){
-  let i
-  let j
+  let level
   const levels = []
   const rest   = []
 
-  for (i = 0; i < rowSegments.length; i++) {
+  for (let i = 0; i < rowSegments.length; i++) {
     const seg = rowSegments[i];
 
-    for (j = 0; j < levels.length; j++) {
-      if (!segmentsOverlap(seg, levels[j])) {
+    for (level = 0; level < levels.length; level++) {
+      if (!segmentsOverlap(seg, levels[level])) {
         break
       }
     }
 
-    if (j >= limit) {
+    if (level >= limit) {
       rest.push(seg)
     } else {
-      (levels[j] || (levels[j] = [])).push(seg)
+      (levels[level] || (levels[level] = [])).push(seg)
     }
   }
 
@@ -92,12 +91,40 @@ export function eventLevels(rowSegments, limit = Infinity){
   return { levels, rest }
 }
 
-export function inRange(event, from, to, unit = "days") {
-  const mStart = moment(event.start)
-  const mEnd = moment(event.end)
+export function refitRestIntoLevels({levels, rest}, limit) {
+  // if we have exactly reached the limit AND we have some rest
+  if (levels.length <= limit && rest.length > 0) {
+    const refit = eventLevels(rest)
+    // if the rest fits into a single level
+    if (refit.levels.length === 1 && refit.rest.length === 0) {
+      return {
+        levels: levels.concat([refit.levels[0]]),
+        rest: []
+      }
+    }
+  }
+  return { levels, rest }
+}
 
-  return moment(event.start).isSameOrBefore(to, unit)
-    && moment(event.end).isSameOrAfter(from, unit)
+export function inRange(event, from, to, unit = "days") {
+  const start = event.start
+  const end   = correctedEventEnd(event)
+
+  return moment(start).isSameOrBefore(to, unit)
+    && moment(end).isSameOrAfter(from, unit)
+}
+
+export function isOnDate(event, date) {
+  const start = event.start
+  const end   = correctedEventEnd(event)
+  return moment(date).isBetween(start, end, "days", "[]")
+}
+
+export function correctedEventEnd(event) {
+  if (event.allDay) {
+    return moment(event.end).subtract(1, "second").toDate()
+  }
+  return event.end
 }
 
 export function hex2components(hex) {

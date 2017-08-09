@@ -5,7 +5,7 @@ import WidgetMixin from "../../widget_mixin"
 import LastUpdatedAt from "../../last_updated_at"
 import * as utils from "./utils"
 
-moment.locale("en-GB")
+moment.locale("en-GB") // use English names but Monday-based weeks
 
 function mapEvent(data) {
   return {
@@ -39,6 +39,14 @@ function buildWeeks(around, before, after) {
 
 export default React.createClass({
   mixins: [WidgetMixin("calendar:state")],
+  getDefaultProps() {
+    return {
+      perCell: 6, // one "event" will be used for "+X more indicator"
+      weeksBefore: 1,
+      weeksAfter: 2,
+      navigateByWeeks: 4,
+    }
+  },
   getInitialState() {
     return { events: [], current: new Date() }
   },
@@ -48,15 +56,17 @@ export default React.createClass({
     let focus = new Date(this.state.current)
     if(this.state.focus) focus = new Date(this.state.focus)
 
-    const weeks = buildWeeks(focus, 1, 3)
+    const weeks = buildWeeks(focus, this.props.weeksBefore, this.props.weeksAfter)
 
     return (
       <div className="CalendarWidget">
         <div className="Calendar">
           <Navigation onFocus={this._focus} focus={focus} {...this.props}/>
+          <Weekdays week={weeks[0]}/>
           <div className="Weeks">
             {weeks.map((week, idx) => {
               return <Week
+                {...this.props}
                 current={current}
                 week={week}
                 events={events}
@@ -90,16 +100,28 @@ const Navigation = React.createClass({
     )
   },
   _onPrev() {
-    const focus = moment(this.props.focus).subtract(4, "week")
+    const focus = moment(this.props.focus).subtract(this.props.navigateByWeeks, "week")
     this.props.onFocus(focus.toDate())
   },
   _onNext() {
-    const focus = moment(this.props.focus).add(4, "week")
+    const focus = moment(this.props.focus).add(this.props.navigateByWeeks, "week")
     this.props.onFocus(focus.toDate())
   },
   _onReset() {
     this.props.onFocus(this.props.current)
   },
+})
+
+const Weekdays = React.createClass({
+  render() {
+    return (
+      <div className="Weekdays">
+        {this.props.week.map((date, idx) => {
+          return <div key={idx}>{formatDayLabel(date)}</div>
+        })}
+      </div>
+    )
+  }
 })
 
 const Week = React.createClass({
@@ -146,6 +168,10 @@ const BackgroundCells = React.createClass({
   }
 })
 
+function formatDayLabel(date) {
+  return moment(date).format("dd")
+}
+
 function formatDateLabel(date) {
   const day = moment(date).date()
   if(day == 1) return `${formatMonthLabel(date)} ${day}`
@@ -161,10 +187,15 @@ function formatWeekLabel(date) {
 }
 
 function formatEventDate(event) {
+  const start = event.start
+  const end = utils.correctedEventEnd(event)
   if (event.allDay) {
-    return `${moment(event.start).format("L")} - ${moment(event.end).format("L")}`
+    if (moment(start).isSame(end, "days")) {
+      return moment(start).format("L")
+    }
+    return `${moment(start).format("L")} - ${moment(end).format("L")}`
   }
-  return moment(event.start).format("LLL")
+  return moment(start).format("LLL")
 }
 
 const LabelCells = React.createClass({
@@ -218,12 +249,11 @@ const Labels = React.createClass({
   }
 })
 
-const EVENTS_PER_CELL = 7
-
 const WeekEvents = React.createClass({
   render(){
-    const from = this.props.week[0]
-    const to   = this.props.week[this.props.week.length - 1]
+    const {perCell, week} = this.props
+    const from = week[0]
+    const to   = week[week.length - 1]
     const events = eventsForWeek(this.props.events, from, to)
     events.sort((a, b) => utils.sortEvents(a, b))
 
@@ -231,7 +261,8 @@ const WeekEvents = React.createClass({
       return utils.segementizeEventBetween(event, from, to)
     })
 
-    const { levels, rest } = utils.eventLevels(segments, EVENTS_PER_CELL)
+    const leveled = utils.eventLevels(segments, perCell-1)
+    const { levels, rest } = utils.refitRestIntoLevels(leveled, perCell)
     return (
       <div className="WeekEvents">
         {levels.map((segments, idx) => {
@@ -307,7 +338,7 @@ const EventRestRow = React.createClass({
       <div className="EventRestRow">
         {week.map((date, idx) => {
           const events = segments.filter(({event}) => {
-            return utils.inRange(event, date, date)
+            return utils.isOnDate(event, date)
           }).map(({event}) => event)
           return (
             <div key={idx} className="More" style={utils.styleForSegement(1, week.length)}>

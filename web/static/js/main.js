@@ -22,7 +22,7 @@ const widgets = [
   [Mattermost,              {x:0, y:0, w:1, h:2}],
   [RedmineActivityProjects, {x:1, y:1, w:1, h:2}],
   //[RedmineActivityUsers,    {x:1, y:2, w:1, h:1}],
-  [Calendar,                {x:2, y:0, w:2, h:3}],
+  [Calendar,                {x:2, y:0, w:2, h:2}, {perCell: 7}],
   [OwncloudImages,          {x:4, y:1, w:1, h:1}],
   [TimeWidget,              {x:4, y:0, w:1, h:1}],
   //[GitlabCiWidget,          {x:3, y:0, w:1, h:1}],
