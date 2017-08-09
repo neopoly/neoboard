@@ -1,4 +1,5 @@
 import moment from "moment"
+import lodash from "lodash"
 
 function diff(mA, mB, unit) {
   return Math.abs(mA.diff(mB, unit))
@@ -61,12 +62,11 @@ function sortSegments(a, b) {
   return a.left - b.left
 }
 
-export function eventLevels(rowSegments, limit = Infinity){
-  let level
+export function eventLevels(rowSegments){
   const levels = []
-  const rest   = []
 
   for (let i = 0; i < rowSegments.length; i++) {
+    let level
     const seg = rowSegments[i];
 
     for (level = 0; level < levels.length; level++) {
@@ -75,35 +75,29 @@ export function eventLevels(rowSegments, limit = Infinity){
       }
     }
 
-    if (level >= limit) {
-      rest.push(seg)
-    } else {
-      (levels[level] || (levels[level] = [])).push(seg)
-    }
+    (levels[level] || (levels[level] = [])).push(seg)
   }
 
   for (let k = 0; k < levels.length; k++) {
     levels[k].sort(sortSegments)
   }
 
-  rest.sort(sortSegments)
-
-  return { levels, rest }
+  return levels
 }
 
-export function refitRestIntoLevels({levels, rest}, limit) {
-  // if we have exactly reached the limit AND we have some rest
-  if (levels.length <= limit && rest.length > 0) {
-    const refit = eventLevels(rest)
-    // if the rest fits into a single level
-    if (refit.levels.length === 1 && refit.rest.length === 0) {
-      return {
-        levels: levels.concat([refit.levels[0]]),
-        rest: []
-      }
+export function limitEventLevels(levels, limit) {
+  if (levels.length > limit) {
+    const maxLevel = limit - 1
+    return {
+      levels: levels.slice(0, maxLevel),
+      rest: lodash.flatten(levels.slice(maxLevel))
     }
   }
-  return { levels, rest }
+
+  return {
+    levels,
+    rest: []
+  }
 }
 
 export function inRange(event, from, to, unit = "days") {

@@ -7,41 +7,11 @@ import * as utils from "./utils"
 
 moment.locale("en-GB") // use English names but Monday-based weeks
 
-function mapEvent(data) {
-  return {
-    title: data.title,
-    start: new Date(data.start),
-    end: new Date(data.end),
-    allDay: data.allDay,
-    color: data.color,
-    calendar: data.calendar
-  }
-}
-
-function buildWeek(around) {
-  const mFrom     = moment(around).startOf("week").startOf("day")
-  const mTo       = moment(around).endOf("week").endOf("day")
-  const week      = []
-  for (let m = mFrom.clone(); m.isSameOrBefore(mTo); m.add(1, "day")) {
-    week.push(m.toDate())
-  }
-  return week
-}
-
-function buildWeeks(around, before, after) {
-  const weeks = []
-  for(let i=before*-1; i <= after; i++) {
-    const week = buildWeek(moment(around).add(7 * i, "day"))
-    weeks.push(week)
-  }
-  return weeks
-}
-
 export default React.createClass({
   mixins: [WidgetMixin("calendar:state")],
   getDefaultProps() {
     return {
-      perCell: 6, // one "event" will be used for "+X more indicator"
+      perCell: 7, // one "event" will be used for "+X more indicator"
       weeksBefore: 1,
       weeksAfter: 2,
       navigateByWeeks: 4,
@@ -82,6 +52,36 @@ export default React.createClass({
     this.setState({focus: date})
   }
 })
+
+function mapEvent(data) {
+  return {
+    title: data.title,
+    start: new Date(data.start),
+    end: new Date(data.end),
+    allDay: data.allDay,
+    color: data.color,
+    calendar: data.calendar
+  }
+}
+
+function buildWeek(around) {
+  const mFrom     = moment(around).startOf("week").startOf("day")
+  const mTo       = moment(around).endOf("week").endOf("day")
+  const week      = []
+  for (let m = mFrom.clone(); m.isSameOrBefore(mTo); m.add(1, "day")) {
+    week.push(m.toDate())
+  }
+  return week
+}
+
+function buildWeeks(around, before, after) {
+  const weeks = []
+  for(let i=before*-1; i <= after; i++) {
+    const week = buildWeek(moment(around).add(7 * i, "day"))
+    weeks.push(week)
+  }
+  return weeks
+}
 
 function eventsForWeek(events, from, to) {
   return events.filter(e => utils.inRange(e, from, to, "day"))
@@ -261,8 +261,9 @@ const WeekEvents = React.createClass({
       return utils.segementizeEventBetween(event, from, to)
     })
 
-    const leveled = utils.eventLevels(segments, perCell-1)
-    const { levels, rest } = utils.refitRestIntoLevels(leveled, perCell)
+    const allLevels = utils.eventLevels(segments)
+    const {levels, rest} = utils.limitEventLevels(allLevels, perCell)
+
     return (
       <div className="WeekEvents">
         {levels.map((segments, idx) => {
@@ -437,7 +438,7 @@ const EventsPopOverHolder = React.createClass({
     )
   },
   _onEnter(e) {
-    const top = e.screenY > screen.height / 2
+    const top = e.screenY > window.innerHeight / 2
     this.setState({tooltip: true, top})
   },
   _onExit() {
