@@ -49,8 +49,11 @@
       flex-basis: $width
       max-width: $width
       text-align: right
-      color: $halfWhite
+      color: $twoThirdWhite
       padding: 0 8px
+
+      &.Weekday-6, &.Weekday-0
+        color: $thirdWhite
 
   .Weeks
     position: relative
@@ -80,7 +83,7 @@
       border-top: $borderSize solid $borderColor
       &:first-child
         border-left: none
-      &.isCurrentWeek
+      &.Weekday-6, &.Weekday-0
         background: lighten($backgroundColor, 69%)
       &.isCurrentDay
         background: lighten($backgroundColor, 50%)
@@ -100,7 +103,8 @@
         color: $halfBlack
       .Date
         float: right
-        padding: 1px 7px
+        padding: 0 5px
+        line-height: 19px
         &.isCurrentDay
           background: $backgroundColor
           color: $white
@@ -150,10 +154,12 @@
       border-top-left-radius: 8px
       border-bottom-left-radius: 8px
       border-left-width: 1px
+      margin-left: 6px
     &.isEnded
       border-top-right-radius: 8px
       border-bottom-right-radius: 8px
       border-right-width: 1px
+      margin-right: 6px
 
     .EventTitle
       position: absolute
@@ -262,3 +268,5 @@
         margin-bottom: 5px
         th
           padding-right: 5px
+        th, td
+          padding: 2px
