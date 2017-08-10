@@ -2,7 +2,7 @@ defmodule Neoboard.Widgets.Calendar.Event do
   alias Timex
   alias Neoboard.Widgets.Calendar.Event
 
-  defstruct [:id, :title, :start, :end, :categories]
+  defstruct [:id, :title, :start, :end, :categories, :location, :description]
 
   def all_day?(%Event{start: %Date{}, end: %Date{}}), do: true
   def all_day?(_), do: false

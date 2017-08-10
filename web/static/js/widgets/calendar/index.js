@@ -54,14 +54,10 @@ export default React.createClass({
 })
 
 function mapEvent(data) {
-  return {
-    title: data.title,
+  return Object.assign({}, data, {
     start: new Date(data.start),
-    end: new Date(data.end),
-    allDay: data.allDay,
-    color: data.color,
-    calendar: data.calendar
-  }
+    end: new Date(data.end)
+  })
 }
 
 function buildWeek(around) {
@@ -342,14 +338,16 @@ const EventRestRow = React.createClass({
             return utils.isOnDate(event, date)
           }).map(({event}) => event)
           return (
-            <div key={idx} className="More" style={utils.styleForSegement(1, week.length)}>
+            <div
+              key={idx}
+              style={utils.styleForSegement(1, week.length)}
+            >
               {events.length > 0 &&
-                <EventsPopOverHolder
-                  events={events}
-                >
-                  <span>+{events.length} more</span>
-                </EventsPopOverHolder>
-              }
+                <EventsPopOverHolder events={events}>
+                  <span className="More">
+                    +{events.length} more
+                  </span>
+                </EventsPopOverHolder>}
             </div>
           )
         })}
@@ -475,8 +473,25 @@ const EventsPopOver = React.createClass({
                   <tbody>
                     <tr>
                       <th>Date:</th>
-                      <td>{formatEventDate(event)}</td>
+                      <td>
+                        {formatEventDate(event)}
+                      </td>
                     </tr>
+                    {event.location &&
+                      <tr>
+                        <th>Location:</th>
+                        <td>
+                          {event.location}
+                        </td>
+                      </tr>
+                    }
+                    {event.description &&
+                      <tr>
+                        <td colSpan={2}>
+                          {event.description}
+                        </td>
+                      </tr>
+                    }
                   </tbody>
                 </table>
               </div>

@@ -21,6 +21,8 @@ defmodule Neoboard.Widgets.Calendar.ParserTest do
     assert ~D[2017-02-18] == event.end
     assert "Demo A" == event.title
     assert "Category A" == event.categories
+    assert "Ort A" == event.location
+    assert "Description A" == event.description
   end
 
   test "parses 'DEMO C' event", %{doc: doc} do

@@ -31,6 +31,12 @@ defmodule Neoboard.Widgets.Calendar.Parser do
   defp parse({"CATEGORIES", value, _}, data) do
     update_event(data, :categories, value)
   end
+  defp parse({"LOCATION", value, _}, data) do
+    update_event(data, :location, value)
+  end
+  defp parse({"DESCRIPTION", value, _}, data) do
+    update_event(data, :description, value)
+  end
   defp parse({"X-WR-CALNAME", value, _}, data) do
     Map.put(data, :title, value)
   end
