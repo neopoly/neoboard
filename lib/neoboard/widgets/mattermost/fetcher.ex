@@ -102,7 +102,7 @@ defmodule Neoboard.Widgets.Mattermost.Fetcher do
   end
 
   defp users_url(fetcher = %Fetcher{team_id: team}, page, per_page) do
-    fetcher |> url("teams/#{team}/users/#{page}/#{per_page}")
+    fetcher |> url("users/#{page}/#{per_page}")
   end
 
   defp avatar_url(user) do
