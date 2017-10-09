@@ -25,7 +25,7 @@ defmodule Neoboard.Widgets.MattermostFetcherTest do
       send_json(conn, %{})
     end
 
-    users = "/teams/the_team_id/users/0/#{Fetcher.users_per_page}"
+    users = "/users/0/#{Fetcher.users_per_page}"
     Bypass.expect bypass, "GET", users, fn conn ->
       conn = Plug.Conn.fetch_query_params(conn)
       assert_private_token_header(conn)
@@ -50,7 +50,7 @@ defmodule Neoboard.Widgets.MattermostFetcherTest do
       })
     end
 
-    users = "/teams/the_team_id/users/0/#{Fetcher.users_per_page}"
+    users = "/users/0/#{Fetcher.users_per_page}"
     Bypass.expect bypass, "GET", users, fn conn ->
       conn = Plug.Conn.fetch_query_params(conn)
       assert_request_header(conn, "authorization", "Bearer #{@private_token}")
@@ -78,7 +78,7 @@ defmodule Neoboard.Widgets.MattermostFetcherTest do
       })
     end
 
-    users = "/teams/the_team_id/users/0/#{Fetcher.users_per_page}"
+    users = "/users/0/#{Fetcher.users_per_page}"
     Bypass.expect bypass, "GET", users, fn conn ->
       conn = Plug.Conn.fetch_query_params(conn)
       assert_private_token_header(conn)
@@ -119,14 +119,14 @@ defmodule Neoboard.Widgets.MattermostFetcherTest do
       })
     end
 
-    users = "/teams/the_team_id/users/0/#{Fetcher.users_per_page}"
+    users = "/users/0/#{Fetcher.users_per_page}"
     Bypass.expect bypass, "GET", users, fn conn ->
       conn = Plug.Conn.fetch_query_params(conn)
       assert_private_token_header(conn)
       send_json(conn, fake_users(1, Fetcher.users_per_page))
     end
 
-    users = "/teams/the_team_id/users/1/#{Fetcher.users_per_page}"
+    users = "/users/1/#{Fetcher.users_per_page}"
     Bypass.expect bypass, "GET", users, fn conn ->
       conn = Plug.Conn.fetch_query_params(conn)
       assert_private_token_header(conn)
