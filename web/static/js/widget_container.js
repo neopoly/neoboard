@@ -5,9 +5,9 @@ import ReactGridLayout from "react-grid-layout"
 export default React.createClass({
   getDefaultProps() {
     return {
-      width: 1900,
+      width: 1920,
       cols: 5,
-      rowHeight: 380,
+      rowHeight: 350,
       widgets: []
     }
   },
@@ -15,13 +15,15 @@ export default React.createClass({
     return {}
   },
   render() {
-    let channel = this.props.channel
+    const channel = this.props.channel
     let renderWidget = function(configuration, i){
-      let widget = configuration[0]
-      let grid   = configuration[1]
+      const widget = configuration[0]
+      const grid   = configuration[1]
+      const props  = configuration[2] || {}
+      props.channel = channel
       return (
         <div key={i} data-grid={grid}>
-          {React.createElement(widget, {channel: channel})}
+          {React.createElement(widget, props)}
         </div>
       )
     }
@@ -34,7 +36,10 @@ export default React.createClass({
         isDraggable={false}
         listenToWindowResize={false}
         useCSSTransforms={true}
-        width={this.props.width}>
+        width={this.props.width}
+        margin={[5,5]}
+        containerPadding={[5,5]}
+      >
         {this.props.widgets.map(renderWidget)}
       </ReactGridLayout>
     )

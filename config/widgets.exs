@@ -75,5 +75,18 @@ config :neoboard, Neoboard.Widgets.Time,
 #   ],
 #   every: 10_000
 
-#config :neoboard, Neoboard.Widgets.Youtube,
-#  url: "https://www.youtube.com/embed/uNYEZXvRlB8?&autoplay=1"
+# config :neoboard, Neoboard.Widgets.Youtube,
+#   url: "https://www.youtube.com/embed/uNYEZXvRlB8?&autoplay=1"
+
+# config :neoboard, Neoboard.Widgets.Calendar,
+#   calendars: [
+#     %{
+#       url: "https://calendar.company.com/projects.ics",
+#       colors: ["#0B467F", "#62B2FF", "#158CFF", "#31597F", "#1170CC"]
+#     },
+#     %{
+#       url: "https://calendar.company.com/meetings.ics",
+#       colors: ["#AF1E7F"]
+#     },
+#   ],
+#   every: 600_000
