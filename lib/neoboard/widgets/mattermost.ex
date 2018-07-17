@@ -3,7 +3,6 @@ defmodule Neoboard.Widgets.Mattermost do
   use Neoboard.Pusher
   use Neoboard.Config
   alias Neoboard.TimeService
-  alias Neoboard.Widgets.Mattermost.Authentication
   alias Neoboard.Widgets.Mattermost.Fetcher
 
   def start_link do
@@ -17,10 +16,9 @@ defmodule Neoboard.Widgets.Mattermost do
   end
 
   def handle_info(:login, _) do
-    {:ok, authentication} = Authentication.login(config())
-    send(self(), :tick)
+    send(self, :tick)
     {:noreply, %{
-      private_token: authentication.private_token,
+      private_token: config()[:personal_access_token],
       posts: [],
       last_fetch: initial_last_fetch()
     }}

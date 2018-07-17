@@ -56,8 +56,8 @@ config :neoboard, Neoboard.Widgets.Time,
 
 # config :neoboard, Neoboard.Widgets.Mattermost,
 #  api_url: "http://mattermost.company.com/api/v4",
-#  login_id: "username_or_email",
-#  password: "very_secret",
+#  # See: https://docs.mattermost.com/developer/personal-access-tokens.html
+#  personal_access_token: "your_personal_access_token",
 #  channel_id: "the_channel_id",
 #  every: 10_000,
 #  posts: 10,
