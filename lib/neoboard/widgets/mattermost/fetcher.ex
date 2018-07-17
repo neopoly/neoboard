@@ -2,19 +2,12 @@ defmodule Neoboard.Widgets.Mattermost.Fetcher do
   alias Neoboard.Widgets.Mattermost.Fetcher
   alias Neoboard.Gravatar
 
-  defstruct [:api_url, :private_token, :channel_id, :team_id, :since]
-
-  @users_per_page 1000
-
-  def users_per_page do
-    @users_per_page
-  end
+  defstruct [:api_url, :private_token, :channel_id, :since]
 
   def fetch(since, private_token, config) do
     %Fetcher{
       api_url: config[:api_url],
       private_token: private_token,
-      team_id: config[:team_id],
       channel_id: config[:channel_id],
       since: since
     } |> fetch
@@ -22,7 +15,8 @@ defmodule Neoboard.Widgets.Mattermost.Fetcher do
 
   defp fetch(fetcher) do
     with {:ok, raw_posts} <- fetch_posts(fetcher),
-         {:ok, users} <- fetch_users(fetcher),
+         user_ids <- extract_user_ids(raw_posts),
+         {:ok, users} <- fetch_users(fetcher, user_ids),
          posts <- inject_users(raw_posts, users) do
       {:ok, posts}
     else
@@ -32,7 +26,7 @@ defmodule Neoboard.Widgets.Mattermost.Fetcher do
 
   defp fetch_posts(fetcher) do
     case request(fetcher, posts_url(fetcher)) do
-      {:ok, data} -> {:ok, extract_posts(data["posts"])}
+      {:ok, data} -> {:ok, extract_posts(data["posts"], data["order"])}
       other -> other
     end
   end
@@ -43,32 +37,29 @@ defmodule Neoboard.Widgets.Mattermost.Fetcher do
     end)
   end
 
-  defp extract_posts(nil), do: []
-  defp extract_posts(posts) do
-    posts
-    |> Map.values
+  defp extract_posts(nil, _), do: []
+  defp extract_posts(posts, order) do
+    order
+    |> Enum.map(&(Map.get(posts, &1)))
     |> Enum.filter(&(&1["delete_at"] == 0))
     |> Enum.sort(&(&1["create_at"] > &2["create_at"]))
   end
 
+  def extract_user_ids(posts) do
+    Enum.map(posts, &(&1["user_id"]))
+  end
+
   defp extract_users(nil), do: %{}
   defp extract_users(users) do
-    Enum.reduce(users, %{}, fn({id, user}, acc) ->
-      Map.put(acc, id, Map.put(user, "avatar_url", avatar_url(user)))
+    Enum.reduce(users, %{}, fn(user, acc) ->
+      Map.put(acc, user["id"], Map.put(user, "avatar_url", avatar_url(user)))
     end)
   end
 
-  defp fetch_users(fetcher), do: fetch_users(fetcher, 0, %{})
-  defp fetch_users(fetcher, page, pool) do
-    case request(fetcher, users_url(fetcher, page, @users_per_page)) do
-      {:ok, data} ->
-        users = extract_users(data)
-        pool  = Map.merge(pool, users)
-        if map_size(users) >= @users_per_page do
-          fetch_users(fetcher, page+1, pool)
-        else
-          {:ok, pool}
-        end
+  defp fetch_users(_, []), do: {:ok, %{}}
+  defp fetch_users(fetcher, user_ids) do
+    case request(fetcher, users_url(fetcher), user_ids) do
+      {:ok, data} -> {:ok, extract_users(data)}
       other -> other
     end
   end
@@ -77,11 +68,18 @@ defmodule Neoboard.Widgets.Mattermost.Fetcher do
     {:ok, response} = HTTPoison.get(url, headers(fetcher))
     parse_response(response)
   end
+  defp request(fetcher, url, data) do
+    {:ok, response} = HTTPoison.post(url, dump_request(data), headers(fetcher))
+    parse_response(response)
+  end
+
+  defp dump_request(data) do
+    Poison.encode!(data)
+  end
 
   defp parse_response(%HTTPoison.Response{status_code: 200, body: body}) do
     Poison.decode(body)
   end
-
   defp parse_response(%HTTPoison.Response{status_code: 401, body: body}) do
     case Poison.decode(body) do
       {:ok, data} -> {:authentication_failure, data["message"]}
@@ -96,13 +94,13 @@ defmodule Neoboard.Widgets.Mattermost.Fetcher do
     }
   end
 
-  defp posts_url(fetcher = %Fetcher{team_id: team, channel_id: channel, since: since}) do
+  defp posts_url(fetcher = %Fetcher{channel_id: channel, since: since}) do
     timestamp = to_timestamp(since)
-    fetcher |> url("teams/#{team}/channels/#{channel}/posts/since/#{timestamp}")
+    fetcher |> url("channels/#{channel}/posts?since=#{timestamp}")
   end
 
-  defp users_url(fetcher = %Fetcher{team_id: team}, page, per_page) do
-    fetcher |> url("users/#{page}/#{per_page}")
+  defp users_url(fetcher) do
+    fetcher |> url("users/ids")
   end
 
   defp avatar_url(user) do
@@ -114,6 +112,6 @@ defmodule Neoboard.Widgets.Mattermost.Fetcher do
   end
 
   defp to_timestamp(since) do
-    DateTime.to_unix(since)
+    DateTime.to_unix(since, :millisecond)
   end
 end
