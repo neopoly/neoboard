@@ -54,11 +54,10 @@ config :neoboard, Neoboard.Widgets.Time,
 #   every: 10_000,
 #   title: "gitter.im/yourRoom"
 
-#config :neoboard, Neoboard.Widgets.Mattermost,
-#  api_url: "http://mattermost.company.com/api/v3",
-#  login_id: "username_or_email",
-#  password: "very_secret",
-#  team_id: "your_team_id",
+# config :neoboard, Neoboard.Widgets.Mattermost,
+#  api_url: "http://mattermost.company.com/api/v4",
+#  # See: https://docs.mattermost.com/developer/personal-access-tokens.html
+#  personal_access_token: "your_personal_access_token",
 #  channel_id: "the_channel_id",
 #  every: 10_000,
 #  posts: 10,
