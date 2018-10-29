@@ -38,7 +38,7 @@ defmodule Neoboard.Widgets.GitlabCi.Fetcher do
   end
 
   defp collect_projects(fetcher = %Fetcher{api_url: api_url}, url \\ nil) do
-    url = url || "#{api_url}/projects/all?per_page=100"
+    url = url || "#{api_url}/projects?per_page=100"
     {:ok, response = %HTTPoison.Response{status_code: 200}} = fetch(fetcher, url)
     {next, collected} = parse_response(response)
     fetcher = %{fetcher | projects: fetcher.projects ++ collected}
