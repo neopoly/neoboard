@@ -1,10 +1,16 @@
 defmodule Neoboard.Widgets.GitlabCi.Fetcher do
   defmodule Project do
     @derive [Poison.Encoder]
-    defstruct [:id, :name, :url, :build_status, :failed?]
+    defstruct [:id, :name, :url, :default_branch, :build_status, :failed?]
 
     def from_json(json) do
-      %__MODULE__{id: json["id"], name: json["name"], url: json["web_url"], failed?: false}
+      %__MODULE__{
+        id: json["id"],
+        name: json["name"],
+        url: json["web_url"],
+        default_branch: default_branch(json),
+        failed?: false
+      }
     end
 
     def fill_build_status(project, build_status_json) do
@@ -12,11 +18,19 @@ defmodule Neoboard.Widgets.GitlabCi.Fetcher do
       if failed do
         %{project |
           build_status: failed["status"],
-          url: "#{project.url}/builds/#{failed["id"]}",
+          url: failed["web_url"],
           failed?: true
         }
       else
         project
+      end
+    end
+
+    defp default_branch(json) do
+      case Map.get(json, "default_branch") do
+        nil -> "master"
+        ""  -> "master"
+        val -> val
       end
     end
   end
@@ -38,7 +52,7 @@ defmodule Neoboard.Widgets.GitlabCi.Fetcher do
   end
 
   defp collect_projects(fetcher = %Fetcher{api_url: api_url}, url \\ nil) do
-    url = url || "#{api_url}/projects?per_page=100"
+    url = url || "#{api_url}/projects?per_page=100&archived=false"
     {:ok, response = %HTTPoison.Response{status_code: 200}} = fetch(fetcher, url)
     {next, collected} = parse_response(response)
     fetcher = %{fetcher | projects: fetcher.projects ++ collected}
@@ -51,7 +65,7 @@ defmodule Neoboard.Widgets.GitlabCi.Fetcher do
   defp collect_build_status(fetcher = %Fetcher{api_url: api_url, projects: projects}) do
     projects = projects
     |> Enum.map(fn project ->
-      url = "#{api_url}/projects/#{project.id}/builds?per_page=1"
+      url = "#{api_url}/projects/#{project.id}/pipelines?per_page=1&ref=#{project.default_branch}"
       {:ok, %HTTPoison.Response{status_code: 200, body: body}} = fetch(fetcher, url)
       Project.fill_build_status(project, parse_body(body))
     end)
@@ -86,7 +100,7 @@ defmodule Neoboard.Widgets.GitlabCi.Fetcher do
   end
 
   defp to_projects(json) do
-    json |> Enum.filter_map(&(&1["builds_enabled"]), &Project.from_json/1)
+    json |> Enum.filter_map(&(&1["jobs_enabled"]), &Project.from_json/1)
   end
 
   defp parse_body(body) do
