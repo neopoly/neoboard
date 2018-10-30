@@ -1,5 +1,5 @@
-FROM elixir:1.4
-MAINTAINER Jonas Thiel <jonas@thiel.io>
+FROM elixir:1.7
+LABEL maintainer="jt@neopoly.de"
 
 ENV REQUIRED_PACKAGES="nodejs yarn" \
     APP_HOME="/app" \
