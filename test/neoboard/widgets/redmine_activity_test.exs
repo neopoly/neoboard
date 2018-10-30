@@ -19,7 +19,7 @@ defmodule Neoboard.Widgets.RedmineActivityTest do
     assert Enum.empty?(rest)
 
     [second | one_project] = two_projects
-    assert second.name       == "project3 & more"
+    assert second.name       == "project3 & [møre]"
     assert second.activity   == 1
     assert second.updated_at == ~N[2015-05-18 15:02:59] |> Timex.to_datetime
     [user | rest] = second.users

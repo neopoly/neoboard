@@ -144,7 +144,10 @@ defmodule Neoboard.Widgets.RedmineActivity.Parser do
   end
 
   defp extract_project_name(entry) do
-    entry |> Xml.first('./title') |> Xml.text |> match(~r/^([&\w\-_ ]+) - /)
+    entry
+    |> Xml.first('./title')
+    |> Xml.text
+    |> match(~r/^(.+) - /U)
   end
 
   defp extract_updated(entry) do
@@ -171,7 +174,7 @@ defmodule Neoboard.Widgets.RedmineActivity.Xml do
 
   def xpath(nil, _), do: []
   def xpath(node, path) do
-    :xmerl_xpath.string(to_char_list(path), node)
+    :xmerl_xpath.string(to_charlist(path), node)
   end
   def first(node, path), do: node |> xpath(path) |> List.first
 
