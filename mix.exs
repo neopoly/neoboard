@@ -43,7 +43,7 @@ defmodule Neoboard.Mixfile do
      {:bypass, "~> 0.9", only: :test},
      {:plug_cowboy, "~> 1.0"},
      {:timex, "~> 3.1"},
-     {:httpoison, "~> 0.11"},
+     {:httpoison, "~> 1.4"},
      {:distillery, "~> 1.1"}]
   end
 end
