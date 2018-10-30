@@ -62,15 +62,18 @@ defmodule Neoboard.Widgets.GitlabCi.Fetcher do
     end
   end
 
-  defp collect_build_status(fetcher = %Fetcher{api_url: api_url, projects: projects}) do
+  defp collect_build_status(fetcher = %Fetcher{projects: projects}) do
     projects = projects
-    |> Enum.map(fn project ->
-      url = "#{api_url}/projects/#{project.id}/pipelines?per_page=1&ref=#{project.default_branch}"
-      {:ok, %HTTPoison.Response{status_code: 200, body: body}} = fetch(fetcher, url)
-      Project.fill_build_status(project, parse_body(body))
-    end)
-
+    |> Task.async_stream(&(get_build_status(&1, fetcher)), max_concurrency: 8)
+    |> Enum.map(fn {:ok, val} -> val end)
+    |> Enum.to_list
     %{fetcher | projects: projects}
+  end
+
+  defp get_build_status(project, fetcher) do
+    url = "#{fetcher.api_url}/projects/#{project.id}/pipelines?per_page=1&ref=#{project.default_branch}"
+    {:ok, %HTTPoison.Response{status_code: 200, body: body}} = fetch(fetcher, url)
+    Project.fill_build_status(project, parse_body(body))
   end
 
   defp fetch(%Fetcher{private_token: private_token}, url) do
