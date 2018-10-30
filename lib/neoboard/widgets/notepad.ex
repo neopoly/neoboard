@@ -5,6 +5,10 @@ defmodule Neoboard.Widgets.Notepad do
 
   @body_pattern ~r{<body>\s*(.*)</body>}s
 
+  def init(args) do
+    {:ok, args}
+  end
+
   def start_link do
     {:ok, pid} = GenServer.start_link(__MODULE__, nil)
     send(pid, :tick)

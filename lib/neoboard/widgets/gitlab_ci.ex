@@ -5,6 +5,10 @@ defmodule Neoboard.Widgets.GitlabCi do
 
   alias Neoboard.Widgets.GitlabCi.Fetcher
 
+  def init(args) do
+    {:ok, args}
+  end
+
   def start_link do
     {:ok, pid} = GenServer.start_link(__MODULE__, [])
     send(pid, :tick)

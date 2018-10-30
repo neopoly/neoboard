@@ -3,6 +3,10 @@ defmodule Neoboard.Widgets.Time do
   use Neoboard.Pusher
   use Neoboard.Config
 
+  def init(args) do
+    {:ok, args}
+  end
+
   def start_link do
     {:ok, pid} = GenServer.start_link(__MODULE__, [])
     send(pid, :tick)

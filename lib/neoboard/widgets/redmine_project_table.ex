@@ -4,6 +4,10 @@ defmodule Neoboard.Widgets.RedmineProjectTable do
   use Neoboard.Config
   alias Neoboard.TimeService
 
+  def init(args) do
+    {:ok, args}
+  end
+
   def start_link do
     {:ok, pid} = GenServer.start_link(__MODULE__, nil)
     send(pid, :tick)

@@ -5,6 +5,10 @@ defmodule Neoboard.Widgets.RedmineActivity do
   use Timex
   alias Neoboard.Widgets.RedmineActivity.Parser
 
+  def init(args) do
+    {:ok, args}
+  end
+
   def start_link do
     {:ok, pid} = GenServer.start_link(__MODULE__, nil)
     send(pid, :tick)

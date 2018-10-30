@@ -31,10 +31,6 @@ defmodule Neoboard.Widgets.Gitter do
     {:stop, "Stream ended", state}
   end
 
-  def handle_info(request, state) do
-    super(request, state)
-  end
-
   def handle_cast(:listen, _state) do
     messages = fetch()
     push_messages! messages
