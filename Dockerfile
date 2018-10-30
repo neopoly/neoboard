@@ -37,8 +37,8 @@ RUN mix compile
 
 COPY ["webpack.config.js", ".babelrc", "${APP_HOME}/"]
 RUN mix assets.compile \
- && mix phoenix.digest
+ && mix phx.digest
 
 EXPOSE 4000
 
-CMD ["mix", "phoenix.server"]
+CMD ["mix", "phx.server"]

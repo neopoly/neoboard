@@ -37,11 +37,11 @@ defmodule Neoboard.Mixfile do
   #
   # Type `mix help deps` for examples and options
   defp deps do
-    [{:phoenix, "~> 1.2"},
+    [{:phoenix, "~> 1.3"},
      {:phoenix_html, "~> 2.9"},
      {:phoenix_live_reload, "~> 1.0", only: :dev},
-     {:bypass, github: "ericmj/bypass", branch: "emj-multi-bypass", only: :test},
-     {:cowboy, "~> 1.1"},
+     {:bypass, "~> 0.9", only: :test},
+     {:plug_cowboy, "~> 1.0"},
      {:timex, "~> 3.1"},
      {:httpoison, "~> 0.11"},
      {:distillery, "~> 1.1"}]

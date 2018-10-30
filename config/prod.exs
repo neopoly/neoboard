@@ -13,7 +13,7 @@ use Mix.Config
 # which you typically run after static files are built.
 config :neoboard, Neoboard.Endpoint,
   http: [port: System.get_env("NEOBOARD_PORT")],
-  cache_static_manifest: "priv/static/manifest.json",
+  cache_static_manifest: "priv/static/cache_manifest.json",
   secret_key_base: System.get_env("NEOBOARD_SECRET_BASE_KEY"),
   server: true,
   root: ".",
