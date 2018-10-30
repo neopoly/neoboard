@@ -103,7 +103,9 @@ defmodule Neoboard.Widgets.GitlabCi.Fetcher do
   end
 
   defp to_projects(json) do
-    json |> Enum.filter_map(&(&1["jobs_enabled"]), &Project.from_json/1)
+    json
+    |> Enum.filter(&(&1["jobs_enabled"]))
+    |> Enum.map(&Project.from_json/1)
   end
 
   defp parse_body(body) do
