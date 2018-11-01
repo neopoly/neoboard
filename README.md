@@ -51,13 +51,13 @@ Phoenix "digest" task:
 
 ## Release and run via distillery
 
-    $ node_modules/webpack/bin/webpack.js -p --progress
+    $ mix assets.compile
     $ export NEOBOARD_SECRET_BASE_KEY=<GENERATED>
     $ export NEOBOARD_COOKIE=<GENERATED_COOKIE>
     $ export NEOBOARD_PORT=4000
     $ MIX_ENV=prod mix do phx.digest, release --no-tar
 
-    $ rel/neoboard/bin/neoboard foreground
+    $ _build/prod/rel/neoboard/bin/neoboard foreground
 
 ## LICENSE
 

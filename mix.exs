@@ -6,7 +6,7 @@ defmodule Neoboard.Mixfile do
      version: "0.0.1",
      elixir: "~> 1.7",
      elixirc_paths: elixirc_paths(Mix.env),
-     compilers: [:phoenix] ++ Mix.compilers,
+     compilers: [:phoenix, :gettext] ++ Mix.compilers,
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
      deps: deps()]
@@ -16,17 +16,15 @@ defmodule Neoboard.Mixfile do
   #
   # Type `mix help compile.app` for more information
   def application do
-    [mod: {Neoboard, []},
-     applications: [
-       :phoenix,
-       :phoenix_html,
-       :phoenix_pubsub,
-       :timex,
-       :cowboy,
-       :logger,
-       :httpoison,
-       :xmerl,
-       :tzdata]]
+    [
+      mod: {Neoboard, []},
+      extra_applications: [
+        :timex,
+        :logger,
+        :httpoison,
+        :xmerl,
+        :runtime_tools,
+        :tzdata]]
   end
 
   # Specifies which paths to compile per environment
@@ -44,6 +42,6 @@ defmodule Neoboard.Mixfile do
      {:plug_cowboy, "~> 1.0"},
      {:timex, "~> 3.1"},
      {:httpoison, "~> 1.4"},
-     {:distillery, "~> 1.1"}]
+     {:distillery, "~> 2.0"}]
   end
 end
