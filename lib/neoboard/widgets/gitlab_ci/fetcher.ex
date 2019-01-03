@@ -37,10 +37,15 @@ defmodule Neoboard.Widgets.GitlabCi.Fetcher do
 
   alias Neoboard.Widgets.GitlabCi.Fetcher
 
-  defstruct [:api_url, :private_token, projects: []]
+  defstruct [:api_url, :private_token, :per_page, :options, projects: []]
 
-  def fetch_projects(api_url, private_token) do
-    %Fetcher{api_url: api_url, private_token: private_token} |> fetch_projects
+  def fetch_projects(api_url, private_token, per_page, timeout) do
+    %Fetcher{
+      api_url: api_url,
+      private_token: private_token,
+      per_page: per_page,
+      options: [timeout: timeout, recv_timeout: timeout],
+    } |> fetch_projects
   end
 
   defp fetch_projects(fetcher) do
@@ -51,8 +56,8 @@ defmodule Neoboard.Widgets.GitlabCi.Fetcher do
     {:ok, fetcher.projects}
   end
 
-  defp collect_projects(fetcher = %Fetcher{api_url: api_url}, url \\ nil) do
-    url = url || "#{api_url}/projects?per_page=100&archived=false"
+  defp collect_projects(fetcher = %Fetcher{api_url: api_url, per_page: per_page}, url \\ nil) do
+    url = url || "#{api_url}/projects?per_page=#{per_page}&archived=false"
     {:ok, response = %HTTPoison.Response{status_code: 200}} = fetch(fetcher, url)
     {next, collected} = parse_response(response)
     fetcher = %{fetcher | projects: fetcher.projects ++ collected}
@@ -76,9 +81,9 @@ defmodule Neoboard.Widgets.GitlabCi.Fetcher do
     Project.fill_build_status(project, parse_body(body))
   end
 
-  defp fetch(%Fetcher{private_token: private_token}, url) do
+  defp fetch(%Fetcher{private_token: private_token, options: options}, url) do
     headers = [{"PRIVATE-TOKEN", private_token}]
-    HTTPoison.get(url, headers)
+    HTTPoison.get(url, headers, options)
   end
 
   defp parse_response(%HTTPoison.Response{body: body, headers: headers}) do

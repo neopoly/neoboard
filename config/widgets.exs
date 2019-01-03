@@ -20,7 +20,9 @@ config :neoboard, Neoboard.Widgets.Time,
 # config :neoboard, Neoboard.Widgets.GitlabCi,
 #   every: 30000,
 #   api_url: "https://gitlab.com/api/v3",
-#   private_token: "verysecret"
+#   private_token: "verysecret",
+#   per_page: 50,
+#   timeout: 30_000
 
 # Widget can handle responses from Giphy `random`, `search` and `trending` api endpoints
 #

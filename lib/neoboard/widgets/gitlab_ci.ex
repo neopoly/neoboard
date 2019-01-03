@@ -13,9 +13,11 @@ defmodule Neoboard.Widgets.GitlabCi do
   end
 
   def handle_info(:tick, _) do
-    url   = config()[:api_url]
-    token = config()[:private_token]
-    {:ok, projects} = Fetcher.fetch_projects(url, token)
+    url      = config()[:api_url]
+    token    = config()[:private_token]
+    per_page = config()[:per_page]
+    timeout  = config()[:timeout]
+    {:ok, projects} = Fetcher.fetch_projects(url, token, per_page, timeout)
     response = projects |> only_failed |> build_response
     push! response
     {:noreply, nil}
