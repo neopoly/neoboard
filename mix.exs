@@ -4,7 +4,7 @@ defmodule Neoboard.Mixfile do
   def project do
     [app: :neoboard,
      version: "0.0.1",
-     elixir: "~> 1.4",
+     elixir: "~> 1.8",
      elixirc_paths: elixirc_paths(Mix.env),
      compilers: [:phoenix] ++ Mix.compilers,
      build_embedded: Mix.env == :prod,
