@@ -18,7 +18,7 @@ defmodule Neoboard.Broadcaster do
   end
 
   def broadcast!(message, payload) do
-    Logger.debug("[#{@topic}] #{message} -> #{Poison.encode!(payload)}")
+    Logger.debug("[#{@topic}] #{message} -> #{Jason.encode!(payload)}")
     save(message, payload)
     Neoboard.Endpoint.broadcast!(@topic, message, payload)
   end

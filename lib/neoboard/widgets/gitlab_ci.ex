@@ -12,6 +12,10 @@ defmodule Neoboard.Widgets.GitlabCi do
     {:ok, pid}
   end
 
+  def init(init_arg) do
+    {:ok, init_arg}
+  end
+
   def handle_info(:tick, _) do
     url      = config()[:api_url]
     token    = config()[:private_token]

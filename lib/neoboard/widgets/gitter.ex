@@ -16,7 +16,7 @@ defmodule Neoboard.Widgets.Gitter do
   def handle_info(%HTTPoison.AsyncChunk{chunk: chunk}, state) do
     cond do
       String.match?(chunk, ~r/\{.*\}/) ->
-        message = chunk |> Poison.decode!
+        message = chunk |> Jason.decode!
         updated = [message | state] |> Enum.take(config()[:messages])
         push_messages! updated
         {:noreply, updated}
@@ -31,10 +31,6 @@ defmodule Neoboard.Widgets.Gitter do
     {:stop, "Stream ended", state}
   end
 
-  def handle_info(request, state) do
-    super(request, state)
-  end
-
   def handle_cast(:listen, _state) do
     messages = fetch()
     push_messages! messages
@@ -45,7 +41,7 @@ defmodule Neoboard.Widgets.Gitter do
   defp fetch do
     case HTTPoison.get(url(), headers()) do
       {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
-        body |> Poison.decode! |> Enum.reverse
+        body |> Jason.decode! |> Enum.reverse
     end
   end
 

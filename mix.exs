@@ -4,7 +4,7 @@ defmodule Neoboard.Mixfile do
   def project do
     [app: :neoboard,
      version: "0.0.1",
-     elixir: "~> 1.4",
+     elixir: "~> 1.8",
      elixirc_paths: elixirc_paths(Mix.env),
      compilers: [:phoenix] ++ Mix.compilers,
      build_embedded: Mix.env == :prod,
@@ -17,12 +17,11 @@ defmodule Neoboard.Mixfile do
   # Type `mix help compile.app` for more information
   def application do
     [mod: {Neoboard, []},
-     applications: [
+    extra_applications: [
        :phoenix,
        :phoenix_html,
        :phoenix_pubsub,
        :timex,
-       :cowboy,
        :logger,
        :httpoison,
        :xmerl,
@@ -37,13 +36,15 @@ defmodule Neoboard.Mixfile do
   #
   # Type `mix help deps` for examples and options
   defp deps do
-    [{:phoenix, "~> 1.2"},
-     {:phoenix_html, "~> 2.9"},
-     {:phoenix_live_reload, "~> 1.0", only: :dev},
-     {:bypass, github: "ericmj/bypass", branch: "emj-multi-bypass", only: :test},
-     {:cowboy, "~> 1.1"},
-     {:timex, "~> 3.1"},
-     {:httpoison, "~> 0.11"},
-     {:distillery, "~> 1.1"}]
+    [{:phoenix, "~> 1.4"},
+     {:phoenix_html, "~> 2.13"},
+     {:phoenix_live_reload, "~> 1.2", only: :dev},
+     {:bypass, "~> 1.0", only: :test},
+     {:plug_cowboy, "~> 2.0"},
+     {:timex, "~> 3.5"},
+     {:httpoison, "~> 1.5"},
+     {:jason, "~> 1.1"},
+     {:distillery, "~> 2.0"},
+     {:tzdata, "~> 0.5.19"}]
   end
 end

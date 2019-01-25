@@ -9,7 +9,7 @@
     "classnames": "~2.2.5",
     "emojify.js": "^1.1.0",
     "lodash": "^4.17.4",
-    "phoenix": "^1.2.1",
+    "phoenix": "^1.4.0",
     "react": "^15.6.1",
     "react-addons-css-transition-group": "^15.6.0",
     "react-dom": "^15.6.1",

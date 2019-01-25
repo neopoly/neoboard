@@ -16,7 +16,7 @@ defmodule Neoboard.Widgets.Mattermost do
   end
 
   def handle_info(:login, _) do
-    send(self, :tick)
+    send(self(), :tick)
     {:noreply, %{
       private_token: config()[:personal_access_token],
       posts: [],
