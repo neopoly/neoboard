@@ -22,3 +22,7 @@ tag: check-env
 
 push: tag
 	docker push ${DOCKER_REGISTRY}/${NAME}:latest
+
+push_hub:
+	docker tag ${NAME} neopoly/${NAME}:latest
+	docker push neopoly/${NAME}:latest
