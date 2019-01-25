@@ -44,7 +44,7 @@ defmodule Neoboard.Mixfile do
      {:timex, "~> 3.5"},
      {:httpoison, "~> 1.5"},
      {:jason, "~> 1.1"},
-     {:distillery, "~> 1.1"},
+     {:distillery, "~> 2.0"},
      {:tzdata, "~> 0.5.19"}]
   end
 end
