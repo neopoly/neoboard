@@ -10,6 +10,10 @@ defmodule Neoboard.Widgets.Time do
     {:ok, pid}
   end
 
+  def init(init_arg) do
+    {:ok, init_arg}
+  end
+
   def handle_info(:tick, _) do
     now = Neoboard.TimeService.now_as_iso()
     push! %{now: now}

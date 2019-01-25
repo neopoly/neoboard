@@ -10,6 +10,10 @@ defmodule Neoboard.Widgets.Jenkins do
     {:ok, pid}
   end
 
+  def init(init_arg) do
+    {:ok, init_arg}
+  end
+
   def handle_info(:tick, _) do
     {:ok, reponse} = fetch()
     push! reponse

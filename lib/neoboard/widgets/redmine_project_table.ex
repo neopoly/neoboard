@@ -11,6 +11,10 @@ defmodule Neoboard.Widgets.RedmineProjectTable do
     {:ok, pid}
   end
 
+  def init(init_arg) do
+    {:ok, init_arg}
+  end
+
   def handle_info(:tick, _) do
     push! build_response()
     {:noreply, nil}
