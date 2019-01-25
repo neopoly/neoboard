@@ -18,7 +18,7 @@ daemon: build
 	docker run -d --name ${NAME} ${NAME}
 
 tag: check-env
-	docker tag -f ${NAME} ${DOCKER_REGISTRY}/${NAME}:latest
+	docker tag ${NAME} ${DOCKER_REGISTRY}/${NAME}:latest
 
 push: tag
 	docker push ${DOCKER_REGISTRY}/${NAME}:latest
