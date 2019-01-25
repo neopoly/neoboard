@@ -30,7 +30,7 @@ defmodule Neoboard.Widgets.Jenkins do
 
   defp process_body(body) do
     body
-    |> Poison.decode!
+    |> Jason.decode!
     |> extract_failed_jobs!
   end
 

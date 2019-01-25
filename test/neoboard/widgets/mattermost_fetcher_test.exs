@@ -136,7 +136,7 @@ defmodule Neoboard.Widgets.MattermostFetcherTest do
   end
 
   defp send_json(conn, value, status) do
-    json = Poison.encode!(value)
+    json = Jason.encode!(value)
     Plug.Conn.resp(conn, status, json)
   end
 

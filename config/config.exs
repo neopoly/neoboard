@@ -18,6 +18,9 @@ config :logger, :console,
   format: "$time $metadata[$level] $message\n",
   metadata: [:request_id]
 
+# Configures Phoenix
+config :phoenix, :json_library, Jason
+
 # Import configuration for the widgets
 import_config "widgets.exs"
 

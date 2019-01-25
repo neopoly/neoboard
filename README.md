@@ -33,7 +33,7 @@ Install all NPM dependencies:
 
 Now you can startup a server instance:
 
-    $ mix phoenix.server
+    $ mix phx.server
 
 Now you can visit `localhost:4000` from your browser.
 
@@ -47,7 +47,7 @@ tasks is provided to instrument webpack's build process:
 Also you should generate hashed versions of the static files by invoking
 Phoenix "digest" task:
 
-    $ mix phoenix.digest
+    $ mix phx.digest
 
 ## Release and run via distillery
 
@@ -55,7 +55,7 @@ Phoenix "digest" task:
     $ export NEOBOARD_SECRET_BASE_KEY=<GENERATED>
     $ export NEOBOARD_COOKIE=<GENERATED_COOKIE>
     $ export NEOBOARD_PORT=4000
-    $ MIX_ENV=prod mix do phoenix.digest, release --no-tar
+    $ MIX_ENV=prod mix do phx.digest, release --no-tar
 
     $ rel/neoboard/bin/neoboard foreground
 

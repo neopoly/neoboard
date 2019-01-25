@@ -74,14 +74,14 @@ defmodule Neoboard.Widgets.Mattermost.Fetcher do
   end
 
   defp dump_request(data) do
-    Poison.encode!(data)
+    Jason.encode!(data)
   end
 
   defp parse_response(%HTTPoison.Response{status_code: 200, body: body}) do
-    Poison.decode(body)
+    Jason.decode(body)
   end
   defp parse_response(%HTTPoison.Response{status_code: 401, body: body}) do
-    case Poison.decode(body) do
+    case Jason.decode(body) do
       {:ok, data} -> {:authentication_failure, data["message"]}
       other -> other
     end

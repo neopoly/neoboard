@@ -40,7 +40,7 @@ defmodule Neoboard.Widgets.Giphy do
   end
 
   defp decode(string) do
-    Poison.decode!(string)["data"]
+    Jason.decode!(string)["data"]
   end
 
   # Handle response from Giphy `random` api endpoint

@@ -43,6 +43,7 @@ defmodule Neoboard.Widgets.RedmineActivity do
 end
 
 defmodule Neoboard.Widgets.RedmineActivity.Project do
+  @derive Jason.Encoder
   alias Neoboard.Widgets.RedmineActivity.Project
   defstruct name: nil, users: [], activity: 0, updated_at: nil
 
@@ -71,6 +72,7 @@ defmodule Neoboard.Widgets.RedmineActivity.Project do
 end
 
 defmodule Neoboard.Widgets.RedmineActivity.User do
+  @derive Jason.Encoder
   alias Neoboard.Widgets.RedmineActivity.User
   defstruct name: nil, email: nil, avatar: nil, projects: []
 
