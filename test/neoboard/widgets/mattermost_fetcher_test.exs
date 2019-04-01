@@ -26,7 +26,7 @@ defmodule Neoboard.Widgets.MattermostFetcherTest do
       send_json(conn, %{})
     end
 
-    assert {:ok, []} = Fetcher.fetch(since, @private_token, config)
+    assert {:ok, []} = Fetcher.fetch(since, nil, @private_token, config)
   end
 
   test "ignores deleted posts", %{bypass: bypass} do
@@ -40,12 +40,12 @@ defmodule Neoboard.Widgets.MattermostFetcherTest do
       send_json(conn, %{
         "order" => ["p1"],
         "posts" => %{
-          "p1" => fake_post(1476880485, "u1")
+          "p1" => fake_post("p1", 1476880485, "u1")
         }
       })
     end
 
-    assert {:ok, []} = Fetcher.fetch(since, @private_token, config)
+    assert {:ok, []} = Fetcher.fetch(since, nil, @private_token, config)
   end
 
   test "injects enriched users into posts", %{bypass: bypass} do
@@ -60,7 +60,7 @@ defmodule Neoboard.Widgets.MattermostFetcherTest do
       send_json(conn, %{
         "order" => ["p1"],
         "posts" => %{
-          "p1" => fake_post(0, "u1")
+          "p1" => fake_post("p1", 0, "u1")
         }
       })
     end
@@ -88,7 +88,50 @@ defmodule Neoboard.Widgets.MattermostFetcherTest do
       }
     }]
 
-    assert {:ok, ^expected} = Fetcher.fetch(since, @private_token, config)
+    assert {:ok, ^expected} = Fetcher.fetch(since, nil, @private_token, config)
+  end
+
+  test "loads posts since last given id", %{bypass: bypass} do
+    since = DateTime.from_unix!(0)
+    config = build_config(bypass)
+
+    posts = "/channels/the_channel_id/posts"
+    Bypass.expect bypass, "GET", posts, fn conn ->
+      conn = Plug.Conn.fetch_query_params(conn)
+      assert "p1" == conn.query_params["after"]
+      assert_private_token_header(conn)
+      send_json(conn, %{
+        "order" => ["p2"],
+        "posts" => %{
+          "p2" => fake_post("p2", 0, "u1")
+        }
+      })
+    end
+
+    users = "/users/ids"
+    Bypass.expect bypass, "POST", users, fn conn ->
+      conn = Plug.Conn.fetch_query_params(conn)
+      assert_private_token_header(conn)
+      send_json(conn, [
+        fake_user("u1")
+      ])
+    end
+
+    expected = [%{
+      "create_at" => 1476880484,
+      "delete_at" => 0,
+      "id"        => "p2",
+      "message"   => "Some message",
+      "user_id"   => "u1",
+      "user"    => %{
+        "id" => "u1",
+        "avatar_url" => "https://secure.gravatar.com/avatar/0bc83cb571cd1c50ba6f3e8a78ef1346",
+        "email" => "MyEmailAddress@example.com",
+        "username" => "the_username"
+      }
+    }]
+
+    assert {:ok, ^expected} = Fetcher.fetch(since, "p1", @private_token, config)
   end
 
   test "fails as authentication_failure", %{bypass: bypass} do
@@ -100,7 +143,7 @@ defmodule Neoboard.Widgets.MattermostFetcherTest do
       send_json(conn, %{"message" => "Some auth error"}, 401)
     end
 
-    assert {:authentication_failure, "Some auth error"} = Fetcher.fetch(since, @private_token, config)
+    assert {:authentication_failure, "Some auth error"} = Fetcher.fetch(since, nil, @private_token, config)
   end
 
   test "fails as error if response isn't JSON", %{bypass: bypass} do
@@ -112,7 +155,7 @@ defmodule Neoboard.Widgets.MattermostFetcherTest do
       Plug.Conn.resp(conn, 200, "INVALID")
     end
 
-    assert {:error, _} = Fetcher.fetch(since, @private_token, config)
+    assert {:error, _} = Fetcher.fetch(since, nil, @private_token, config)
   end
 
   defp build_config(bypass) do
@@ -152,9 +195,9 @@ defmodule Neoboard.Widgets.MattermostFetcherTest do
     }
   end
 
-  defp fake_post(delete_at, user_id) do
+  defp fake_post(id, delete_at, user_id) do
     %{
-      "id"        => "p1",
+      "id"        => id,
       "message"   => "Some message",
       "user_id"   => user_id,
       "delete_at" => delete_at,

@@ -20,7 +20,8 @@ defmodule Neoboard.Widgets.Mattermost do
     {:noreply, %{
       private_token: config()[:personal_access_token],
       posts: [],
-      last_fetch: initial_last_fetch()
+      initial_since: build_since(),
+      last_post_id: nil
     }}
   end
 
@@ -36,27 +37,33 @@ defmodule Neoboard.Widgets.Mattermost do
   end
 
   defp fetch_and_push_posts(state) do
-    last_fetch    = state[:last_fetch]
+    since         = state[:initial_since]
+    post_id       = state[:last_post_id]
     private_token = state[:private_token]
     posts         = state[:posts]
 
-    case Fetcher.fetch(last_fetch, private_token, config()) do
+    case Fetcher.fetch(since, post_id, private_token, config()) do
       {:ok, new_posts} ->
         posts = new_posts ++ posts |> Enum.take(config()[:posts])
         push_posts! posts
 
-        {:ok, %{
+        {:ok, Map.merge(state, %{
           posts: posts,
-          last_fetch: TimeService.now,
-          private_token: private_token
-        }}
+          since: build_since(),
+          last_post_id: extract_last_post_id(posts)
+        })}
       other -> other
     end
   end
 
-  defp initial_last_fetch do
+  defp build_since do
     offset = Keyword.get(config(), :offset, days: -7)
     Timex.shift(TimeService.now, offset)
+  end
+
+  defp extract_last_post_id([]), do: nil
+  defp extract_last_post_id([post | _]) do
+    post["id"]
   end
 
   defp push_posts!(posts) do
