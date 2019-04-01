@@ -2,14 +2,15 @@ defmodule Neoboard.Widgets.Mattermost.Fetcher do
   alias Neoboard.Widgets.Mattermost.Fetcher
   alias Neoboard.Gravatar
 
-  defstruct [:api_url, :private_token, :channel_id, :since]
+  defstruct [:api_url, :private_token, :channel_id, :since, :last_post_id]
 
-  def fetch(since, private_token, config) do
+  def fetch(since, last_post_id, private_token, config) do
     %Fetcher{
       api_url: config[:api_url],
       private_token: private_token,
       channel_id: config[:channel_id],
-      since: since
+      since: since,
+      last_post_id: last_post_id
     } |> fetch
   end
 
@@ -94,9 +95,12 @@ defmodule Neoboard.Widgets.Mattermost.Fetcher do
     }
   end
 
-  defp posts_url(fetcher = %Fetcher{channel_id: channel, since: since}) do
+  defp posts_url(fetcher = %Fetcher{channel_id: channel, since: since, last_post_id: nil}) do
     timestamp = to_timestamp(since)
     fetcher |> url("channels/#{channel}/posts?since=#{timestamp}")
+  end
+  defp posts_url(fetcher = %Fetcher{channel_id: channel, last_post_id: last_post_id}) do
+    fetcher |> url("channels/#{channel}/posts?after=#{last_post_id}")
   end
 
   defp users_url(fetcher) do
